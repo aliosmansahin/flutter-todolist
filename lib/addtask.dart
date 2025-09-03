@@ -51,17 +51,27 @@ class _AddTaskState extends State<AddTask> {
                     child: Text("Task description"),
                   ),
                   TextField(autofocus: true, minLines: 5, maxLines: 5),
-                  //Deadline
+                  //Deadline date
                   Padding(
                     padding: const EdgeInsets.only(top: 20),
-                    child: Text("Deadline"),
+                    child: Text("Deadline date"),
                   ),
-                  Text("No deadline selected"),
+                  Text("No deadline date selected"),
                   OutlinedButton(
                     onPressed: () {},
-                    child: Text("Select a deadline"),
+                    child: Text("Select a deadline date"),
                   ),
-
+                  //Deadline time
+                  Padding(
+                    padding: const EdgeInsets.only(top: 20),
+                    child: Text("Deadline time"),
+                  ),
+                  Text("No deadline time selected"),
+                  OutlinedButton(
+                    onPressed: () {},
+                    child: Text("Select a deadline time"),
+                  ),
+                  //Task type
                   Padding(
                     padding: const EdgeInsets.only(top: 20),
                     child: Text("Task type"),
@@ -76,6 +86,7 @@ class _AddTaskState extends State<AddTask> {
                       DropdownMenuEntry(value: "school", label: "School"),
                     ],
                   ),
+                  //Add task button
                   Padding(
                     padding: const EdgeInsets.only(top: 20),
                     child: OutlinedButton(
