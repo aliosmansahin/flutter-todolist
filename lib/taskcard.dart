@@ -35,7 +35,14 @@ class _TaskCardState extends State<TaskCard> {
                   Text("date"),
                   Padding(
                     padding: EdgeInsetsGeometry.symmetric(horizontal: 10),
-                    child: Icon(Icons.done),
+                    child: IconButton(
+                      icon: Icon(Icons.done),
+                      padding: EdgeInsets.symmetric(
+                        horizontal: 20,
+                        vertical: 0,
+                      ),
+                      onPressed: () {},
+                    ),
                   ),
                 ],
               ),
