@@ -8,14 +8,15 @@ Created by Ali Osman ŞAHİN on 09/03/2025
 
 part of 'main.dart';
 
-class AddTask extends StatefulWidget {
-  const AddTask({super.key});
+class AddEditTask extends StatefulWidget {
+  final bool willEdit;
+  const AddEditTask({super.key, this.willEdit = false});
 
   @override
-  State<AddTask> createState() => _AddTaskState();
+  State<AddEditTask> createState() => _AddEditTaskState();
 }
 
-class _AddTaskState extends State<AddTask> {
+class _AddEditTaskState extends State<AddEditTask> {
   @override
   Widget build(BuildContext context) {
     return DraggableScrollableSheet(
@@ -28,14 +29,8 @@ class _AddTaskState extends State<AddTask> {
           controller: scrollController,
           physics: BouncingScrollPhysics(),
           slivers: [
-            /*SliverList.builder(
-              itemCount: 25,
-              itemBuilder: (BuildContext context, int index) {
-                return ListTile(title: Text('Item $index'));
-              },
-            ),*/
             SliverAppBar.medium(
-              title: Text("New Task"),
+              title: Text(widget.willEdit ? "Edit Task" : "New Task"),
               backgroundColor: Colors.transparent,
             ),
             SliverPadding(
@@ -93,9 +88,10 @@ class _AddTaskState extends State<AddTask> {
                       onPressed: () {
                         Navigator.pop(context);
                       },
-                      child: Text("Add Task"),
+                      child: Text(widget.willEdit ? "Edit Task" : "Add Task"),
                     ),
                   ),
+                  Padding(padding: EdgeInsetsGeometry.only(top: 20)),
                 ]),
               ),
             ),

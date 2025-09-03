@@ -44,7 +44,15 @@ class _TaskDetailState extends State<TaskDetail> {
                 padding: const EdgeInsets.only(right: 10),
                 child: IconButton(
                   padding: EdgeInsets.all(10),
-                  onPressed: () {},
+                  onPressed: () {
+                    showModalBottomSheet(
+                      isScrollControlled: true,
+                      context: context,
+                      builder: (bottomSheetContext) {
+                        return AddEditTask(willEdit: true);
+                      },
+                    );
+                  },
                   icon: Icon(Icons.edit),
                 ),
               ),

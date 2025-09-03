@@ -14,7 +14,7 @@ Other Widget files
 */
 part 'mainpage.dart';
 part 'taskcard.dart';
-part 'addtask.dart';
+part 'addedittask.dart';
 part 'taskdetail.dart';
 
 void main() {
