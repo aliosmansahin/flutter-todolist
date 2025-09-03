@@ -2,6 +2,8 @@
 
 The home page of the application
 
+Created by Ali Osman ŞAHİN on 09/03/2025
+
 */
 
 part of 'main.dart';
@@ -20,10 +22,50 @@ class _MainPageState extends State<MainPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text("To Do List"),
+      body: CustomScrollView(
+        physics: BouncingScrollPhysics(),
+        slivers: [
+          /*
+          AppBar
+          */
+          SliverAppBar.medium(
+            pinned: false,
+            floating: false,
+            expandedHeight: 150,
+            stretch: true,
+            backgroundColor: Theme.of(context).secondaryHeaderColor,
+            foregroundColor: Theme.of(context).primaryColor,
+            flexibleSpace: FlexibleSpaceBar(
+              title: Text(
+                "To Do List",
+                style: TextStyle(color: Theme.of(context).primaryColorDark),
+              ),
+              centerTitle: true,
+            ),
+          ),
+          /*
+          Junk items to test scrolling
+          */
+          SliverList.builder(
+            itemBuilder: (context, index) {
+              return Text("ali");
+            },
+            itemCount: 50,
+          ),
+          /*
+          Last item will have bottom-margin, to prevent overlap with floating action button
+          */
+          SliverToBoxAdapter(
+            child: SizedBox(height: 100, width: double.infinity),
+          ),
+        ],
       ),
-      body: Text("Some Stuff"),
+      backgroundColor: Theme.of(context).secondaryHeaderColor,
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {},
+        backgroundColor: Theme.of(context).bottomSheetTheme.backgroundColor,
+        child: Icon(Icons.add),
+      ),
     );
   }
 }

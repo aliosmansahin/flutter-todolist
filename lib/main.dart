@@ -4,6 +4,8 @@ Main entrypoint, runs "MyApp"
 
 */
 
+import 'dart:ffi';
+
 import 'package:flutter/material.dart';
 
 part 'mainpage.dart';
@@ -11,7 +13,6 @@ part 'mainpage.dart';
 void main() {
   runApp(const MyApp());
 }
-
 
 /*
 
@@ -42,7 +43,7 @@ class MyApp extends StatelessWidget {
         //
         // This works for code too, not just values: Most code changes can be
         // tested with just a hot reload.
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.cyanAccent),
+        colorScheme: ColorScheme.fromSeed(seedColor: Colors.red),
       ),
       debugShowCheckedModeBanner: false,
       home: MainPage(),
