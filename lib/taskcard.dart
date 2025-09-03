@@ -18,35 +18,42 @@ class TaskCard extends StatefulWidget {
 class _TaskCardState extends State<TaskCard> {
   @override
   Widget build(BuildContext context) {
-    return Card(
-      surfaceTintColor: Theme.of(context).cardTheme.surfaceTintColor,
-      child: SizedBox(
-        width: double.infinity,
-        height: 75,
-        child: Padding(
-          padding: EdgeInsetsGeometry.all(20),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text("data"),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  Text("date"),
-                  Padding(
-                    padding: EdgeInsetsGeometry.symmetric(horizontal: 10),
-                    child: IconButton(
-                      icon: Icon(Icons.done),
-                      padding: EdgeInsets.symmetric(
-                        horizontal: 20,
-                        vertical: 0,
+    return GestureDetector(
+      onTap: () {
+        Navigator.of(
+          context,
+        ).push(MaterialPageRoute(builder: (context) => TaskDetail()));
+      },
+      child: Card(
+        surfaceTintColor: Theme.of(context).cardTheme.surfaceTintColor,
+        child: SizedBox(
+          width: double.infinity,
+          height: 75,
+          child: Padding(
+            padding: EdgeInsetsGeometry.all(20),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text("data"),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    Text("date"),
+                    Padding(
+                      padding: EdgeInsetsGeometry.symmetric(horizontal: 10),
+                      child: IconButton(
+                        icon: Icon(Icons.done),
+                        padding: EdgeInsets.symmetric(
+                          horizontal: 20,
+                          vertical: 0,
+                        ),
+                        onPressed: () {},
                       ),
-                      onPressed: () {},
                     ),
-                  ),
-                ],
-              ),
-            ],
+                  ],
+                ),
+              ],
+            ),
           ),
         ),
       ),
