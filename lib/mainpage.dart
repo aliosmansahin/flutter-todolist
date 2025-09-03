@@ -48,7 +48,7 @@ class _MainPageState extends State<MainPage> {
           */
           SliverList.builder(
             itemBuilder: (context, index) {
-              return Text("ali");
+              return TaskCard();
             },
             itemCount: 50,
           ),

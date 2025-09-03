@@ -4,11 +4,16 @@ Main entrypoint, runs "MyApp"
 
 */
 
-import 'dart:ffi';
-
+/*
+Imports
+*/
 import 'package:flutter/material.dart';
 
+/*
+Other Widget files
+*/
 part 'mainpage.dart';
+part 'taskcard.dart';
 
 void main() {
   runApp(const MyApp());
