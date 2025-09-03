@@ -61,10 +61,19 @@ class _MainPageState extends State<MainPage> {
         ],
       ),
       backgroundColor: Theme.of(context).secondaryHeaderColor,
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {},
+      floatingActionButton: FloatingActionButton.extended(
+        onPressed: () {
+          showModalBottomSheet(
+            isScrollControlled: true,
+            context: context,
+            builder: (bottomSheetContext) {
+              return AddTask();
+            },
+          );
+        },
         backgroundColor: Theme.of(context).bottomSheetTheme.backgroundColor,
-        child: Icon(Icons.add),
+        icon: Icon(Icons.add),
+        label: Text("New task"),
       ),
     );
   }
