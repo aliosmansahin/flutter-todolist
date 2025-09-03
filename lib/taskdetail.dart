@@ -56,6 +56,50 @@ class _TaskDetailState extends State<TaskDetail> {
                   icon: Icon(Icons.edit),
                 ),
               ),
+              Padding(
+                padding: const EdgeInsets.only(right: 10),
+                child: IconButton(
+                  padding: EdgeInsets.all(10),
+                  onPressed: () {
+                    showDialog(
+                      context: context,
+                      builder: (dialogContext) {
+                        return AlertDialog(
+                          title: Text("Delete Task"),
+                          content: Text(
+                            "Would you like to delete this task?",
+                            style: TextStyle(fontSize: 16),
+                          ),
+                          actions: [
+                            TextButton(
+                              onPressed: () {
+                                Navigator.pop(dialogContext);
+                              },
+                              child: Text(
+                                "No",
+                                style: TextStyle(
+                                  fontSize: 16,
+                                  color: Theme.of(context).primaryColorDark,
+                                ),
+                              ),
+                            ),
+                            TextButton(
+                              onPressed: () {
+                                //TODO: Delete task
+                              },
+                              child: Text(
+                                "Yes",
+                                style: TextStyle(fontSize: 16),
+                              ),
+                            ),
+                          ],
+                        );
+                      },
+                    );
+                  },
+                  icon: Icon(Icons.delete),
+                ),
+              ),
             ],
           ),
           SliverPadding(
