@@ -100,6 +100,18 @@ class _TaskDetailState extends State<TaskDetail> {
                   child: Text("Task type", style: TextStyle(fontSize: 20)),
                 ),
                 Text("None", style: TextStyle(fontSize: 16)),
+                Divider(),
+                //Notifications
+                Padding(
+                  padding: const EdgeInsets.only(top: 20),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text("Send notification", style: TextStyle(fontSize: 20)),
+                      Switch(value: false, onChanged: null),
+                    ],
+                  ),
+                ),
               ]),
             ),
           ),
