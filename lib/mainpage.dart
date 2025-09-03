@@ -67,7 +67,7 @@ class _MainPageState extends State<MainPage> {
             isScrollControlled: true,
             context: context,
             builder: (bottomSheetContext) {
-              return AddTask();
+              return AddEditTask();
             },
           );
         },
