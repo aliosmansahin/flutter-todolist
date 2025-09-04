@@ -9,7 +9,8 @@ Created by Ali Osman ŞAHİN on 09/03/2025
 part of 'main.dart';
 
 class TaskCard extends StatefulWidget {
-  const TaskCard({super.key});
+  final Task task;
+  const TaskCard({super.key, required this.task});
 
   @override
   State<TaskCard> createState() => _TaskCardState();
@@ -20,9 +21,11 @@ class _TaskCardState extends State<TaskCard> {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        Navigator.of(
-          context,
-        ).push(MaterialPageRoute(builder: (context) => TaskDetail()));
+        Navigator.of(context).push(
+          MaterialPageRoute(
+            builder: (context) => TaskDetail(id: widget.task.id),
+          ),
+        );
       },
       child: Card(
         surfaceTintColor: Theme.of(context).cardTheme.surfaceTintColor,
@@ -34,11 +37,11 @@ class _TaskCardState extends State<TaskCard> {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text("data"),
+                Text(widget.task.title),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
-                    Text("date"),
+                    Text(widget.task.dateAndTime.toLocal().toString()),
                     Padding(
                       padding: EdgeInsetsGeometry.symmetric(horizontal: 10),
                       child: IconButton(
