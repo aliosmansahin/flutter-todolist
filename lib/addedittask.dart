@@ -33,8 +33,6 @@ class _AddEditTaskState extends State<AddEditTask> {
   }
 
   Future<void> addTask() async {
-    if (!checkForEmptiness()) return;
-
     //Insert task
     db
         .into(db.tasks)
@@ -161,14 +159,42 @@ class _AddEditTaskState extends State<AddEditTask> {
                     padding: const EdgeInsets.only(top: 20),
                     child: OutlinedButton(
                       onPressed: () async {
-                        if (widget.willEdit) {
-                          //Edit
+                        if (!checkForEmptiness()) {
+                          showDialog(
+                            context: context,
+                            builder: (dialogContext) {
+                              return AlertDialog(
+                                title: Text(
+                                  "Couln't ${widget.willEdit ? "Edit" : "Add"}",
+                                ),
+                                content: Text(
+                                  "Can't ${widget.willEdit ? "edit the" : "add an"} item without one or some of parameters",
+                                  style: TextStyle(fontSize: 16),
+                                ),
+                                actions: [
+                                  TextButton(
+                                    onPressed: () {
+                                      Navigator.pop(dialogContext);
+                                    },
+                                    child: Text(
+                                      "OK",
+                                      style: TextStyle(fontSize: 16),
+                                    ),
+                                  ),
+                                ],
+                              );
+                            },
+                          );
                         } else {
-                          //Add
-                          await addTask();
-                        }
-                        if (mounted) {
-                          Navigator.pop(context);
+                          if (widget.willEdit) {
+                            //Edit
+                          } else {
+                            //Add
+                            await addTask();
+                          }
+                          if (mounted) {
+                            Navigator.pop(context);
+                          }
                         }
                       },
                       child: Text(widget.willEdit ? "Edit Task" : "Add Task"),
