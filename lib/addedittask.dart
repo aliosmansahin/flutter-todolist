@@ -167,7 +167,9 @@ class _AddEditTaskState extends State<AddEditTask> {
                           //Add
                           await addTask();
                         }
-                        Navigator.pop(context);
+                        if (mounted) {
+                          Navigator.pop(context);
+                        }
                       },
                       child: Text(widget.willEdit ? "Edit Task" : "Add Task"),
                     ),
