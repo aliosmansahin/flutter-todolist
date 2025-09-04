@@ -52,9 +52,12 @@ class _TaskDetailState extends State<TaskDetail> {
   */
   Future<void> deleteTask() async {
     await (db.delete(db.tasks)..where((tbl) {
-          return tbl.id.equals(widget.id);
+          return tbl.id.equals(data.id);
         }))
         .go();
+    if (data.shouldNotify && !data.notificationSent) {
+      await cancelTaskNotification(data.id);
+    }
   }
 
   Future<void> changeNotifyStatus(bool newValue) async {
@@ -240,24 +243,32 @@ class _TaskDetailState extends State<TaskDetail> {
                   Text(data.type, style: TextStyle(fontSize: 16)),
                   Divider(),
                   //Notifications
-                  Padding(
-                    padding: const EdgeInsets.only(top: 20),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          "Send notification",
-                          style: TextStyle(fontSize: 20),
+                  data.dateAndTime.isAfter(DateTime.now())
+                      ? Padding(
+                          padding: const EdgeInsets.only(top: 20),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(
+                                "Send notification",
+                                style: TextStyle(fontSize: 20),
+                              ),
+                              Switch(
+                                value: data.shouldNotify,
+                                onChanged: (value) async {
+                                  await changeNotifyStatus(value);
+                                },
+                              ),
+                            ],
+                          ),
+                        )
+                      : Padding(
+                          padding: const EdgeInsets.only(top: 20),
+                          child: Text(
+                            "This is a passed task",
+                            style: TextStyle(fontSize: 20),
+                          ),
                         ),
-                        Switch(
-                          value: data.shouldNotify,
-                          onChanged: (value) async {
-                            await changeNotifyStatus(value);
-                          },
-                        ),
-                      ],
-                    ),
-                  ),
                 ]),
               ),
             ),
