@@ -7,6 +7,7 @@ Main entrypoint, runs "MyApp"
 /*
 Imports
 */
+import 'package:drift/drift.dart';
 import 'package:flutter/material.dart';
 import 'package:drift/native.dart';
 

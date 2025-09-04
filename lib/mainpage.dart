@@ -16,6 +16,28 @@ class MainPage extends StatefulWidget {
 }
 
 class _MainPageState extends State<MainPage> {
+  List<Task> data = [];
+
+  /*
+    Listener function to handle events for tasks
+  */
+  Future<void> listenForUpdates() async {
+    db.select(db.tasks).watch().forEach((element) {
+      setState(() {
+        data = element;
+      });
+    });
+  }
+
+  /*
+    InitState function
+  */
+  @override
+  void initState() {
+    listenForUpdates();
+    super.initState();
+  }
+
   /*
     Build function
   */
@@ -48,9 +70,10 @@ class _MainPageState extends State<MainPage> {
           */
           SliverList.builder(
             itemBuilder: (context, index) {
-              return TaskCard();
+              Task task = data.elementAt(index);
+              return TaskCard(task: task);
             },
-            itemCount: 50,
+            itemCount: data.length,
           ),
           /*
           Last item will have bottom-margin, to prevent overlap with floating action button

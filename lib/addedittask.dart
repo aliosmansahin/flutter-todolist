@@ -50,10 +50,6 @@ class _AddEditTaskState extends State<AddEditTask> {
             type: selectedType,
           ),
         );
-
-    db.select(db.tasks).get().then((value) {
-      print(value);
-    });
   }
 
   @override
