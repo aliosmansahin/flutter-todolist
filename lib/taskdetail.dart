@@ -29,7 +29,7 @@ class _TaskDetailState extends State<TaskDetail> {
           return tbl.id.equals(widget.id);
         }))
         .watch()
-        .forEach((element) {
+        .listen((element) {
           setState(() {
             data = element.first;
             isLoading = false;

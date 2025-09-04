@@ -22,7 +22,7 @@ class _MainPageState extends State<MainPage> {
     Listener function to handle events for tasks
   */
   Future<void> listenForUpdates() async {
-    db.select(db.tasks).watch().forEach((element) {
+    db.select(db.tasks).watch().listen((element) {
       setState(() {
         data = element;
       });
