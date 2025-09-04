@@ -9,7 +9,8 @@ Created by Ali Osman ŞAHİN on 09/03/2025
 part of 'main.dart';
 
 class TaskDetail extends StatefulWidget {
-  const TaskDetail({super.key});
+  final Task task;
+  const TaskDetail({super.key, required this.task});
 
   @override
   State<TaskDetail> createState() => _TaskDetailState();
@@ -49,7 +50,7 @@ class _TaskDetailState extends State<TaskDetail> {
                       isScrollControlled: true,
                       context: context,
                       builder: (bottomSheetContext) {
-                        return AddEditTask(willEdit: true);
+                        return AddEditTask(willEdit: true, task: widget.task);
                       },
                     );
                   },

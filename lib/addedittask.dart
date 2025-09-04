@@ -10,7 +10,8 @@ part of 'main.dart';
 
 class AddEditTask extends StatefulWidget {
   final bool willEdit;
-  const AddEditTask({super.key, this.willEdit = false});
+  final Task? task;
+  const AddEditTask({super.key, this.willEdit = false, this.task});
 
   @override
   State<AddEditTask> createState() => _AddEditTaskState();
@@ -50,6 +51,43 @@ class _AddEditTaskState extends State<AddEditTask> {
             type: selectedType,
           ),
         );
+  }
+
+  Future<void> editTask(int id) async {
+    //Update task
+    (db.update(db.tasks)..where((i) => i.id.equals(id))).write(
+      TasksCompanion.insert(
+        title: titleController.text,
+        description: descriptionController.text,
+        dateAndTime: DateTime(
+          selectedDate.year,
+          selectedDate.month,
+          selectedDate.day,
+          selectedTime.hour,
+          selectedTime.minute,
+        ),
+        type: selectedType,
+      ),
+    );
+  }
+
+  /*
+    Setup empty fields to current values
+  */
+  void setupFields() {
+    if (widget.task != null) {
+      titleController.text = widget.task!.title;
+      descriptionController.text = widget.task!.description;
+      selectedDate = widget.task!.dateAndTime;
+      selectedTime = TimeOfDay.fromDateTime(widget.task!.dateAndTime);
+      selectedType = widget.task!.type;
+    }
+  }
+
+  @override
+  void initState() {
+    setupFields();
+    super.initState();
   }
 
   @override
@@ -184,6 +222,9 @@ class _AddEditTaskState extends State<AddEditTask> {
                         } else {
                           if (widget.willEdit) {
                             //Edit
+                            if (widget.task != null) {
+                              await editTask(widget.task!.id);
+                            }
                           } else {
                             //Add
                             await addTask();

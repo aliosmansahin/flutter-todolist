@@ -21,9 +21,11 @@ class _TaskCardState extends State<TaskCard> {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        Navigator.of(
-          context,
-        ).push(MaterialPageRoute(builder: (context) => TaskDetail()));
+        Navigator.of(context).push(
+          MaterialPageRoute(
+            builder: (context) => TaskDetail(task: widget.task),
+          ),
+        );
       },
       child: Card(
         surfaceTintColor: Theme.of(context).cardTheme.surfaceTintColor,
