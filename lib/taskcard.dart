@@ -23,7 +23,7 @@ class _TaskCardState extends State<TaskCard> {
       onTap: () {
         Navigator.of(context).push(
           MaterialPageRoute(
-            builder: (context) => TaskDetail(task: widget.task),
+            builder: (context) => TaskDetail(id: widget.task.id),
           ),
         );
       },
