@@ -17,6 +17,47 @@ class AddEditTask extends StatefulWidget {
 }
 
 class _AddEditTaskState extends State<AddEditTask> {
+  TextEditingController titleController = TextEditingController();
+  TextEditingController descriptionController = TextEditingController();
+  DateTime selectedDate = DateTime.now();
+  TimeOfDay selectedTime = TimeOfDay.now();
+  String selectedType = "none";
+
+  //Checks TextEditingControllers if one or some of them is empty
+  //TRUE : No empty item
+  //FALSE : Empty item(s)
+  bool checkForEmptiness() {
+    if (titleController.text.isEmpty) return false;
+    if (descriptionController.text.isEmpty) return false;
+    return true;
+  }
+
+  Future<void> addTask() async {
+    if (!checkForEmptiness()) return;
+
+    //Insert task
+    db
+        .into(db.tasks)
+        .insert(
+          TasksCompanion.insert(
+            title: titleController.text,
+            description: descriptionController.text,
+            dateAndTime: DateTime(
+              selectedDate.year,
+              selectedDate.month,
+              selectedDate.day,
+              selectedTime.hour,
+              selectedTime.minute,
+            ),
+            type: selectedType,
+          ),
+        );
+
+    db.select(db.tasks).get().then((value) {
+      print(value);
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return DraggableScrollableSheet(
@@ -39,21 +80,39 @@ class _AddEditTaskState extends State<AddEditTask> {
                 delegate: SliverChildListDelegate([
                   //Task name
                   Text("Task name"),
-                  TextField(autofocus: true),
+                  TextField(autofocus: true, controller: titleController),
                   //Task description
                   Padding(
                     padding: const EdgeInsets.only(top: 20),
                     child: Text("Task description"),
                   ),
-                  TextField(autofocus: true, minLines: 5, maxLines: 5),
+                  TextField(
+                    autofocus: true,
+                    minLines: 5,
+                    maxLines: 5,
+                    controller: descriptionController,
+                  ),
                   //Deadline date
                   Padding(
                     padding: const EdgeInsets.only(top: 20),
                     child: Text("Deadline date"),
                   ),
-                  Text("No deadline date selected"),
+                  Text(
+                    "${selectedDate.year}/${selectedDate.month}/${selectedDate.day}",
+                  ),
                   OutlinedButton(
-                    onPressed: () {},
+                    onPressed: () async {
+                      final DateTime? date = await showDatePicker(
+                        context: context,
+                        firstDate: DateTime.now(),
+                        lastDate: DateTime(3000),
+                      );
+                      if (date != null) {
+                        setState(() {
+                          selectedDate = date;
+                        });
+                      }
+                    },
                     child: Text("Select a deadline date"),
                   ),
                   //Deadline time
@@ -61,9 +120,20 @@ class _AddEditTaskState extends State<AddEditTask> {
                     padding: const EdgeInsets.only(top: 20),
                     child: Text("Deadline time"),
                   ),
-                  Text("No deadline time selected"),
+                  Text("${selectedTime.hour}:${selectedTime.minute}"),
                   OutlinedButton(
-                    onPressed: () {},
+                    onPressed: () async {
+                      final TimeOfDay? timeOfDay = await showTimePicker(
+                        context: context,
+                        initialTime: selectedTime,
+                        initialEntryMode: TimePickerEntryMode.dial,
+                      );
+                      if (timeOfDay != null) {
+                        setState(() {
+                          selectedTime = timeOfDay;
+                        });
+                      }
+                    },
                     child: Text("Select a deadline time"),
                   ),
                   //Task type
@@ -74,6 +144,11 @@ class _AddEditTaskState extends State<AddEditTask> {
                   DropdownMenu(
                     width: double.infinity,
                     hintText: "Select a type",
+                    onSelected: (value) {
+                      if (value != null) {
+                        selectedType = value;
+                      }
+                    },
                     dropdownMenuEntries: [
                       DropdownMenuEntry(value: "food", label: "Food"),
                       DropdownMenuEntry(value: "sport", label: "Sport"),
@@ -85,7 +160,13 @@ class _AddEditTaskState extends State<AddEditTask> {
                   Padding(
                     padding: const EdgeInsets.only(top: 20),
                     child: OutlinedButton(
-                      onPressed: () {
+                      onPressed: () async {
+                        if (widget.willEdit) {
+                          //Edit
+                        } else {
+                          //Add
+                          await addTask();
+                        }
                         Navigator.pop(context);
                       },
                       child: Text(widget.willEdit ? "Edit Task" : "Add Task"),
