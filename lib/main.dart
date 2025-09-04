@@ -8,6 +8,9 @@ Main entrypoint, runs "MyApp"
 Imports
 */
 import 'package:flutter/material.dart';
+import 'package:drift/native.dart';
+
+import 'database/database.dart';
 
 /*
 Other Widget files
@@ -17,7 +20,19 @@ part 'taskcard.dart';
 part 'addedittask.dart';
 part 'taskdetail.dart';
 
-void main() {
+//Instance for database
+late Database db;
+
+/*
+
+Main Function
+
+*/
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+
+  db = Database(NativeDatabase.memory());
+
   runApp(const MyApp());
 }
 
