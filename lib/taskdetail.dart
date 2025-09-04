@@ -20,21 +20,41 @@ class _TaskDetailState extends State<TaskDetail> {
   late Task data;
   bool isLoading = true;
 
+  late StreamSubscription<List<Task>> _subscription;
   /*
     Listener function to handle events for task
     Also handles the first loading
   */
   Future<void> listenForUpdates() async {
-    (db.select(db.tasks)..where((tbl) {
+    _subscription =
+        (db.select(db.tasks)..where((tbl) {
+              return tbl.id.equals(widget.id);
+            }))
+            .watch()
+            .listen((element) {
+              if (!mounted) return;
+
+              if (element.isNotEmpty) {
+                setState(() {
+                  data = element.first;
+                  isLoading = false;
+                });
+              } else {
+                isLoading = false;
+
+                if (mounted) Navigator.of(context).pop();
+              }
+            });
+  }
+
+  /*
+    Deleter function
+  */
+  Future<void> deleteTask() async {
+    await (db.delete(db.tasks)..where((tbl) {
           return tbl.id.equals(widget.id);
         }))
-        .watch()
-        .listen((element) {
-          setState(() {
-            data = element.first;
-            isLoading = false;
-          });
-        });
+        .go();
   }
 
   /*
@@ -44,6 +64,12 @@ class _TaskDetailState extends State<TaskDetail> {
   void initState() {
     super.initState();
     listenForUpdates();
+  }
+
+  @override
+  void dispose() {
+    _subscription.cancel(); //Cancel listening
+    super.dispose();
   }
 
   @override
@@ -120,8 +146,9 @@ class _TaskDetailState extends State<TaskDetail> {
                                 ),
                               ),
                               TextButton(
-                                onPressed: () {
-                                  //TODO: Delete task
+                                onPressed: () async {
+                                  Navigator.pop(dialogContext);
+                                  await deleteTask();
                                 },
                                 child: Text(
                                   "Yes",
