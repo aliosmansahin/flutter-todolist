@@ -12,7 +12,10 @@ import 'dart:async';
 import 'package:drift/drift.dart';
 import 'package:flutter/material.dart';
 import 'package:drift/native.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:intl/intl.dart';
+import 'package:timezone/data/latest_all.dart' as tz;
+import 'package:timezone/timezone.dart' as tz;
 
 import 'database/database.dart';
 
@@ -27,6 +30,90 @@ part 'taskdetail.dart';
 //Instance for database
 late Database db;
 
+//Instance for notificationsPlugin
+final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
+    FlutterLocalNotificationsPlugin();
+
+/*
+
+Initializer for notifications
+
+*/
+Future<void> initNotifications() async {
+  const AndroidInitializationSettings initializationSettingsAndroid =
+      AndroidInitializationSettings('@mipmap/ic_launcher');
+
+  final InitializationSettings initializationSettings = InitializationSettings(
+    android: initializationSettingsAndroid,
+  );
+
+  await flutterLocalNotificationsPlugin.initialize(initializationSettings);
+}
+
+/*
+
+Scheduler for notifications
+
+*/
+Future<void> scheduleTaskNotification(Task task) async {
+  if (!task.shouldNotify || task.notificationSent) return;
+
+  //Not send notification if it passed
+  if (task.dateAndTime.isBefore(DateTime.now())) return;
+
+  await flutterLocalNotificationsPlugin.zonedSchedule(
+    task.id,
+    "Task Reminder",
+    task.title,
+    tz.TZDateTime.from(task.dateAndTime, tz.local),
+    const NotificationDetails(
+      android: AndroidNotificationDetails(
+        "task_channel",
+        "Task Notifications",
+        channelDescription: "For task notifications",
+        importance: Importance.high,
+        priority: Priority.high,
+      ),
+    ),
+    androidScheduleMode: AndroidScheduleMode.alarmClock,
+  );
+
+  await (db.update(db.tasks)..where((t) => t.id.equals(task.id))).write(
+    TasksCompanion(notificationSent: Value(true)),
+  );
+}
+
+/*
+
+Cancels task notification
+
+*/
+Future<void> cancelTaskNotification(int taskId) async {
+  await flutterLocalNotificationsPlugin.cancel(taskId);
+}
+
+/*
+
+Checks for the time and calls schedule function of notifications
+
+*/
+Future<void> checkAndSchedulePendingNotifications() async {
+  final now = DateTime.now();
+
+  final tasksToNotify =
+      await (db.select(db.tasks)..where(
+            (tbl) =>
+                tbl.shouldNotify.equals(true) &
+                tbl.notificationSent.equals(false) &
+                tbl.dateAndTime.isBiggerOrEqualValue(now),
+          ))
+          .get();
+
+  for (final task in tasksToNotify) {
+    await scheduleTaskNotification(task);
+  }
+}
+
 /*
 
 Main Function
@@ -35,8 +122,20 @@ Main Function
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
+  tz.initializeTimeZones();
+
+  //Permission request for notifications
+  flutterLocalNotificationsPlugin
+      .resolvePlatformSpecificImplementation<
+        AndroidFlutterLocalNotificationsPlugin
+      >()
+      ?.requestNotificationsPermission();
+
+  await initNotifications();
+
   db = Database(NativeDatabase.memory());
 
+  await checkAndSchedulePendingNotifications();
   runApp(const MyApp());
 }
 

@@ -34,10 +34,10 @@ class _AddEditTaskState extends State<AddEditTask> {
   }
 
   Future<void> addTask() async {
-    //Insert task
-    db
+    //Insert task and get the task object
+    final Task task = await db
         .into(db.tasks)
-        .insert(
+        .insertReturning(
           TasksCompanion.insert(
             title: titleController.text,
             description: descriptionController.text,
@@ -49,8 +49,11 @@ class _AddEditTaskState extends State<AddEditTask> {
               selectedTime.minute,
             ),
             type: selectedType,
+            shouldNotify: Value(true),
           ),
         );
+
+    await scheduleTaskNotification(task);
   }
 
   Future<void> editTask(int id) async {
