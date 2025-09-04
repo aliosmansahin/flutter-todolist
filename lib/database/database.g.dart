@@ -61,6 +61,36 @@ class $TasksTable extends Tasks with TableInfo<$TasksTable, Task> {
     type: DriftSqlType.string,
     requiredDuringInsert: true,
   );
+  static const VerificationMeta _shouldNotifyMeta = const VerificationMeta(
+    'shouldNotify',
+  );
+  @override
+  late final GeneratedColumn<bool> shouldNotify = GeneratedColumn<bool>(
+    'should_notify',
+    aliasedName,
+    false,
+    type: DriftSqlType.bool,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'CHECK ("should_notify" IN (0, 1))',
+    ),
+    defaultValue: const Constant(false),
+  );
+  static const VerificationMeta _notificationSentMeta = const VerificationMeta(
+    'notificationSent',
+  );
+  @override
+  late final GeneratedColumn<bool> notificationSent = GeneratedColumn<bool>(
+    'notification_sent',
+    aliasedName,
+    false,
+    type: DriftSqlType.bool,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'CHECK ("notification_sent" IN (0, 1))',
+    ),
+    defaultValue: const Constant(false),
+  );
   @override
   List<GeneratedColumn> get $columns => [
     id,
@@ -68,6 +98,8 @@ class $TasksTable extends Tasks with TableInfo<$TasksTable, Task> {
     description,
     dateAndTime,
     type,
+    shouldNotify,
+    notificationSent,
   ];
   @override
   String get aliasedName => _alias ?? actualTableName;
@@ -122,6 +154,24 @@ class $TasksTable extends Tasks with TableInfo<$TasksTable, Task> {
     } else if (isInserting) {
       context.missing(_typeMeta);
     }
+    if (data.containsKey('should_notify')) {
+      context.handle(
+        _shouldNotifyMeta,
+        shouldNotify.isAcceptableOrUnknown(
+          data['should_notify']!,
+          _shouldNotifyMeta,
+        ),
+      );
+    }
+    if (data.containsKey('notification_sent')) {
+      context.handle(
+        _notificationSentMeta,
+        notificationSent.isAcceptableOrUnknown(
+          data['notification_sent']!,
+          _notificationSentMeta,
+        ),
+      );
+    }
     return context;
   }
 
@@ -151,6 +201,14 @@ class $TasksTable extends Tasks with TableInfo<$TasksTable, Task> {
         DriftSqlType.string,
         data['${effectivePrefix}type'],
       )!,
+      shouldNotify: attachedDatabase.typeMapping.read(
+        DriftSqlType.bool,
+        data['${effectivePrefix}should_notify'],
+      )!,
+      notificationSent: attachedDatabase.typeMapping.read(
+        DriftSqlType.bool,
+        data['${effectivePrefix}notification_sent'],
+      )!,
     );
   }
 
@@ -166,12 +224,16 @@ class Task extends DataClass implements Insertable<Task> {
   final String description;
   final DateTime dateAndTime;
   final String type;
+  final bool shouldNotify;
+  final bool notificationSent;
   const Task({
     required this.id,
     required this.title,
     required this.description,
     required this.dateAndTime,
     required this.type,
+    required this.shouldNotify,
+    required this.notificationSent,
   });
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
@@ -181,6 +243,8 @@ class Task extends DataClass implements Insertable<Task> {
     map['description'] = Variable<String>(description);
     map['date_and_time'] = Variable<DateTime>(dateAndTime);
     map['type'] = Variable<String>(type);
+    map['should_notify'] = Variable<bool>(shouldNotify);
+    map['notification_sent'] = Variable<bool>(notificationSent);
     return map;
   }
 
@@ -191,6 +255,8 @@ class Task extends DataClass implements Insertable<Task> {
       description: Value(description),
       dateAndTime: Value(dateAndTime),
       type: Value(type),
+      shouldNotify: Value(shouldNotify),
+      notificationSent: Value(notificationSent),
     );
   }
 
@@ -205,6 +271,8 @@ class Task extends DataClass implements Insertable<Task> {
       description: serializer.fromJson<String>(json['description']),
       dateAndTime: serializer.fromJson<DateTime>(json['dateAndTime']),
       type: serializer.fromJson<String>(json['type']),
+      shouldNotify: serializer.fromJson<bool>(json['shouldNotify']),
+      notificationSent: serializer.fromJson<bool>(json['notificationSent']),
     );
   }
   @override
@@ -216,6 +284,8 @@ class Task extends DataClass implements Insertable<Task> {
       'description': serializer.toJson<String>(description),
       'dateAndTime': serializer.toJson<DateTime>(dateAndTime),
       'type': serializer.toJson<String>(type),
+      'shouldNotify': serializer.toJson<bool>(shouldNotify),
+      'notificationSent': serializer.toJson<bool>(notificationSent),
     };
   }
 
@@ -225,12 +295,16 @@ class Task extends DataClass implements Insertable<Task> {
     String? description,
     DateTime? dateAndTime,
     String? type,
+    bool? shouldNotify,
+    bool? notificationSent,
   }) => Task(
     id: id ?? this.id,
     title: title ?? this.title,
     description: description ?? this.description,
     dateAndTime: dateAndTime ?? this.dateAndTime,
     type: type ?? this.type,
+    shouldNotify: shouldNotify ?? this.shouldNotify,
+    notificationSent: notificationSent ?? this.notificationSent,
   );
   Task copyWithCompanion(TasksCompanion data) {
     return Task(
@@ -243,6 +317,12 @@ class Task extends DataClass implements Insertable<Task> {
           ? data.dateAndTime.value
           : this.dateAndTime,
       type: data.type.present ? data.type.value : this.type,
+      shouldNotify: data.shouldNotify.present
+          ? data.shouldNotify.value
+          : this.shouldNotify,
+      notificationSent: data.notificationSent.present
+          ? data.notificationSent.value
+          : this.notificationSent,
     );
   }
 
@@ -253,13 +333,23 @@ class Task extends DataClass implements Insertable<Task> {
           ..write('title: $title, ')
           ..write('description: $description, ')
           ..write('dateAndTime: $dateAndTime, ')
-          ..write('type: $type')
+          ..write('type: $type, ')
+          ..write('shouldNotify: $shouldNotify, ')
+          ..write('notificationSent: $notificationSent')
           ..write(')'))
         .toString();
   }
 
   @override
-  int get hashCode => Object.hash(id, title, description, dateAndTime, type);
+  int get hashCode => Object.hash(
+    id,
+    title,
+    description,
+    dateAndTime,
+    type,
+    shouldNotify,
+    notificationSent,
+  );
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
@@ -268,7 +358,9 @@ class Task extends DataClass implements Insertable<Task> {
           other.title == this.title &&
           other.description == this.description &&
           other.dateAndTime == this.dateAndTime &&
-          other.type == this.type);
+          other.type == this.type &&
+          other.shouldNotify == this.shouldNotify &&
+          other.notificationSent == this.notificationSent);
 }
 
 class TasksCompanion extends UpdateCompanion<Task> {
@@ -277,12 +369,16 @@ class TasksCompanion extends UpdateCompanion<Task> {
   final Value<String> description;
   final Value<DateTime> dateAndTime;
   final Value<String> type;
+  final Value<bool> shouldNotify;
+  final Value<bool> notificationSent;
   const TasksCompanion({
     this.id = const Value.absent(),
     this.title = const Value.absent(),
     this.description = const Value.absent(),
     this.dateAndTime = const Value.absent(),
     this.type = const Value.absent(),
+    this.shouldNotify = const Value.absent(),
+    this.notificationSent = const Value.absent(),
   });
   TasksCompanion.insert({
     this.id = const Value.absent(),
@@ -290,6 +386,8 @@ class TasksCompanion extends UpdateCompanion<Task> {
     required String description,
     required DateTime dateAndTime,
     required String type,
+    this.shouldNotify = const Value.absent(),
+    this.notificationSent = const Value.absent(),
   }) : title = Value(title),
        description = Value(description),
        dateAndTime = Value(dateAndTime),
@@ -300,6 +398,8 @@ class TasksCompanion extends UpdateCompanion<Task> {
     Expression<String>? description,
     Expression<DateTime>? dateAndTime,
     Expression<String>? type,
+    Expression<bool>? shouldNotify,
+    Expression<bool>? notificationSent,
   }) {
     return RawValuesInsertable({
       if (id != null) 'id': id,
@@ -307,6 +407,8 @@ class TasksCompanion extends UpdateCompanion<Task> {
       if (description != null) 'description': description,
       if (dateAndTime != null) 'date_and_time': dateAndTime,
       if (type != null) 'type': type,
+      if (shouldNotify != null) 'should_notify': shouldNotify,
+      if (notificationSent != null) 'notification_sent': notificationSent,
     });
   }
 
@@ -316,6 +418,8 @@ class TasksCompanion extends UpdateCompanion<Task> {
     Value<String>? description,
     Value<DateTime>? dateAndTime,
     Value<String>? type,
+    Value<bool>? shouldNotify,
+    Value<bool>? notificationSent,
   }) {
     return TasksCompanion(
       id: id ?? this.id,
@@ -323,6 +427,8 @@ class TasksCompanion extends UpdateCompanion<Task> {
       description: description ?? this.description,
       dateAndTime: dateAndTime ?? this.dateAndTime,
       type: type ?? this.type,
+      shouldNotify: shouldNotify ?? this.shouldNotify,
+      notificationSent: notificationSent ?? this.notificationSent,
     );
   }
 
@@ -344,6 +450,12 @@ class TasksCompanion extends UpdateCompanion<Task> {
     if (type.present) {
       map['type'] = Variable<String>(type.value);
     }
+    if (shouldNotify.present) {
+      map['should_notify'] = Variable<bool>(shouldNotify.value);
+    }
+    if (notificationSent.present) {
+      map['notification_sent'] = Variable<bool>(notificationSent.value);
+    }
     return map;
   }
 
@@ -354,7 +466,9 @@ class TasksCompanion extends UpdateCompanion<Task> {
           ..write('title: $title, ')
           ..write('description: $description, ')
           ..write('dateAndTime: $dateAndTime, ')
-          ..write('type: $type')
+          ..write('type: $type, ')
+          ..write('shouldNotify: $shouldNotify, ')
+          ..write('notificationSent: $notificationSent')
           ..write(')'))
         .toString();
   }
@@ -460,6 +574,8 @@ typedef $$TasksTableCreateCompanionBuilder =
       required String description,
       required DateTime dateAndTime,
       required String type,
+      Value<bool> shouldNotify,
+      Value<bool> notificationSent,
     });
 typedef $$TasksTableUpdateCompanionBuilder =
     TasksCompanion Function({
@@ -468,6 +584,8 @@ typedef $$TasksTableUpdateCompanionBuilder =
       Value<String> description,
       Value<DateTime> dateAndTime,
       Value<String> type,
+      Value<bool> shouldNotify,
+      Value<bool> notificationSent,
     });
 
 class $$TasksTableFilterComposer extends Composer<_$Database, $TasksTable> {
@@ -500,6 +618,16 @@ class $$TasksTableFilterComposer extends Composer<_$Database, $TasksTable> {
 
   ColumnFilters<String> get type => $composableBuilder(
     column: $table.type,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<bool> get shouldNotify => $composableBuilder(
+    column: $table.shouldNotify,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<bool> get notificationSent => $composableBuilder(
+    column: $table.notificationSent,
     builder: (column) => ColumnFilters(column),
   );
 }
@@ -536,6 +664,16 @@ class $$TasksTableOrderingComposer extends Composer<_$Database, $TasksTable> {
     column: $table.type,
     builder: (column) => ColumnOrderings(column),
   );
+
+  ColumnOrderings<bool> get shouldNotify => $composableBuilder(
+    column: $table.shouldNotify,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<bool> get notificationSent => $composableBuilder(
+    column: $table.notificationSent,
+    builder: (column) => ColumnOrderings(column),
+  );
 }
 
 class $$TasksTableAnnotationComposer extends Composer<_$Database, $TasksTable> {
@@ -564,6 +702,16 @@ class $$TasksTableAnnotationComposer extends Composer<_$Database, $TasksTable> {
 
   GeneratedColumn<String> get type =>
       $composableBuilder(column: $table.type, builder: (column) => column);
+
+  GeneratedColumn<bool> get shouldNotify => $composableBuilder(
+    column: $table.shouldNotify,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<bool> get notificationSent => $composableBuilder(
+    column: $table.notificationSent,
+    builder: (column) => column,
+  );
 }
 
 class $$TasksTableTableManager
@@ -599,12 +747,16 @@ class $$TasksTableTableManager
                 Value<String> description = const Value.absent(),
                 Value<DateTime> dateAndTime = const Value.absent(),
                 Value<String> type = const Value.absent(),
+                Value<bool> shouldNotify = const Value.absent(),
+                Value<bool> notificationSent = const Value.absent(),
               }) => TasksCompanion(
                 id: id,
                 title: title,
                 description: description,
                 dateAndTime: dateAndTime,
                 type: type,
+                shouldNotify: shouldNotify,
+                notificationSent: notificationSent,
               ),
           createCompanionCallback:
               ({
@@ -613,12 +765,16 @@ class $$TasksTableTableManager
                 required String description,
                 required DateTime dateAndTime,
                 required String type,
+                Value<bool> shouldNotify = const Value.absent(),
+                Value<bool> notificationSent = const Value.absent(),
               }) => TasksCompanion.insert(
                 id: id,
                 title: title,
                 description: description,
                 dateAndTime: dateAndTime,
                 type: type,
+                shouldNotify: shouldNotify,
+                notificationSent: notificationSent,
               ),
           withReferenceMapper: (p0) => p0
               .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
