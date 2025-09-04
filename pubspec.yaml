@@ -41,8 +41,10 @@ dependencies:
   path_provider: ^2.1.5
   path: ^1.9.1
   intl: ^0.20.2
-  flutter_local_notifications: ^19.4.1
-  timezone: ^0.10.1
+  flutter_local_notifications: ^17.2.1
+  timezone: ^0.9.1
+  android_intent_plus: ^5.3.1
+  flutter_timezone: ^4.1.1
   
 
 dev_dependencies:

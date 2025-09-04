@@ -8,11 +8,16 @@ Main entrypoint, runs "MyApp"
 Imports
 */
 import 'dart:async';
+import 'dart:io';
 
+import 'package:android_intent_plus/android_intent.dart';
 import 'package:drift/drift.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:drift/native.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:flutter_timezone/flutter_timezone.dart';
 import 'package:intl/intl.dart';
 import 'package:timezone/data/latest_all.dart' as tz;
 import 'package:timezone/timezone.dart' as tz;
@@ -43,8 +48,16 @@ Future<void> initNotifications() async {
   const AndroidInitializationSettings initializationSettingsAndroid =
       AndroidInitializationSettings('@mipmap/ic_launcher');
 
+  const DarwinInitializationSettings initializationSettingsIOS =
+      DarwinInitializationSettings(
+        requestAlertPermission: true,
+        requestBadgePermission: true,
+        requestSoundPermission: true,
+      );
+
   final InitializationSettings initializationSettings = InitializationSettings(
     android: initializationSettingsAndroid,
+    iOS: initializationSettingsIOS,
   );
 
   await flutterLocalNotificationsPlugin.initialize(initializationSettings);
@@ -70,13 +83,36 @@ Future<void> scheduleTaskNotification(Task task) async {
       android: AndroidNotificationDetails(
         "task_channel",
         "Task Notifications",
-        channelDescription: "For task notifications",
-        importance: Importance.high,
+        channelDescription: "Task notification channel",
+        importance: Importance.max,
         priority: Priority.high,
       ),
     ),
-    androidScheduleMode: AndroidScheduleMode.alarmClock,
+
+    androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
+    uiLocalNotificationDateInterpretation:
+        UILocalNotificationDateInterpretation.absoluteTime,
+    matchDateTimeComponents: null,
   );
+
+  /*flutterLocalNotificationsPlugin.show(
+    task.id,
+    "Task Reminder",
+    task.title,
+    const NotificationDetails(
+      android: AndroidNotificationDetails(
+        "task_channel",
+        "Task Notifications",
+        channelDescription: "Task notification channel",
+        importance: Importance.max,
+        priority: Priority.high,
+      ),
+    ),
+  );*/
+
+  print(":::::::notification scheduled");
+  print(task.dateAndTime);
+  print(tz.TZDateTime.from(task.dateAndTime, tz.local));
 
   await (db.update(db.tasks)..where((t) => t.id.equals(task.id))).write(
     TasksCompanion(notificationSent: Value(true)),
@@ -116,6 +152,40 @@ Future<void> checkAndSchedulePendingNotifications() async {
 
 /*
 
+Checks for if the application can schedule exact alarms
+
+*/
+Future<bool> canScheduleExactAlarms() async {
+  const platform = MethodChannel("alarm_permission");
+  try {
+    final result = await platform.invokeMethod<bool>("canScheduleExactAlarms");
+    return result ?? false;
+  } catch (e) {
+    print("Coun't check for the exact alarm $e");
+    return false;
+  }
+}
+
+/*
+
+Requests exact alarm permission
+
+*/
+Future<void> checkAndRequestExactAlarmPermission() async {
+  if (Platform.isAndroid) {
+    final canSchedule = await canScheduleExactAlarms();
+    if (!canSchedule) {
+      //Needs to route settings
+      final intent = AndroidIntent(
+        action: 'android.settings.REQUEST_SCHEDULE_EXACT_ALARM',
+      );
+      await intent.launch();
+    }
+  }
+}
+
+/*
+
 Main Function
 
 */
@@ -123,13 +193,29 @@ Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   tz.initializeTimeZones();
+  final String currentTimeZone = await FlutterTimezone.getLocalTimezone();
+  tz.setLocalLocation(tz.getLocation(currentTimeZone));
+
+  const AndroidNotificationChannel channel = AndroidNotificationChannel(
+    "task_channel",
+    "Task Notifications",
+    description: "Task notification channel",
+    importance: Importance.max,
+  );
 
   //Permission request for notifications
-  flutterLocalNotificationsPlugin
+  final androidImplementation = flutterLocalNotificationsPlugin
       .resolvePlatformSpecificImplementation<
         AndroidFlutterLocalNotificationsPlugin
-      >()
-      ?.requestNotificationsPermission();
+      >();
+
+  await androidImplementation?.createNotificationChannel(channel);
+
+  await androidImplementation?.requestExactAlarmsPermission();
+
+  await androidImplementation?.requestNotificationsPermission();
+
+  //await checkAndRequestExactAlarmPermission();
 
   await initNotifications();
 
