@@ -69,6 +69,8 @@ Scheduler for notifications
 
 */
 Future<void> scheduleTaskNotification(Task task) async {
+  print(task.shouldNotify);
+  print(task.notificationSent);
   if (!task.shouldNotify || task.notificationSent) return;
 
   //Not send notification if it passed
@@ -126,6 +128,8 @@ Cancels task notification
 */
 Future<void> cancelTaskNotification(int taskId) async {
   await flutterLocalNotificationsPlugin.cancel(taskId);
+
+  print(":::::::notification canceled");
 }
 
 /*

@@ -57,6 +57,27 @@ class _TaskDetailState extends State<TaskDetail> {
         .go();
   }
 
+  Future<void> changeNotifyStatus(bool newValue) async {
+    //Store new data as a list and pass first item into data variable
+    var newData =
+        await (db.update(db.tasks)..where((tbl) {
+              return tbl.id.equals(data.id);
+            }))
+            .writeReturning(
+              TasksCompanion(
+                shouldNotify: Value(newValue),
+                notificationSent: Value(false),
+              ),
+            );
+    data = newData.first;
+
+    if (newValue) {
+      await scheduleTaskNotification(data);
+    } else {
+      await cancelTaskNotification(data.id);
+    }
+  }
+
   /*
     InitState function
   */
@@ -228,7 +249,12 @@ class _TaskDetailState extends State<TaskDetail> {
                           "Send notification",
                           style: TextStyle(fontSize: 20),
                         ),
-                        Switch(value: false, onChanged: null),
+                        Switch(
+                          value: data.shouldNotify,
+                          onChanged: (value) async {
+                            await changeNotifyStatus(value);
+                          },
+                        ),
                       ],
                     ),
                   ),
