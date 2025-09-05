@@ -71,13 +71,33 @@ class _MainPageState extends State<MainPage> {
           /*
           Items
           */
-          SliverList.builder(
-            itemBuilder: (context, index) {
-              Task task = data.elementAt(index);
-              return TaskCard(task: task);
-            },
-            itemCount: data.length,
-          ),
+          data.isEmpty
+              ? SliverPadding(
+                  padding: const EdgeInsets.only(top: 200),
+                  sliver: SliverToBoxAdapter(
+                    child: Center(
+                      child: Column(
+                        children: [
+                          Text(
+                            "There is no task.",
+                            style: TextStyle(fontSize: 30),
+                          ),
+                          Text(
+                            "Add a new one!",
+                            style: TextStyle(fontSize: 30),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                )
+              : SliverList.builder(
+                  itemBuilder: (context, index) {
+                    Task task = data.elementAt(index);
+                    return TaskCard(task: task);
+                  },
+                  itemCount: data.length,
+                ),
           /*
           Last item will have bottom-margin, to prevent overlap with floating action button
           */
