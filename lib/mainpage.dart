@@ -16,7 +16,7 @@ class MainPage extends StatefulWidget {
 }
 
 class _MainPageState extends State<MainPage> {
-  List<Task> data = [];
+  Map<DateTime, List<Task>> data = {};
 
   /*
     Listener function to handle events for tasks
@@ -27,7 +27,14 @@ class _MainPageState extends State<MainPage> {
 
     query.watch().listen((element) {
       setState(() {
-        data = element;
+        data = groupBy(
+          element,
+          (Task task) => DateTime(
+            task.dateAndTime.year,
+            task.dateAndTime.month,
+            task.dateAndTime.day,
+          ),
+        );
       });
     });
   }
@@ -91,13 +98,41 @@ class _MainPageState extends State<MainPage> {
                     ),
                   ),
                 )
-              : SliverList.builder(
-                  itemBuilder: (context, index) {
-                    Task task = data.elementAt(index);
-                    return TaskCard(task: task);
-                  },
-                  itemCount: data.length,
+              : SliverList(
+                  delegate: SliverChildBuilderDelegate((context, index) {
+                    final date = data.entries.elementAt(index).key;
+                    final tasksOfDate = data.entries.elementAt(index).value;
+
+                    return Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        //Date
+                        Padding(
+                          padding: const EdgeInsets.only(top: 18, left: 10),
+                          child: Text(
+                            DateFormat("yyyy/MM/dd").format(date).toString(),
+                            style: const TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+                        //Tasks of the date
+                        ListView.builder(
+                          physics:
+                              const NeverScrollableScrollPhysics(), // important
+                          shrinkWrap: true, // important
+                          itemCount: tasksOfDate.length,
+                          itemBuilder: (context, taskIndex) {
+                            return TaskCard(task: tasksOfDate[taskIndex]);
+                          },
+                          padding: EdgeInsets.all(0),
+                        ),
+                      ],
+                    );
+                  }, childCount: data.entries.length),
                 ),
+
           /*
           Last item will have bottom-margin, to prevent overlap with floating action button
           */
