@@ -11,7 +11,7 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:android_intent_plus/android_intent.dart';
-import 'package:drift/drift.dart';
+import 'package:drift/drift.dart' as drift;
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:drift/native.dart';
@@ -21,6 +21,7 @@ import 'package:flutter_timezone/flutter_timezone.dart';
 import 'package:intl/intl.dart';
 import 'package:timezone/data/latest_all.dart' as tz;
 import 'package:timezone/timezone.dart' as tz;
+import 'package:collection/collection.dart';
 
 import 'database/database.dart';
 
@@ -31,6 +32,7 @@ part 'mainpage.dart';
 part 'taskcard.dart';
 part 'addedittask.dart';
 part 'taskdetail.dart';
+part 'utils/shadowedfield.dart';
 
 //Instance for database
 late Database db;
@@ -117,7 +119,7 @@ Future<void> scheduleTaskNotification(Task task) async {
   print(tz.TZDateTime.from(task.dateAndTime, tz.local));
 
   await (db.update(db.tasks)..where((t) => t.id.equals(task.id))).write(
-    TasksCompanion(notificationSent: Value(true)),
+    TasksCompanion(notificationSent: drift.Value(true)),
   );
 }
 

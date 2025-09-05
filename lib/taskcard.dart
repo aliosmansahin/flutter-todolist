@@ -33,15 +33,46 @@ class _TaskCardState extends State<TaskCard> {
           width: double.infinity,
           height: 75,
           child: Padding(
-            padding: EdgeInsetsGeometry.all(20),
+            padding: EdgeInsetsGeometry.only(left: 20),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text(widget.task.title),
+                //Title
+                Expanded(
+                  child: Padding(
+                    padding: const EdgeInsets.only(right: 15),
+                    child: Text(
+                      widget.task.title,
+                      style: TextStyle(fontSize: 18),
+                      overflow: TextOverflow.ellipsis,
+                      maxLines: 2,
+                    ),
+                  ),
+                ),
+
                 Row(
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
-                    Text(widget.task.dateAndTime.toLocal().toString()),
+                    //Date and time
+                    Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          DateFormat(
+                            "yyyy/MM/dd",
+                          ).format(widget.task.dateAndTime).toString(),
+                          style: TextStyle(fontSize: 18),
+                        ),
+                        Text(
+                          DateFormat(
+                            "HH:mm",
+                          ).format(widget.task.dateAndTime).toString(),
+                          style: TextStyle(fontSize: 18),
+                        ),
+                      ],
+                    ),
+
+                    //Done button
                     Padding(
                       padding: EdgeInsetsGeometry.symmetric(horizontal: 10),
                       child: IconButton(

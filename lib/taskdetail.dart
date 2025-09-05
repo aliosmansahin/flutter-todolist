@@ -68,8 +68,8 @@ class _TaskDetailState extends State<TaskDetail> {
             }))
             .writeReturning(
               TasksCompanion(
-                shouldNotify: Value(newValue),
-                notificationSent: Value(false),
+                shouldNotify: drift.Value(newValue),
+                notificationSent: drift.Value(false),
               ),
             );
     data = newData.first;
@@ -194,59 +194,57 @@ class _TaskDetailState extends State<TaskDetail> {
               sliver: SliverList(
                 delegate: SliverChildListDelegate([
                   //Task name
-                  Text("Task name", style: TextStyle(fontSize: 20)),
-                  Text(data.title, style: TextStyle(fontSize: 16)),
-                  Divider(),
+                  ShadowedField(
+                    title: "Task name",
+                    child: Text(data.title, style: TextStyle(fontSize: 17)),
+                  ),
+
                   //Task description
-                  Padding(
-                    padding: const EdgeInsets.only(top: 20),
+                  ShadowedField(
+                    title: "Task description",
+                    margin: EdgeInsets.only(top: 20),
                     child: Text(
-                      "Task description",
-                      style: TextStyle(fontSize: 20),
+                      data.description,
+                      style: TextStyle(fontSize: 17),
                     ),
                   ),
-                  Text(data.description, style: TextStyle(fontSize: 16)),
-                  Divider(),
-                  //Deadline date
-                  Padding(
-                    padding: const EdgeInsets.only(top: 20),
-                    child: Text(
-                      "Deadline date",
-                      style: TextStyle(fontSize: 20),
+
+                  //Deadline date and time
+                  ShadowedField(
+                    title: "Deadline date and time",
+                    margin: EdgeInsets.only(top: 20),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          DateFormat(
+                            "yyyy/MM/dd",
+                          ).format(data.dateAndTime).toString(),
+                          style: TextStyle(fontSize: 17),
+                        ),
+                        Text(
+                          DateFormat(
+                            "HH:mm",
+                          ).format(data.dateAndTime).toString(),
+                          style: TextStyle(fontSize: 17),
+                        ),
+                      ],
                     ),
                   ),
-                  Text(
-                    DateFormat(
-                      "yyyy/MM/dd",
-                    ).format(data.dateAndTime).toString(),
-                    style: TextStyle(fontSize: 16),
-                  ),
-                  Divider(),
-                  //Deadline time
-                  Padding(
-                    padding: const EdgeInsets.only(top: 20),
-                    child: Text(
-                      "Deadline time",
-                      style: TextStyle(fontSize: 20),
-                    ),
-                  ),
-                  Text(
-                    DateFormat("HH:mm").format(data.dateAndTime).toString(),
-                    style: TextStyle(fontSize: 16),
-                  ),
-                  Divider(),
+
                   //Task type
-                  Padding(
-                    padding: const EdgeInsets.only(top: 20),
-                    child: Text("Task type", style: TextStyle(fontSize: 20)),
+                  ShadowedField(
+                    title: "Task type",
+                    margin: EdgeInsets.only(top: 20),
+                    child: Text(data.type, style: TextStyle(fontSize: 17)),
                   ),
-                  Text(data.type, style: TextStyle(fontSize: 16)),
-                  Divider(),
+
                   //Notifications
-                  data.dateAndTime.isAfter(DateTime.now())
-                      ? Padding(
-                          padding: const EdgeInsets.only(top: 20),
-                          child: Row(
+                  ShadowedField(
+                    title: "Notification",
+                    margin: EdgeInsets.only(top: 20),
+                    child: data.dateAndTime.isAfter(DateTime.now())
+                        ? Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               Text(
@@ -260,15 +258,12 @@ class _TaskDetailState extends State<TaskDetail> {
                                 },
                               ),
                             ],
-                          ),
-                        )
-                      : Padding(
-                          padding: const EdgeInsets.only(top: 20),
-                          child: Text(
+                          )
+                        : Text(
                             "This is a passed task",
                             style: TextStyle(fontSize: 20),
                           ),
-                        ),
+                  ),
                 ]),
               ),
             ),
