@@ -11,7 +11,7 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:android_intent_plus/android_intent.dart';
-import 'package:drift/drift.dart';
+import 'package:drift/drift.dart' as drift;
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:drift/native.dart';
@@ -117,7 +117,7 @@ Future<void> scheduleTaskNotification(Task task) async {
   print(tz.TZDateTime.from(task.dateAndTime, tz.local));
 
   await (db.update(db.tasks)..where((t) => t.id.equals(task.id))).write(
-    TasksCompanion(notificationSent: Value(true)),
+    TasksCompanion(notificationSent: drift.Value(true)),
   );
 }
 

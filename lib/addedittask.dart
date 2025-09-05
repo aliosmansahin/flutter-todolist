@@ -49,7 +49,7 @@ class _AddEditTaskState extends State<AddEditTask> {
               selectedTime.minute,
             ),
             type: selectedType,
-            shouldNotify: Value(true),
+            shouldNotify: drift.Value(true),
           ),
         );
 
@@ -61,9 +61,9 @@ class _AddEditTaskState extends State<AddEditTask> {
     var newData = await (db.update(db.tasks)..where((i) => i.id.equals(id)))
         .writeReturning(
           TasksCompanion(
-            title: Value(titleController.text),
-            description: Value(descriptionController.text),
-            dateAndTime: Value(
+            title: drift.Value(titleController.text),
+            description: drift.Value(descriptionController.text),
+            dateAndTime: drift.Value(
               DateTime(
                 selectedDate.year,
                 selectedDate.month,
@@ -72,8 +72,8 @@ class _AddEditTaskState extends State<AddEditTask> {
                 selectedTime.minute,
               ),
             ),
-            type: Value(selectedType),
-            notificationSent: Value(false),
+            type: drift.Value(selectedType),
+            notificationSent: drift.Value(false),
           ),
         );
 
@@ -103,158 +103,174 @@ class _AddEditTaskState extends State<AddEditTask> {
 
   @override
   Widget build(BuildContext context) {
-    return DraggableScrollableSheet(
-      expand: false,
-      initialChildSize: 0.75,
-      maxChildSize: 1,
-      minChildSize: 0.1,
-      builder: (BuildContext context, ScrollController scrollController) {
-        return CustomScrollView(
-          controller: scrollController,
-          physics: BouncingScrollPhysics(),
-          slivers: [
-            SliverAppBar.medium(
-              title: Text(widget.willEdit ? "Edit Task" : "New Task"),
-              backgroundColor: Colors.transparent,
-            ),
-            SliverPadding(
-              padding: const EdgeInsets.all(8.0),
-              sliver: SliverList(
-                delegate: SliverChildListDelegate([
-                  //Task name
-                  Text("Task name"),
-                  TextField(autofocus: true, controller: titleController),
-                  //Task description
-                  Padding(
-                    padding: const EdgeInsets.only(top: 20),
-                    child: Text("Task description"),
-                  ),
-                  TextField(
-                    autofocus: true,
-                    minLines: 5,
-                    maxLines: 5,
-                    controller: descriptionController,
-                  ),
-                  //Deadline date
-                  Padding(
-                    padding: const EdgeInsets.only(top: 20),
-                    child: Text("Deadline date"),
-                  ),
-                  Text(
-                    "${selectedDate.year}/${selectedDate.month}/${selectedDate.day}",
-                  ),
-                  OutlinedButton(
-                    onPressed: () async {
-                      final DateTime? date = await showDatePicker(
-                        context: context,
-                        firstDate: DateTime.now(),
-                        lastDate: DateTime(3000),
-                      );
-                      if (date != null) {
-                        setState(() {
-                          selectedDate = date;
-                        });
-                      }
-                    },
-                    child: Text("Select a deadline date"),
-                  ),
-                  //Deadline time
-                  Padding(
-                    padding: const EdgeInsets.only(top: 20),
-                    child: Text("Deadline time"),
-                  ),
-                  Text("${selectedTime.hour}:${selectedTime.minute}"),
-                  OutlinedButton(
-                    onPressed: () async {
-                      final TimeOfDay? timeOfDay = await showTimePicker(
-                        context: context,
-                        initialTime: selectedTime,
-                        initialEntryMode: TimePickerEntryMode.dial,
-                      );
-                      if (timeOfDay != null) {
-                        setState(() {
-                          selectedTime = timeOfDay;
-                        });
-                      }
-                    },
-                    child: Text("Select a deadline time"),
-                  ),
-                  //Task type
-                  Padding(
-                    padding: const EdgeInsets.only(top: 20),
-                    child: Text("Task type"),
-                  ),
-                  DropdownMenu(
-                    width: double.infinity,
-                    hintText: "Select a type",
-                    onSelected: (value) {
-                      if (value != null) {
-                        selectedType = value;
-                      }
-                    },
-                    dropdownMenuEntries: [
-                      DropdownMenuEntry(value: "food", label: "Food"),
-                      DropdownMenuEntry(value: "sport", label: "Sport"),
-                      DropdownMenuEntry(value: "work", label: "Work"),
-                      DropdownMenuEntry(value: "school", label: "School"),
-                    ],
-                  ),
-                  //Add task button
-                  Padding(
-                    padding: const EdgeInsets.only(top: 20),
-                    child: OutlinedButton(
-                      onPressed: () async {
-                        if (!checkForEmptiness()) {
-                          showDialog(
+    return SafeArea(
+      child: DraggableScrollableSheet(
+        expand: false,
+        shouldCloseOnMinExtent: false,
+        initialChildSize: 0.75,
+        maxChildSize: 1,
+        minChildSize: 0.1,
+        builder: (BuildContext context, ScrollController scrollController) {
+          return Container(
+            color: Theme.of(context).canvasColor,
+            child: CustomScrollView(
+              controller: scrollController,
+              physics: BouncingScrollPhysics(),
+              slivers: [
+                SliverAppBar.medium(
+                  title: Text(widget.willEdit ? "Edit Task" : "New Task"),
+                  backgroundColor: Theme.of(context).canvasColor,
+                  elevation: 4,
+                  pinned: true,
+                ),
+                SliverPadding(
+                  padding: const EdgeInsets.all(8.0),
+                  sliver: SliverList(
+                    delegate: SliverChildListDelegate([
+                      //Task name
+                      Container(
+                        child: Column(
+                          children: [
+                            Text("Task name"),
+                            TextField(controller: titleController),
+                          ],
+                        ),
+                      ),
+
+                      //Task description
+                      Padding(
+                        padding: const EdgeInsets.only(top: 20),
+                        child: Text("Task description"),
+                      ),
+                      TextField(
+                        minLines: 5,
+                        maxLines: 5,
+                        controller: descriptionController,
+                      ),
+                      //Deadline date
+                      Padding(
+                        padding: const EdgeInsets.only(top: 20),
+                        child: Text("Deadline date"),
+                      ),
+                      Text(
+                        "${selectedDate.year}/${selectedDate.month}/${selectedDate.day}",
+                      ),
+                      OutlinedButton(
+                        onPressed: () async {
+                          final DateTime? date = await showDatePicker(
                             context: context,
-                            builder: (dialogContext) {
-                              return AlertDialog(
-                                title: Text(
-                                  "Couln't ${widget.willEdit ? "Edit" : "Add"}",
-                                ),
-                                content: Text(
-                                  "Can't ${widget.willEdit ? "edit the" : "add an"} item without one or some of parameters",
-                                  style: TextStyle(fontSize: 16),
-                                ),
-                                actions: [
-                                  TextButton(
-                                    onPressed: () {
-                                      Navigator.pop(dialogContext);
-                                    },
-                                    child: Text(
-                                      "OK",
+                            firstDate: DateTime.now(),
+                            lastDate: DateTime(3000),
+                          );
+                          if (date != null) {
+                            setState(() {
+                              selectedDate = date;
+                            });
+                          }
+                        },
+                        child: Text("Select a deadline date"),
+                      ),
+                      //Deadline time
+                      Padding(
+                        padding: const EdgeInsets.only(top: 20),
+                        child: Text("Deadline time"),
+                      ),
+                      Text("${selectedTime.hour}:${selectedTime.minute}"),
+                      OutlinedButton(
+                        onPressed: () async {
+                          final TimeOfDay? timeOfDay = await showTimePicker(
+                            context: context,
+                            initialTime: selectedTime,
+                            initialEntryMode: TimePickerEntryMode.dial,
+                          );
+                          if (timeOfDay != null) {
+                            setState(() {
+                              selectedTime = timeOfDay;
+                            });
+                          }
+                        },
+                        child: Text("Select a deadline time"),
+                      ),
+                      //Task type
+                      Padding(
+                        padding: const EdgeInsets.only(top: 20),
+                        child: Text("Task type"),
+                      ),
+                      DropdownMenu(
+                        width: double.infinity,
+                        hintText: "Select a type",
+                        onSelected: (value) {
+                          if (value != null) {
+                            selectedType = value;
+                          }
+                        },
+                        dropdownMenuEntries: [
+                          DropdownMenuEntry(value: "food", label: "Food"),
+                          DropdownMenuEntry(value: "sport", label: "Sport"),
+                          DropdownMenuEntry(value: "work", label: "Work"),
+                          DropdownMenuEntry(value: "school", label: "School"),
+                        ],
+                      ),
+                      //Add task button
+                      Padding(
+                        padding: const EdgeInsets.only(top: 20),
+                        child: OutlinedButton(
+                          onPressed: () async {
+                            if (!checkForEmptiness()) {
+                              showDialog(
+                                context: context,
+                                builder: (dialogContext) {
+                                  return AlertDialog(
+                                    title: Text(
+                                      "Couln't ${widget.willEdit ? "Edit" : "Add"}",
+                                    ),
+                                    content: Text(
+                                      "Can't ${widget.willEdit ? "edit the" : "add an"} item without one or some of parameters",
                                       style: TextStyle(fontSize: 16),
                                     ),
-                                  ),
-                                ],
+                                    actions: [
+                                      TextButton(
+                                        onPressed: () {
+                                          Navigator.pop(dialogContext);
+                                        },
+                                        child: Text(
+                                          "OK",
+                                          style: TextStyle(fontSize: 16),
+                                        ),
+                                      ),
+                                    ],
+                                  );
+                                },
                               );
-                            },
-                          );
-                        } else {
-                          if (widget.willEdit) {
-                            //Edit
-                            if (widget.task != null) {
-                              await editTask(widget.task!.id);
+                            } else {
+                              if (widget.willEdit) {
+                                //Edit
+                                if (widget.task != null) {
+                                  await editTask(widget.task!.id);
+                                }
+                              } else {
+                                //Add
+                                await addTask();
+                              }
+                              if (mounted) {
+                                Navigator.pop(context);
+                              }
                             }
-                          } else {
-                            //Add
-                            await addTask();
-                          }
-                          if (mounted) {
-                            Navigator.pop(context);
-                          }
-                        }
-                      },
-                      child: Text(widget.willEdit ? "Edit Task" : "Add Task"),
-                    ),
+                          },
+                          child: Text(
+                            widget.willEdit ? "Edit Task" : "Add Task",
+                          ),
+                        ),
+                      ),
+                      Padding(padding: EdgeInsetsGeometry.only(top: 20)),
+                    ]),
                   ),
-                  Padding(padding: EdgeInsetsGeometry.only(top: 20)),
-                ]),
-              ),
+                ),
+              ],
             ),
-          ],
-        );
-      },
+          );
+        },
+      ),
     );
   }
 }

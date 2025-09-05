@@ -68,8 +68,8 @@ class _TaskDetailState extends State<TaskDetail> {
             }))
             .writeReturning(
               TasksCompanion(
-                shouldNotify: Value(newValue),
-                notificationSent: Value(false),
+                shouldNotify: drift.Value(newValue),
+                notificationSent: drift.Value(false),
               ),
             );
     data = newData.first;
