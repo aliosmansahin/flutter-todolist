@@ -22,7 +22,10 @@ class _MainPageState extends State<MainPage> {
     Listener function to handle events for tasks
   */
   Future<void> listenForUpdates() async {
-    db.select(db.tasks).watch().listen((element) {
+    final query = db.select(db.tasks);
+    query.orderBy([(t) => drift.OrderingTerm.asc(t.dateAndTime)]);
+
+    query.watch().listen((element) {
       setState(() {
         data = element;
       });
@@ -66,7 +69,7 @@ class _MainPageState extends State<MainPage> {
             ),
           ),
           /*
-          Junk items to test scrolling
+          Items
           */
           SliverList.builder(
             itemBuilder: (context, index) {
