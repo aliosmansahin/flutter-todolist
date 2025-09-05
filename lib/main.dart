@@ -31,6 +31,7 @@ part 'mainpage.dart';
 part 'taskcard.dart';
 part 'addedittask.dart';
 part 'taskdetail.dart';
+part 'utils/shadowedfield.dart';
 
 //Instance for database
 late Database db;
