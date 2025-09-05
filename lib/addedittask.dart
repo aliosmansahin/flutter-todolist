@@ -34,10 +34,10 @@ class _AddEditTaskState extends State<AddEditTask> {
   }
 
   Future<void> addTask() async {
-    //Insert task
-    db
+    //Insert task and get the task object
+    final Task task = await db
         .into(db.tasks)
-        .insert(
+        .insertReturning(
           TasksCompanion.insert(
             title: titleController.text,
             description: descriptionController.text,
@@ -49,26 +49,37 @@ class _AddEditTaskState extends State<AddEditTask> {
               selectedTime.minute,
             ),
             type: selectedType,
+            shouldNotify: Value(true),
           ),
         );
+
+    await scheduleTaskNotification(task);
   }
 
   Future<void> editTask(int id) async {
-    //Update task
-    (db.update(db.tasks)..where((i) => i.id.equals(id))).write(
-      TasksCompanion.insert(
-        title: titleController.text,
-        description: descriptionController.text,
-        dateAndTime: DateTime(
-          selectedDate.year,
-          selectedDate.month,
-          selectedDate.day,
-          selectedTime.hour,
-          selectedTime.minute,
-        ),
-        type: selectedType,
-      ),
-    );
+    //Update task, returning is a list but we will have to use first index
+    var newData = await (db.update(db.tasks)..where((i) => i.id.equals(id)))
+        .writeReturning(
+          TasksCompanion(
+            title: Value(titleController.text),
+            description: Value(descriptionController.text),
+            dateAndTime: Value(
+              DateTime(
+                selectedDate.year,
+                selectedDate.month,
+                selectedDate.day,
+                selectedTime.hour,
+                selectedTime.minute,
+              ),
+            ),
+            type: Value(selectedType),
+            notificationSent: Value(false),
+          ),
+        );
+
+    //Cancel old notification and schedule new one
+    await cancelTaskNotification(id);
+    await scheduleTaskNotification(newData.first);
   }
 
   /*
