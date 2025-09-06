@@ -18,11 +18,15 @@ class AddEditTask extends StatefulWidget {
 }
 
 class _AddEditTaskState extends State<AddEditTask> {
+  //Fields
   TextEditingController titleController = TextEditingController();
   TextEditingController descriptionController = TextEditingController();
   DateTime selectedDate = DateTime.now();
   TimeOfDay selectedTime = TimeOfDay.now();
   String selectedType = "none";
+  bool important = false;
+
+  //Design
   Color buttonColor = Colors.white;
   bool firstBuild = true;
 
@@ -51,7 +55,7 @@ class _AddEditTaskState extends State<AddEditTask> {
               selectedTime.minute,
             ),
             type: selectedType,
-            important: false, //TODO: Add a switch for it
+            important: important,
           ),
         );
 
@@ -76,7 +80,7 @@ class _AddEditTaskState extends State<AddEditTask> {
             ),
             type: drift.Value(selectedType),
             notificationSent: drift.Value(false),
-            important: drift.Value(false), //TODO: Add a switch for it
+            important: drift.Value(important),
           ),
         );
 
@@ -95,6 +99,7 @@ class _AddEditTaskState extends State<AddEditTask> {
       selectedDate = widget.task!.dateAndTime;
       selectedTime = TimeOfDay.fromDateTime(widget.task!.dateAndTime);
       selectedType = widget.task!.type;
+      important = widget.task!.important;
     }
   }
 
@@ -233,6 +238,7 @@ class _AddEditTaskState extends State<AddEditTask> {
                     //Task type
                     ShadowedField(
                       title: "Task type",
+                      margin: EdgeInsets.only(bottom: 20),
                       child: DropdownMenu(
                         width: double.infinity,
                         hintText: "Select a type",
@@ -249,6 +255,26 @@ class _AddEditTaskState extends State<AddEditTask> {
                           DropdownMenuEntry(value: "sport", label: "Sport"),
                           DropdownMenuEntry(value: "work", label: "Work"),
                           DropdownMenuEntry(value: "school", label: "School"),
+                        ],
+                      ),
+                    ),
+
+                    //Importancy
+                    ShadowedField(
+                      title: "Importancy",
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            "Is this task important for you?",
+                            style: TextStyle(fontSize: 17),
+                          ),
+                          Switch(
+                            value: important,
+                            onChanged: (value) => setState(() {
+                              important = value;
+                            }),
+                          ),
                         ],
                       ),
                     ),
