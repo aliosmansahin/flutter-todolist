@@ -186,6 +186,11 @@ class _AddEditTaskState extends State<AddEditTask> {
                                 style: TextStyle(fontSize: 17),
                               ),
                               OutlinedButton(
+                                style: OutlinedButton.styleFrom(
+                                  backgroundColor: Theme.of(
+                                    context,
+                                  ).canvasColor,
+                                ),
                                 onPressed: () async {
                                   final DateTime? date = await showDatePicker(
                                     context: context,
@@ -216,6 +221,11 @@ class _AddEditTaskState extends State<AddEditTask> {
                                 style: TextStyle(fontSize: 17),
                               ),
                               OutlinedButton(
+                                style: OutlinedButton.styleFrom(
+                                  backgroundColor: Theme.of(
+                                    context,
+                                  ).canvasColor,
+                                ),
                                 onPressed: () async {
                                   final TimeOfDay? timeOfDay =
                                       await showTimePicker(

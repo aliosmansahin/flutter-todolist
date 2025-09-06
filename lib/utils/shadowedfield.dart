@@ -29,7 +29,7 @@ class _ShadowedFieldState extends State<ShadowedField> {
     return Container(
       margin: widget.margin,
       decoration: BoxDecoration(
-        color: Theme.of(context).canvasColor,
+        color: Theme.of(context).secondaryHeaderColor,
         boxShadow: [
           BoxShadow(
             color: Colors.grey.withValues(alpha: 0.5),
