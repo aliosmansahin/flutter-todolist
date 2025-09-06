@@ -34,8 +34,20 @@ class _TaskCardState extends State<TaskCard> {
           ),
         );
       },
-      child: Card(
-        surfaceTintColor: Theme.of(context).cardTheme.surfaceTintColor,
+      child: Container(
+        margin: EdgeInsets.all(10),
+        decoration: BoxDecoration(
+          color: Theme.of(context).secondaryHeaderColor,
+          boxShadow: [
+            BoxShadow(
+              color: Colors.grey.withValues(alpha: 0.5),
+              spreadRadius: 4,
+              blurRadius: 7,
+              offset: Offset(0, 3),
+            ),
+          ],
+          borderRadius: BorderRadius.all(Radius.circular(10)),
+        ),
         child: SizedBox(
           width: double.infinity,
           height: 75,
