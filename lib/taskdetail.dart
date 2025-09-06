@@ -130,7 +130,7 @@ class _TaskDetailState extends State<TaskDetail> {
             SliverAppBar.medium(
               pinned: false,
               floating: false,
-              expandedHeight: 150,
+              expandedHeight: 400,
               stretch: true,
               backgroundColor: Theme.of(context).secondaryHeaderColor,
               foregroundColor: Theme.of(context).primaryColor,
@@ -141,69 +141,6 @@ class _TaskDetailState extends State<TaskDetail> {
                 ),
                 centerTitle: true,
               ),
-              actions: [
-                Padding(
-                  padding: const EdgeInsets.only(right: 10),
-                  child: IconButton(
-                    padding: EdgeInsets.all(10),
-                    onPressed: () {
-                      showModalBottomSheet(
-                        isScrollControlled: true,
-                        context: context,
-                        builder: (bottomSheetContext) {
-                          return AddEditTask(willEdit: true, task: data);
-                        },
-                      );
-                    },
-                    icon: Icon(Icons.edit),
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(right: 10),
-                  child: IconButton(
-                    padding: EdgeInsets.all(10),
-                    onPressed: () {
-                      showDialog(
-                        context: context,
-                        builder: (dialogContext) {
-                          return AlertDialog(
-                            title: Text("Delete Task"),
-                            content: Text(
-                              "Would you like to delete this task?",
-                              style: TextStyle(fontSize: 16),
-                            ),
-                            actions: [
-                              TextButton(
-                                onPressed: () {
-                                  Navigator.pop(dialogContext);
-                                },
-                                child: Text(
-                                  "No",
-                                  style: TextStyle(
-                                    fontSize: 16,
-                                    color: Theme.of(context).primaryColorDark,
-                                  ),
-                                ),
-                              ),
-                              TextButton(
-                                onPressed: () async {
-                                  Navigator.pop(dialogContext);
-                                  await deleteTask();
-                                },
-                                child: Text(
-                                  "Yes",
-                                  style: TextStyle(fontSize: 16),
-                                ),
-                              ),
-                            ],
-                          );
-                        },
-                      );
-                    },
-                    icon: Icon(Icons.delete),
-                  ),
-                ),
-              ],
             ),
             SliverPadding(
               padding: const EdgeInsets.all(10),
@@ -304,9 +241,78 @@ class _TaskDetailState extends State<TaskDetail> {
                 ]),
               ),
             ),
+
+            SliverPadding(padding: EdgeInsetsGeometry.only(top: 160)),
           ],
         ),
         backgroundColor: Theme.of(context).secondaryHeaderColor,
+        floatingActionButton: Padding(
+          padding: const EdgeInsets.only(bottom: 50),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              FloatingActionButton.extended(
+                onPressed: () {
+                  showDialog(
+                    context: context,
+                    builder: (dialogContext) {
+                      return AlertDialog(
+                        title: Text("Delete Task"),
+                        content: Text(
+                          "Would you like to delete this task?",
+                          style: TextStyle(fontSize: 16),
+                        ),
+                        actions: [
+                          TextButton(
+                            onPressed: () {
+                              Navigator.pop(dialogContext);
+                            },
+                            child: Text(
+                              "No",
+                              style: TextStyle(
+                                fontSize: 16,
+                                color: Theme.of(context).primaryColorDark,
+                              ),
+                            ),
+                          ),
+                          TextButton(
+                            onPressed: () async {
+                              Navigator.pop(dialogContext);
+                              await deleteTask();
+                            },
+                            child: Text("Yes", style: TextStyle(fontSize: 16)),
+                          ),
+                        ],
+                      );
+                    },
+                  );
+                },
+                backgroundColor: Theme.of(
+                  context,
+                ).bottomSheetTheme.backgroundColor,
+                icon: Icon(Icons.delete),
+                label: Text("Delete task"),
+              ),
+              Padding(padding: EdgeInsetsGeometry.only(left: 10)),
+              FloatingActionButton.extended(
+                onPressed: () {
+                  showModalBottomSheet(
+                    isScrollControlled: true,
+                    context: context,
+                    builder: (bottomSheetContext) {
+                      return AddEditTask(willEdit: true, task: data);
+                    },
+                  );
+                },
+                backgroundColor: Theme.of(
+                  context,
+                ).bottomSheetTheme.backgroundColor,
+                icon: Icon(Icons.edit),
+                label: Text("Edit task"),
+              ),
+            ],
+          ),
+        ),
       );
     }
   }
