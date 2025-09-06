@@ -2,7 +2,7 @@
 
 Shows selected segment
 
-Created by Ali Osman ŞAHİN on 09/06(2025
+Created by Ali Osman ŞAHİN on 09/06/2025
 
 */
 
