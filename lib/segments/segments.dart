@@ -61,9 +61,24 @@ class _SegmentsState extends State<Segments> {
         }
 
         return SegmentUpcoming(data: completedTasks);
+      case TaskSegments.todo:
+        Map<DateTime, List<Task>> allTasks = Map.fromEntries(
+          widget.data.entries,
+        );
+
+        Map<DateTime, List<Task>> tasks = {};
+
+        for (var element in allTasks.entries) {
+          for (var task in element.value) {
+            if (!task.completed) {
+              tasks.addEntries([element]);
+            }
+          }
+        }
+
+        return SegmentTodo(data: tasks);
       case TaskSegments.completed:
       case TaskSegments.overdue:
-      case TaskSegments.todo:
         return SliverPadding(padding: EdgeInsetsGeometry.all(10));
     }
   }
