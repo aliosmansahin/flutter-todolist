@@ -76,7 +76,7 @@ class _MainPageState extends State<MainPage> {
               SliverAppBar.medium(
                 pinned: false,
                 floating: false,
-                expandedHeight: 150,
+                expandedHeight: 400,
                 stretch: true,
                 backgroundColor: Theme.of(context).secondaryHeaderColor,
                 foregroundColor: Theme.of(context).primaryColor,
@@ -115,7 +115,7 @@ class _MainPageState extends State<MainPage> {
                   boxShadow: [
                     BoxShadow(
                       color: Colors.grey.withValues(alpha: 0.5),
-                      spreadRadius: 5,
+                      spreadRadius: 4,
                       blurRadius: 2,
                     ),
                   ],
