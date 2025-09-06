@@ -51,32 +51,7 @@ class _SegmentTodoState extends State<SegmentTodo> {
               final date = tasks.entries.elementAt(index).key;
               final tasksOfDate = tasks.entries.elementAt(index).value;
 
-              return Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  //Date
-                  Padding(
-                    padding: const EdgeInsets.only(top: 18, left: 10),
-                    child: Text(
-                      DateFormat("yyyy/MM/dd").format(date).toString(),
-                      style: const TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ),
-                  //Tasks of the date
-                  ListView.builder(
-                    physics: const NeverScrollableScrollPhysics(), // important
-                    shrinkWrap: true, // important
-                    itemCount: tasksOfDate.length,
-                    itemBuilder: (context, taskIndex) {
-                      return TaskCard(task: tasksOfDate[taskIndex]);
-                    },
-                    padding: EdgeInsets.all(0),
-                  ),
-                ],
-              );
+              return TasksColumn(date: date, tasks: tasksOfDate);
             }, childCount: tasks.entries.length),
           );
   }

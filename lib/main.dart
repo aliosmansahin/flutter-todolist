@@ -36,6 +36,8 @@ part 'addedittask.dart';
 part 'taskdetail.dart';
 part 'utils/shadowedfield.dart';
 part 'utils/notask.dart';
+part 'utils/dateheader.dart';
+part 'utils/taskscolumn.dart';
 part 'segments/segmentall.dart';
 part 'segments/segmenttoday.dart';
 part 'segments/segmentupcoming.dart';

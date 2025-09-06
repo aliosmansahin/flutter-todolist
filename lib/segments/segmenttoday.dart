@@ -18,6 +18,7 @@ class SegmentToday extends StatefulWidget {
 
 class _SegmentTodayState extends State<SegmentToday> {
   List<Task> tasks = [];
+  DateTime date = DateTime.now();
 
   void filterTasks() {
     //Get tasks of today
@@ -31,6 +32,7 @@ class _SegmentTodayState extends State<SegmentToday> {
     //Pass them to tasks
     if (tasksIter != null) {
       tasks = tasksIter.value;
+      date = tasksIter.key;
     }
   }
 
@@ -46,32 +48,7 @@ class _SegmentTodayState extends State<SegmentToday> {
     return tasks.isEmpty
         ? NoTask()
         : SliverToBoxAdapter(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                //Date
-                Padding(
-                  padding: const EdgeInsets.only(top: 18, left: 10),
-                  child: Text(
-                    "Today",
-                    style: const TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ),
-                //Tasks of the date
-                ListView.builder(
-                  physics: const NeverScrollableScrollPhysics(), // important
-                  shrinkWrap: true, // important
-                  itemCount: tasks.length,
-                  itemBuilder: (context, taskIndex) {
-                    return TaskCard(task: tasks[taskIndex]);
-                  },
-                  padding: EdgeInsets.all(0),
-                ),
-              ],
-            ),
+            child: TasksColumn(date: date, tasks: tasks),
           );
   }
 }
