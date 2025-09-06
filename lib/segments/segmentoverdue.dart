@@ -9,51 +9,53 @@ Created by Ali Osman ŞAHİN on 09/06/2025
 part of '../main.dart';
 
 class SegmentOverdue extends StatefulWidget {
-  Map<DateTime, List<Task>> data;
-  SegmentOverdue({super.key, required this.data});
+  final Map<DateTime, List<Task>> data;
+  const SegmentOverdue({super.key, required this.data});
 
   @override
   State<SegmentOverdue> createState() => _SegmentOverdueState();
 }
 
 class _SegmentOverdueState extends State<SegmentOverdue> {
-  Future<void> getTasks() async {
-    final query = db.select(db.tasks);
-    query.orderBy([(t) => drift.OrderingTerm.asc(t.dateAndTime)]);
-    query.where((tbl) {
-      return tbl.dateAndTime.isBiggerThanValue(DateTime.now()).equals(false) &
-          tbl.completed.equals(false);
-    });
+  Map<DateTime, List<Task>> tasks = {};
 
-    await query.get().then((element) {
-      setState(() {
-        widget.data = groupBy(
-          element,
-          (Task task) => DateTime(
-            task.dateAndTime.year,
-            task.dateAndTime.month,
-            task.dateAndTime.day,
-          ),
-        );
-      });
-    });
-    print("ayrı");
+  void filterTasks() {
+    var date = DateTime.now();
+
+    // Filter passed tasks
+    Iterable<MapEntry<DateTime, List<Task>>> tasksIter = widget.data.entries
+        .where((element) => element.key.isBefore(date));
+
+    if (tasksIter.isNotEmpty) {
+      for (var entry in tasksIter) {
+        // Only undone tasks
+        List<Task> incompleteTasks = entry.value
+            .where((task) => !task.completed)
+            .toList();
+
+        // Add them to tasks
+        if (incompleteTasks.isNotEmpty) {
+          tasks[entry.key] = incompleteTasks;
+        }
+      }
+    }
   }
 
   @override
   void initState() {
-    //getTasks();
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    return widget.data.isEmpty
+    filterTasks();
+
+    return tasks.isEmpty
         ? NoTask()
         : SliverList(
             delegate: SliverChildBuilderDelegate((context, index) {
-              final date = widget.data.entries.elementAt(index).key;
-              final tasksOfDate = widget.data.entries.elementAt(index).value;
+              final date = tasks.entries.elementAt(index).key;
+              final tasksOfDate = tasks.entries.elementAt(index).value;
 
               return Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -81,7 +83,7 @@ class _SegmentOverdueState extends State<SegmentOverdue> {
                   ),
                 ],
               );
-            }, childCount: widget.data.entries.length),
+            }, childCount: tasks.entries.length),
           );
   }
 }

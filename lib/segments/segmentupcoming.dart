@@ -9,50 +9,52 @@ Created by Ali Osman ŞAHİN on 09/06/2025
 part of '../main.dart';
 
 class SegmentUpcoming extends StatefulWidget {
-  Map<DateTime, List<Task>> data;
-  SegmentUpcoming({super.key, required this.data});
+  final Map<DateTime, List<Task>> data;
+  const SegmentUpcoming({super.key, required this.data});
 
   @override
   State<SegmentUpcoming> createState() => _SegmentUpcomingState();
 }
 
 class _SegmentUpcomingState extends State<SegmentUpcoming> {
-  Future<void> getTasks() async {
-    final query = db.select(db.tasks);
-    query.orderBy([(t) => drift.OrderingTerm.asc(t.dateAndTime)]);
-    query.where((tbl) {
-      return tbl.dateAndTime.isBiggerThanValue(DateTime.now()) &
-          tbl.completed.equals(false);
-    });
+  Map<DateTime, List<Task>> tasks = {};
 
-    await query.get().then((element) {
-      setState(() {
-        widget.data = groupBy(
-          element,
-          (Task task) => DateTime(
-            task.dateAndTime.year,
-            task.dateAndTime.month,
-            task.dateAndTime.day,
-          ),
-        );
-      });
-    });
+  void filterTasks() {
+    //Get all upcoming tasks
+    var date = DateTime.now();
+    Iterable<MapEntry<DateTime, List<Task>>> tasksIter = widget.data.entries
+        .where((element) {
+          return element.key.isAfter(date);
+        });
+
+    if (tasksIter.isNotEmpty) {
+      Map<DateTime, List<Task>> allTasks = Map.fromEntries(tasksIter);
+
+      //Pass them to tasks
+      for (var element in allTasks.entries) {
+        List<Task> tasksList = element.value.toList();
+        if (tasksList.isNotEmpty) {
+          tasks[element.key] = tasksList;
+        }
+      }
+    }
   }
 
   @override
   void initState() {
-    //getTasks();
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    return widget.data.isEmpty
+    filterTasks();
+
+    return tasks.isEmpty
         ? NoTask()
         : SliverList(
             delegate: SliverChildBuilderDelegate((context, index) {
-              final date = widget.data.entries.elementAt(index).key;
-              final tasksOfDate = widget.data.entries.elementAt(index).value;
+              final date = tasks.entries.elementAt(index).key;
+              final tasksOfDate = tasks.entries.elementAt(index).value;
 
               return Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -80,7 +82,7 @@ class _SegmentUpcomingState extends State<SegmentUpcoming> {
                   ),
                 ],
               );
-            }, childCount: widget.data.entries.length),
+            }, childCount: tasks.entries.length),
           );
   }
 }

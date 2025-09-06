@@ -9,49 +9,47 @@ Created by Ali Osman ŞAHİN on 09/06/2025
 part of '../main.dart';
 
 class SegmentCompleted extends StatefulWidget {
-  Map<DateTime, List<Task>> data;
-  SegmentCompleted({super.key, required this.data});
+  final Map<DateTime, List<Task>> data;
+  const SegmentCompleted({super.key, required this.data});
 
   @override
   State<SegmentCompleted> createState() => _SegmentCompletedState();
 }
 
 class _SegmentCompletedState extends State<SegmentCompleted> {
-  Future<void> getTasks() async {
-    final query = db.select(db.tasks);
-    query.orderBy([(t) => drift.OrderingTerm.asc(t.dateAndTime)]);
-    query.where((tbl) {
-      return tbl.completed.equals(true);
-    });
+  Map<DateTime, List<Task>> tasks = {};
 
-    await query.get().then((element) {
-      setState(() {
-        widget.data = groupBy(
-          element,
-          (Task task) => DateTime(
-            task.dateAndTime.year,
-            task.dateAndTime.month,
-            task.dateAndTime.day,
-          ),
-        );
-      });
-    });
+  void filterTasks() {
+    Map<DateTime, List<Task>> allTasks = Map.fromEntries(widget.data.entries);
+
+    for (var element in allTasks.entries) {
+      //Get completed tasks
+      List<Task> tasksList = element.value
+          .where((task) => task.completed)
+          .toList();
+
+      //Pass them to tasksMap
+      if (tasksList.isNotEmpty) {
+        tasks[element.key] = tasksList;
+      }
+    }
   }
 
   @override
   void initState() {
-    //getTasks();
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    return widget.data.isEmpty
+    filterTasks();
+
+    return tasks.isEmpty
         ? NoTask()
         : SliverList(
             delegate: SliverChildBuilderDelegate((context, index) {
-              final date = widget.data.entries.elementAt(index).key;
-              final tasksOfDate = widget.data.entries.elementAt(index).value;
+              final date = tasks.entries.elementAt(index).key;
+              final tasksOfDate = tasks.entries.elementAt(index).value;
 
               return Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -79,7 +77,7 @@ class _SegmentCompletedState extends State<SegmentCompleted> {
                   ),
                 ],
               );
-            }, childCount: widget.data.entries.length),
+            }, childCount: tasks.entries.length),
           );
   }
 }
