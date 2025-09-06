@@ -1,6 +1,6 @@
 /*
 
-Segment all
+Segment to do
 
 Created by Ali Osman ŞAHİN on 09/06/2025
 
@@ -8,22 +8,31 @@ Created by Ali Osman ŞAHİN on 09/06/2025
 
 part of '../main.dart';
 
-class SegmentAll extends StatefulWidget {
+class SegmentTodo extends StatefulWidget {
   final Map<DateTime, List<Task>> data;
-  const SegmentAll({super.key, required this.data});
+  const SegmentTodo({super.key, required this.data});
 
   @override
-  State<SegmentAll> createState() => _SegmentAllState();
+  State<SegmentTodo> createState() => _SegmentTodoState();
 }
 
-class _SegmentAllState extends State<SegmentAll> {
+class _SegmentTodoState extends State<SegmentTodo> {
   Map<DateTime, List<Task>> tasks = {};
 
   void filterTasks() {
-    //Use all the data
-    //TODO: Add a filtering ui
-    //Call this function in build
-    tasks = widget.data;
+    Map<DateTime, List<Task>> allTasks = Map.fromEntries(widget.data.entries);
+
+    for (var element in allTasks.entries) {
+      //Get incomplete tasks
+      List<Task> tasksList = element.value
+          .where((task) => !task.completed)
+          .toList();
+
+      //Pass them to tasks
+      if (tasksList.isNotEmpty) {
+        tasks[element.key] = tasksList;
+      }
+    }
   }
 
   @override

@@ -23,12 +23,21 @@ class _SegmentsState extends State<Segments> {
     switch (widget.currentSegment) {
       case TaskSegments.all:
         return SegmentAll(data: widget.data);
-      case TaskSegments.completed:
-      case TaskSegments.overdue:
+
       case TaskSegments.today:
-      case TaskSegments.todo:
+        return SegmentToday(data: widget.data);
+
       case TaskSegments.upcoming:
-        return SliverPadding(padding: EdgeInsetsGeometry.all(10));
+        return SegmentUpcoming(data: widget.data);
+
+      case TaskSegments.todo:
+        return SegmentTodo(data: widget.data);
+
+      case TaskSegments.completed:
+        return SegmentCompleted(data: widget.data);
+
+      case TaskSegments.overdue:
+        return SegmentOverdue(data: widget.data);
     }
   }
 }

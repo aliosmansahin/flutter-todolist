@@ -1,6 +1,6 @@
 /*
 
-Segment all
+Segment upcoming
 
 Created by Ali Osman ŞAHİN on 09/06/2025
 
@@ -8,22 +8,36 @@ Created by Ali Osman ŞAHİN on 09/06/2025
 
 part of '../main.dart';
 
-class SegmentAll extends StatefulWidget {
+class SegmentUpcoming extends StatefulWidget {
   final Map<DateTime, List<Task>> data;
-  const SegmentAll({super.key, required this.data});
+  const SegmentUpcoming({super.key, required this.data});
 
   @override
-  State<SegmentAll> createState() => _SegmentAllState();
+  State<SegmentUpcoming> createState() => _SegmentUpcomingState();
 }
 
-class _SegmentAllState extends State<SegmentAll> {
+class _SegmentUpcomingState extends State<SegmentUpcoming> {
   Map<DateTime, List<Task>> tasks = {};
 
   void filterTasks() {
-    //Use all the data
-    //TODO: Add a filtering ui
-    //Call this function in build
-    tasks = widget.data;
+    //Get all upcoming tasks
+    var date = DateTime.now();
+    Iterable<MapEntry<DateTime, List<Task>>> tasksIter = widget.data.entries
+        .where((element) {
+          return element.key.isAfter(date);
+        });
+
+    if (tasksIter.isNotEmpty) {
+      Map<DateTime, List<Task>> allTasks = Map.fromEntries(tasksIter);
+
+      //Pass them to tasks
+      for (var element in allTasks.entries) {
+        List<Task> tasksList = element.value.toList();
+        if (tasksList.isNotEmpty) {
+          tasks[element.key] = tasksList;
+        }
+      }
+    }
   }
 
   @override
