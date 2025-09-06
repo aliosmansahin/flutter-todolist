@@ -60,6 +60,9 @@ class _TaskDetailState extends State<TaskDetail> {
     }
   }
 
+  /*
+    Changer for notify status
+  */
   Future<void> changeNotifyStatus(bool newValue) async {
     //Store new data as a list and pass first item into data variable
     var newData =
@@ -79,6 +82,19 @@ class _TaskDetailState extends State<TaskDetail> {
     } else {
       await cancelTaskNotification(data.id);
     }
+  }
+
+  /*
+    Changer for importancy
+  */
+  Future<void> changeImportancy(bool newValue) async {
+    //Store new data as a list and pass first item into data variable
+    var newData =
+        await (db.update(db.tasks)..where((tbl) {
+              return tbl.id.equals(data.id);
+            }))
+            .writeReturning(TasksCompanion(important: drift.Value(newValue)));
+    data = newData.first;
   }
 
   /*
@@ -237,6 +253,27 @@ class _TaskDetailState extends State<TaskDetail> {
                     title: "Task type",
                     margin: EdgeInsets.only(top: 20),
                     child: Text(data.type, style: TextStyle(fontSize: 17)),
+                  ),
+
+                  //Importancy
+                  ShadowedField(
+                    title: "Importancy",
+                    margin: EdgeInsets.only(top: 20),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          "Is this task important for you?",
+                          style: TextStyle(fontSize: 20),
+                        ),
+                        Switch(
+                          value: data.important,
+                          onChanged: (value) async {
+                            await changeImportancy(value);
+                          },
+                        ),
+                      ],
+                    ),
                   ),
 
                   //Notifications
