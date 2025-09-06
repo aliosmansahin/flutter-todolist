@@ -51,7 +51,7 @@ class _AddEditTaskState extends State<AddEditTask> {
               selectedTime.minute,
             ),
             type: selectedType,
-            shouldNotify: drift.Value(true),
+            important: false, //TODO: Add a switch for it
           ),
         );
 
@@ -76,6 +76,7 @@ class _AddEditTaskState extends State<AddEditTask> {
             ),
             type: drift.Value(selectedType),
             notificationSent: drift.Value(false),
+            important: drift.Value(false), //TODO: Add a switch for it
           ),
         );
 

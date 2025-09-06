@@ -8,9 +8,11 @@ class Tasks extends Table {
   TextColumn get description => text()();
   DateTimeColumn get dateAndTime => dateTime()();
   TextColumn get type => text()();
-  BoolColumn get shouldNotify => boolean().withDefault(const Constant(false))();
+  BoolColumn get shouldNotify => boolean().withDefault(const Constant(true))();
   BoolColumn get notificationSent =>
       boolean().withDefault(const Constant(false))();
+  BoolColumn get completed => boolean().withDefault(const Constant(false))();
+  BoolColumn get important => boolean()();
 }
 
 abstract class TasksView extends View {
@@ -25,7 +27,7 @@ class Database extends _$Database {
   Database(QueryExecutor e) : super(e);
 
   @override
-  int get schemaVersion => 3;
+  int get schemaVersion => 4;
 
   @override
   MigrationStrategy get migration => MigrationStrategy(
@@ -33,6 +35,9 @@ class Database extends _$Database {
       if (from == 2) {
         await migrator.addColumn(tasks, tasks.shouldNotify);
         await migrator.addColumn(tasks, tasks.notificationSent);
+      } else if (from == 3) {
+        await migrator.addColumn(tasks, tasks.completed);
+        await migrator.addColumn(tasks, tasks.important);
       }
     },
   );
