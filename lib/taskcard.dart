@@ -9,14 +9,21 @@ Created by Ali Osman ŞAHİN on 09/03/2025
 part of 'main.dart';
 
 class TaskCard extends StatefulWidget {
-  final Task task;
-  const TaskCard({super.key, required this.task});
+  Task task;
+  TaskCard({super.key, required this.task});
 
   @override
   State<TaskCard> createState() => _TaskCardState();
 }
 
 class _TaskCardState extends State<TaskCard> {
+  Future<void> completeTask() async {
+    var newData =
+        await (db.update(db.tasks)..where((i) => i.id.equals(widget.task.id)))
+            .writeReturning(TasksCompanion(completed: drift.Value(true)));
+    widget.task = newData.first;
+  }
+
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -75,14 +82,29 @@ class _TaskCardState extends State<TaskCard> {
                     //Done button
                     Padding(
                       padding: EdgeInsetsGeometry.symmetric(horizontal: 10),
-                      child: IconButton(
-                        icon: Icon(Icons.done),
-                        padding: EdgeInsets.symmetric(
-                          horizontal: 20,
-                          vertical: 0,
-                        ),
-                        onPressed: () {},
-                      ),
+                      child: widget.task.completed
+                          ? Padding(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 20,
+                              ),
+                              child: Icon(
+                                Icons.done,
+                                color: Colors.red,
+                                size: 40,
+                              ),
+                            )
+                          : IconButton(
+                              icon: Icon(Icons.done, size: 40),
+                              padding: EdgeInsets.symmetric(
+                                horizontal: 20,
+                                vertical: 0,
+                              ),
+                              onPressed: () {
+                                setState(() {
+                                  completeTask();
+                                });
+                              },
+                            ),
                     ),
                   ],
                 ),
