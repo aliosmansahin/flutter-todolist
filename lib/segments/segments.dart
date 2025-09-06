@@ -40,10 +40,30 @@ class _SegmentsState extends State<Segments> {
 
         return SegmentToday(data: tasks);
 
+      case TaskSegments.upcoming:
+        var date = DateTime.now();
+        Iterable<MapEntry<DateTime, List<Task>>> tasksIter = widget.data.entries
+            .where((element) {
+              return element.key.isAfter(date);
+            });
+
+        Map<DateTime, List<Task>> completedTasks = {};
+        if (tasksIter.isNotEmpty) {
+          Map<DateTime, List<Task>> allTasks = Map.fromEntries(tasksIter);
+
+          for (var element in allTasks.entries) {
+            for (var task in element.value) {
+              if (!task.completed) {
+                completedTasks.addEntries([element]);
+              }
+            }
+          }
+        }
+
+        return SegmentUpcoming(data: completedTasks);
       case TaskSegments.completed:
       case TaskSegments.overdue:
       case TaskSegments.todo:
-      case TaskSegments.upcoming:
         return SliverPadding(padding: EdgeInsetsGeometry.all(10));
     }
   }

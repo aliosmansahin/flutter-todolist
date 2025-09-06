@@ -38,6 +38,7 @@ part 'utils/shadowedfield.dart';
 part 'utils/notask.dart';
 part 'segments/segmentall.dart';
 part 'segments/segmenttoday.dart';
+part 'segments/segmentupcoming.dart';
 part 'segments/segments.dart';
 
 //Instance for database
