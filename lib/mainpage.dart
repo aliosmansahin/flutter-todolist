@@ -24,13 +24,22 @@ class _MainPageState extends State<MainPage> {
   */
   Future<void> listenForUpdates() async {
     final query = db.select(db.tasks);
-    query.orderBy([(t) => drift.OrderingTerm.asc(t.dateAndTime)]);
+    //query.orderBy([(t) => drift.OrderingTerm.asc(t.dateAndTime)]);
 
     query.watch().listen((element) {
       setState(() {
-        //TODO: Process all data to send selected segment
+        DateTime now = DateTime.now();
+        final upcomingTasks =
+            element.where((task) => task.dateAndTime.isAfter(now)).toList()
+              ..sort((a, b) => a.dateAndTime.compareTo(b.dateAndTime));
+        final pastTasks =
+            element.where((task) => !task.dateAndTime.isAfter(now)).toList()
+              ..sort((a, b) => a.dateAndTime.compareTo(b.dateAndTime));
+
+        final sortedTasks = [...upcomingTasks, ...pastTasks];
+
         data = groupBy(
-          element,
+          sortedTasks,
           (Task task) => DateTime(
             task.dateAndTime.year,
             task.dateAndTime.month,
