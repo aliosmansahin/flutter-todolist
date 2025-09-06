@@ -23,9 +23,25 @@ class _SegmentsState extends State<Segments> {
     switch (widget.currentSegment) {
       case TaskSegments.all:
         return SegmentAll(data: widget.data);
+
+      case TaskSegments.today:
+        var date = DateTime.now();
+        MapEntry<DateTime, List<Task>>? tasksIter = widget.data.entries
+            .whereIndexed((index, element) {
+              return element.key == DateTime(date.year, date.month, date.day);
+            })
+            .firstOrNull;
+
+        List<Task> tasks = [];
+
+        if (tasksIter != null) {
+          tasks = tasksIter.value;
+        }
+
+        return SegmentToday(data: tasks);
+
       case TaskSegments.completed:
       case TaskSegments.overdue:
-      case TaskSegments.today:
       case TaskSegments.todo:
       case TaskSegments.upcoming:
         return SliverPadding(padding: EdgeInsetsGeometry.all(10));

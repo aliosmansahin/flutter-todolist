@@ -8,6 +8,7 @@ Main entrypoint, runs "MyApp"
 Imports
 */
 import 'dart:async';
+import 'dart:ffi';
 import 'dart:io';
 
 import 'package:android_intent_plus/android_intent.dart';
@@ -36,6 +37,7 @@ part 'taskdetail.dart';
 part 'utils/shadowedfield.dart';
 part 'utils/notask.dart';
 part 'segments/segmentall.dart';
+part 'segments/segmenttoday.dart';
 part 'segments/segments.dart';
 
 //Instance for database
