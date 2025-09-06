@@ -123,14 +123,14 @@ class _AddEditTaskState extends State<AddEditTask> {
       minChildSize: 0.1,
       builder: (BuildContext context, ScrollController scrollController) {
         return Container(
-          color: Theme.of(context).cardTheme.surfaceTintColor,
+          color: Theme.of(context).secondaryHeaderColor,
           child: CustomScrollView(
             controller: scrollController,
             physics: BouncingScrollPhysics(),
             slivers: [
               SliverAppBar.medium(
                 title: Text(widget.willEdit ? "Edit Task" : "New Task"),
-                backgroundColor: Theme.of(context).cardTheme.surfaceTintColor,
+                backgroundColor: Theme.of(context).secondaryHeaderColor,
                 pinned: true,
               ),
               SliverPadding(
@@ -198,7 +198,10 @@ class _AddEditTaskState extends State<AddEditTask> {
                                     });
                                   }
                                 },
-                                child: Text("Select a deadline date"),
+                                child: Text(
+                                  "Select a deadline date",
+                                  style: TextStyle(fontSize: 15),
+                                ),
                               ),
                             ],
                           ),
@@ -227,7 +230,10 @@ class _AddEditTaskState extends State<AddEditTask> {
                                     });
                                   }
                                 },
-                                child: Text("Select a deadline time"),
+                                child: Text(
+                                  "Select a deadline time",
+                                  style: TextStyle(fontSize: 15),
+                                ),
                               ),
                             ],
                           ),
@@ -288,8 +294,8 @@ class _AddEditTaskState extends State<AddEditTask> {
                           borderRadius: BorderRadius.all(Radius.circular(10)),
                           boxShadow: [
                             BoxShadow(
-                              color: Colors.grey.withValues(alpha: 1),
-                              spreadRadius: 5,
+                              color: Colors.grey.withValues(alpha: 0.5),
+                              spreadRadius: 4,
                               blurRadius: 7,
                               offset: Offset(0, 3),
                             ),
@@ -365,7 +371,7 @@ class _AddEditTaskState extends State<AddEditTask> {
                         ),
                       ),
                     ),
-                    Padding(padding: EdgeInsetsGeometry.only(top: 20)),
+                    Padding(padding: EdgeInsetsGeometry.only(top: 40)),
                   ]),
                 ),
               ),
