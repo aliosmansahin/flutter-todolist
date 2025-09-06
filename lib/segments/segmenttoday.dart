@@ -36,7 +36,7 @@ class _SegmentTodayState extends State<SegmentToday> {
 
   @override
   void initState() {
-    getTasks();
+    //getTasks();
     super.initState();
   }
 

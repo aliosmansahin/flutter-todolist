@@ -22,9 +22,11 @@ class _SegmentsState extends State<Segments> {
   Widget build(BuildContext context) {
     switch (widget.currentSegment) {
       case TaskSegments.all:
+        //Use all the data
         return SegmentAll(data: widget.data);
 
       case TaskSegments.today:
+        //Get tasks of today
         var date = DateTime.now();
         MapEntry<DateTime, List<Task>>? tasksIter = widget.data.entries
             .whereIndexed((index, element) {
@@ -32,6 +34,7 @@ class _SegmentsState extends State<Segments> {
             })
             .firstOrNull;
 
+        //Pass them to tasks
         List<Task> tasks = [];
 
         if (tasksIter != null) {
@@ -41,58 +44,67 @@ class _SegmentsState extends State<Segments> {
         return SegmentToday(data: tasks);
 
       case TaskSegments.upcoming:
+        //Get all upcoming tasks
         var date = DateTime.now();
         Iterable<MapEntry<DateTime, List<Task>>> tasksIter = widget.data.entries
             .where((element) {
               return element.key.isAfter(date);
             });
 
-        Map<DateTime, List<Task>> completedTasks = {};
+        Map<DateTime, List<Task>> tasksMap = {};
         if (tasksIter.isNotEmpty) {
           Map<DateTime, List<Task>> allTasks = Map.fromEntries(tasksIter);
 
+          //Pass them to tasksMap
           for (var element in allTasks.entries) {
-            for (var task in element.value) {
-              if (!task.completed) {
-                completedTasks.addEntries([element]);
-              }
+            List<Task> tasks = element.value.toList();
+            if (tasks.isNotEmpty) {
+              tasksMap[element.key] = tasks;
             }
           }
         }
 
-        return SegmentUpcoming(data: completedTasks);
+        return SegmentUpcoming(data: tasksMap);
       case TaskSegments.todo:
         Map<DateTime, List<Task>> allTasks = Map.fromEntries(
           widget.data.entries,
         );
 
-        Map<DateTime, List<Task>> tasks = {};
+        Map<DateTime, List<Task>> tasksMap = {};
 
         for (var element in allTasks.entries) {
-          for (var task in element.value) {
-            if (!task.completed) {
-              tasks.addEntries([element]);
-            }
+          //Get incomplete tasks
+          List<Task> tasks = element.value
+              .where((task) => !task.completed)
+              .toList();
+
+          //Pass them to tasksMap
+          if (tasks.isNotEmpty) {
+            tasksMap[element.key] = tasks;
           }
         }
 
-        return SegmentTodo(data: tasks);
+        return SegmentTodo(data: tasksMap);
       case TaskSegments.completed:
         Map<DateTime, List<Task>> allTasks = Map.fromEntries(
           widget.data.entries,
         );
 
-        Map<DateTime, List<Task>> tasks = {};
+        Map<DateTime, List<Task>> tasksMap = {};
 
         for (var element in allTasks.entries) {
-          for (var task in element.value) {
-            if (task.completed) {
-              tasks.addEntries([element]);
-            }
+          //Get completed tasks
+          List<Task> tasks = element.value
+              .where((task) => task.completed)
+              .toList();
+
+          //Pass them to tasksMap
+          if (tasks.isNotEmpty) {
+            tasksMap[element.key] = tasks;
           }
         }
 
-        return SegmentCompleted(data: tasks);
+        return SegmentCompleted(data: tasksMap);
       case TaskSegments.overdue:
         var date = DateTime.now();
 
@@ -100,7 +112,7 @@ class _SegmentsState extends State<Segments> {
         Iterable<MapEntry<DateTime, List<Task>>> tasksIter = widget.data.entries
             .where((element) => element.key.isBefore(date));
 
-        Map<DateTime, List<Task>> incompletedTasksMap = {};
+        Map<DateTime, List<Task>> incompleteTasksMap = {};
 
         if (tasksIter.isNotEmpty) {
           for (var entry in tasksIter) {
@@ -111,12 +123,12 @@ class _SegmentsState extends State<Segments> {
 
             // Add them to map
             if (incompleteTasks.isNotEmpty) {
-              incompletedTasksMap[entry.key] = incompleteTasks;
+              incompleteTasksMap[entry.key] = incompleteTasks;
             }
           }
         }
 
-        return SegmentOverdue(data: incompletedTasksMap);
+        return SegmentOverdue(data: incompleteTasksMap);
     }
   }
 }

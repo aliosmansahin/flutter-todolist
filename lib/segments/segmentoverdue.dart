@@ -42,7 +42,7 @@ class _SegmentOverdueState extends State<SegmentOverdue> {
 
   @override
   void initState() {
-    getTasks();
+    //getTasks();
     super.initState();
   }
 

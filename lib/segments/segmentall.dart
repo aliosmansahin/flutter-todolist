@@ -37,7 +37,7 @@ class _SegmentAllState extends State<SegmentAll> {
 
   @override
   void initState() {
-    getTasks();
+    //getTasks();
     super.initState();
   }
 

@@ -41,7 +41,7 @@ class _SegmentUpcomingState extends State<SegmentUpcoming> {
 
   @override
   void initState() {
-    getTasks();
+    //getTasks();
     super.initState();
   }
 

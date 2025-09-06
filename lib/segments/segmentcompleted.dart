@@ -40,7 +40,7 @@ class _SegmentCompletedState extends State<SegmentCompleted> {
 
   @override
   void initState() {
-    getTasks();
+    //getTasks();
     super.initState();
   }
 

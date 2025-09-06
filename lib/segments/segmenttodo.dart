@@ -40,7 +40,7 @@ class _SegmentTodoState extends State<SegmentTodo> {
 
   @override
   void initState() {
-    getTasks();
+    //getTasks();
     super.initState();
   }
 
