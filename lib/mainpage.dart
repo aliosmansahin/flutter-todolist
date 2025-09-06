@@ -17,6 +17,7 @@ class MainPage extends StatefulWidget {
 
 class _MainPageState extends State<MainPage> {
   Map<DateTime, List<Task>> data = {};
+  TaskSegments selectedSegment = TaskSegments.all;
 
   /*
     Listener function to handle events for tasks
@@ -27,6 +28,7 @@ class _MainPageState extends State<MainPage> {
 
     query.watch().listen((element) {
       setState(() {
+        //TODO: Process all data to send selected segment
         data = groupBy(
           element,
           (Task task) => DateTime(
@@ -54,107 +56,110 @@ class _MainPageState extends State<MainPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: CustomScrollView(
-        physics: BouncingScrollPhysics(),
-        slivers: [
-          /*
+      body: Stack(
+        children: [
+          CustomScrollView(
+            physics: BouncingScrollPhysics(),
+            slivers: [
+              /*
           AppBar
           */
-          SliverAppBar.medium(
-            pinned: false,
-            floating: false,
-            expandedHeight: 150,
-            stretch: true,
-            backgroundColor: Theme.of(context).secondaryHeaderColor,
-            foregroundColor: Theme.of(context).primaryColor,
-            flexibleSpace: FlexibleSpaceBar(
-              title: Text(
-                "To Do List",
-                style: TextStyle(color: Theme.of(context).primaryColorDark),
-              ),
-              centerTitle: true,
-            ),
-          ),
-          /*
-          Items
-          */
-          data.isEmpty
-              ? SliverPadding(
-                  padding: const EdgeInsets.only(top: 200),
-                  sliver: SliverToBoxAdapter(
-                    child: Center(
-                      child: Column(
-                        children: [
-                          Text(
-                            "There is no task.",
-                            style: TextStyle(fontSize: 30),
-                          ),
-                          Text(
-                            "Add a new one!",
-                            style: TextStyle(fontSize: 30),
-                          ),
-                        ],
-                      ),
-                    ),
+              SliverAppBar.medium(
+                pinned: false,
+                floating: false,
+                expandedHeight: 150,
+                stretch: true,
+                backgroundColor: Theme.of(context).secondaryHeaderColor,
+                foregroundColor: Theme.of(context).primaryColor,
+                flexibleSpace: FlexibleSpaceBar(
+                  title: Text(
+                    "To Do List",
+                    style: TextStyle(color: Theme.of(context).primaryColorDark),
                   ),
-                )
-              : SliverList(
-                  delegate: SliverChildBuilderDelegate((context, index) {
-                    final date = data.entries.elementAt(index).key;
-                    final tasksOfDate = data.entries.elementAt(index).value;
-
-                    return Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        //Date
-                        Padding(
-                          padding: const EdgeInsets.only(top: 18, left: 10),
-                          child: Text(
-                            DateFormat("yyyy/MM/dd").format(date).toString(),
-                            style: const TextStyle(
-                              fontSize: 18,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ),
-                        //Tasks of the date
-                        ListView.builder(
-                          physics:
-                              const NeverScrollableScrollPhysics(), // important
-                          shrinkWrap: true, // important
-                          itemCount: tasksOfDate.length,
-                          itemBuilder: (context, taskIndex) {
-                            return TaskCard(task: tasksOfDate[taskIndex]);
-                          },
-                          padding: EdgeInsets.all(0),
-                        ),
-                      ],
-                    );
-                  }, childCount: data.entries.length),
+                  centerTitle: true,
                 ),
+              ),
+              /*
+              Segments
+              */
+              Segments(data: data, currentSegment: selectedSegment),
 
-          /*
-          Last item will have bottom-margin, to prevent overlap with floating action button
-          */
-          SliverToBoxAdapter(
-            child: SizedBox(height: 100, width: double.infinity),
+              /*
+              Last item will have bottom-margin, to prevent overlap with floating action button
+              */
+              SliverToBoxAdapter(
+                child: SizedBox(height: 100, width: double.infinity),
+              ),
+            ],
+          ),
+          Positioned(
+            bottom: 40,
+            left: 0,
+            right: 0,
+            child: SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              padding: EdgeInsets.symmetric(horizontal: 10),
+              physics: BouncingScrollPhysics(),
+              child: SizedBox(
+                width: 800,
+                child: SegmentedButton<TaskSegments>(
+                  segments: [
+                    ButtonSegment(value: TaskSegments.all, label: Text("All")),
+                    ButtonSegment(
+                      value: TaskSegments.today,
+                      label: Text("Today"),
+                    ),
+                    ButtonSegment(
+                      value: TaskSegments.upcoming,
+                      label: Text("Upcoming"),
+                    ),
+                    ButtonSegment(
+                      value: TaskSegments.todo,
+                      label: Text("To Do"),
+                    ),
+                    ButtonSegment(
+                      value: TaskSegments.completed,
+                      label: Text("Completed"),
+                    ),
+                    ButtonSegment(
+                      value: TaskSegments.overdue,
+                      label: Text("Overdue"),
+                    ),
+                    // Daha fazla segment ekleyerek test edebilirsin
+                  ],
+                  selected: <TaskSegments>{selectedSegment},
+                  onSelectionChanged: (p0) {
+                    setState(() {
+                      // By default there is only a single segment that can be
+                      // selected at one time, so its value is always the first
+                      // item in the selected set.
+                      selectedSegment = p0.first;
+                    });
+                  },
+                  multiSelectionEnabled: false,
+                ),
+              ),
+            ),
           ),
         ],
       ),
       backgroundColor: Theme.of(context).secondaryHeaderColor,
-      floatingActionButton: FloatingActionButton.extended(
-        onPressed: () {
-          showModalBottomSheet(
-            isScrollControlled: true,
-            context: context,
-            builder: (bottomSheetContext) {
-              return AddEditTask();
-            },
-          );
-        },
-        backgroundColor: Theme.of(context).bottomSheetTheme.backgroundColor,
-        icon: Icon(Icons.add),
-        label: Text("New task"),
+      floatingActionButton: Padding(
+        padding: const EdgeInsets.only(bottom: 75),
+        child: FloatingActionButton.extended(
+          onPressed: () {
+            showModalBottomSheet(
+              isScrollControlled: true,
+              context: context,
+              builder: (bottomSheetContext) {
+                return AddEditTask();
+              },
+            );
+          },
+          backgroundColor: Theme.of(context).bottomSheetTheme.backgroundColor,
+          icon: Icon(Icons.add),
+          label: Text("New task"),
+        ),
       ),
     );
   }

@@ -22,6 +22,7 @@ import 'package:intl/intl.dart';
 import 'package:timezone/data/latest_all.dart' as tz;
 import 'package:timezone/timezone.dart' as tz;
 import 'package:collection/collection.dart';
+import 'package:todolist/utils/tasksegments.dart';
 
 import 'database/database.dart';
 
@@ -33,6 +34,8 @@ part 'taskcard.dart';
 part 'addedittask.dart';
 part 'taskdetail.dart';
 part 'utils/shadowedfield.dart';
+part 'segments/segmentall.dart';
+part 'segments/segments.dart';
 
 //Instance for database
 late Database db;
