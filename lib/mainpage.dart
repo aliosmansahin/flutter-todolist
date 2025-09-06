@@ -169,6 +169,7 @@ class _MainPageState extends State<MainPage> {
       floatingActionButton: Padding(
         padding: const EdgeInsets.only(bottom: 75),
         child: FloatingActionButton.extended(
+          heroTag: "new/edittask",
           onPressed: () {
             showModalBottomSheet(
               isScrollControlled: true,

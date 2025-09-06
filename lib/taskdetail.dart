@@ -252,6 +252,7 @@ class _TaskDetailState extends State<TaskDetail> {
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
               FloatingActionButton.extended(
+                heroTag: null,
                 onPressed: () {
                   showDialog(
                     context: context,
@@ -295,6 +296,7 @@ class _TaskDetailState extends State<TaskDetail> {
               ),
               Padding(padding: EdgeInsetsGeometry.only(left: 10)),
               FloatingActionButton.extended(
+                heroTag: "new/edittask",
                 onPressed: () {
                   showModalBottomSheet(
                     isScrollControlled: true,
