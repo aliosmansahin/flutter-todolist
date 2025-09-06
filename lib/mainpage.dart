@@ -125,7 +125,6 @@ class _MainPageState extends State<MainPage> {
                       value: TaskSegments.overdue,
                       label: Text("Overdue"),
                     ),
-                    // Daha fazla segment ekleyerek test edebilirsin
                   ],
                   selected: <TaskSegments>{selectedSegment},
                   onSelectionChanged: (p0) {
