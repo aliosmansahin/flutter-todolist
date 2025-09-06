@@ -34,6 +34,7 @@ part 'taskcard.dart';
 part 'addedittask.dart';
 part 'taskdetail.dart';
 part 'utils/shadowedfield.dart';
+part 'utils/notask.dart';
 part 'segments/segmentall.dart';
 part 'segments/segments.dart';
 

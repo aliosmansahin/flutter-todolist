@@ -44,19 +44,7 @@ class _SegmentAllState extends State<SegmentAll> {
   @override
   Widget build(BuildContext context) {
     return widget.data.isEmpty
-        ? SliverPadding(
-            padding: const EdgeInsets.only(top: 200),
-            sliver: SliverToBoxAdapter(
-              child: Center(
-                child: Column(
-                  children: [
-                    Text("There is no task.", style: TextStyle(fontSize: 30)),
-                    Text("Add a new one!", style: TextStyle(fontSize: 30)),
-                  ],
-                ),
-              ),
-            ),
-          )
+        ? NoTask()
         : SliverList(
             delegate: SliverChildBuilderDelegate((context, index) {
               final date = widget.data.entries.elementAt(index).key;
