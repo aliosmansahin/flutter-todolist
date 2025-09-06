@@ -40,6 +40,7 @@ part 'segments/segmentall.dart';
 part 'segments/segmenttoday.dart';
 part 'segments/segmentupcoming.dart';
 part 'segments/segmenttodo.dart';
+part 'segments/segmentcompleted.dart';
 part 'segments/segments.dart';
 
 //Instance for database
