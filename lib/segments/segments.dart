@@ -94,7 +94,29 @@ class _SegmentsState extends State<Segments> {
 
         return SegmentCompleted(data: tasks);
       case TaskSegments.overdue:
-        return SliverPadding(padding: EdgeInsetsGeometry.all(10));
+        var date = DateTime.now();
+
+        // Filter passed tasks
+        Iterable<MapEntry<DateTime, List<Task>>> tasksIter = widget.data.entries
+            .where((element) => element.key.isBefore(date));
+
+        Map<DateTime, List<Task>> incompletedTasksMap = {};
+
+        if (tasksIter.isNotEmpty) {
+          for (var entry in tasksIter) {
+            // Only undone tasks
+            List<Task> incompleteTasks = entry.value
+                .where((task) => !task.completed)
+                .toList();
+
+            // Add them to map
+            if (incompleteTasks.isNotEmpty) {
+              incompletedTasksMap[entry.key] = incompleteTasks;
+            }
+          }
+        }
+
+        return SegmentOverdue(data: incompletedTasksMap);
     }
   }
 }
