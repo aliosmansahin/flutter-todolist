@@ -97,7 +97,7 @@ class _MainPageState extends State<MainPage> {
               Last item will have bottom-margin, to prevent overlap with floating action button
               */
               SliverToBoxAdapter(
-                child: SizedBox(height: 100, width: double.infinity),
+                child: SizedBox(height: 180, width: double.infinity),
               ),
             ],
           ),
@@ -109,9 +109,23 @@ class _MainPageState extends State<MainPage> {
               scrollDirection: Axis.horizontal,
               padding: EdgeInsets.symmetric(horizontal: 10),
               physics: BouncingScrollPhysics(),
-              child: SizedBox(
+              child: Container(
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.all(Radius.circular(50)),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.grey.withValues(alpha: 0.5),
+                      spreadRadius: 5,
+                      blurRadius: 2,
+                    ),
+                  ],
+                ),
                 width: 800,
+                height: 50,
                 child: SegmentedButton<TaskSegments>(
+                  style: SegmentedButton.styleFrom(
+                    backgroundColor: Theme.of(context).primaryColorLight,
+                  ),
                   segments: [
                     ButtonSegment(value: TaskSegments.all, label: Text("All")),
                     ButtonSegment(
