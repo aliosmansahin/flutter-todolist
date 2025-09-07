@@ -215,9 +215,7 @@ class _AddEditTaskState extends State<AddEditTask> {
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               Text(
-                                DateFormat(
-                                  "HH:mm",
-                                ).format(selectedDate).toString(),
+                                selectedTime.format(context).toString(),
                                 style: TextStyle(fontSize: 17),
                               ),
                               OutlinedButton(
