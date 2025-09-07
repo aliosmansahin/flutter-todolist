@@ -228,7 +228,14 @@ class _TaskDetailState extends State<TaskDetail> {
                               Switch(
                                 value: data.shouldNotify,
                                 onChanged: (value) async {
-                                  await changeNotifyStatus(value);
+                                  bool isBefore = data.dateAndTime.isBefore(
+                                    DateTime.now(),
+                                  );
+                                  if (isBefore) {
+                                    setState(() {});
+                                  } else {
+                                    await changeNotifyStatus(value);
+                                  }
                                 },
                               ),
                             ],
