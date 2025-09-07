@@ -39,6 +39,26 @@ class _AddEditTaskState extends State<AddEditTask> {
     return true;
   }
 
+  //Checks Date and time if user selects date and time before now
+  //TRUE: Date and time is appropriate
+  //FALSE: Date and time are before now
+  bool checkForDateAndTime() {
+    DateTime selectedDateAndTime = DateTime(
+      selectedDate.year,
+      selectedDate.month,
+      selectedDate.day,
+      selectedTime.hour,
+      selectedTime.minute,
+    );
+    DateTime now = DateTime.now();
+
+    if (selectedDateAndTime.isBefore(now)) {
+      return false;
+    } else {
+      return true;
+    }
+  }
+
   Future<void> addTask() async {
     //Insert task and get the task object
     final Task task = await db
@@ -101,6 +121,27 @@ class _AddEditTaskState extends State<AddEditTask> {
       selectedType = widget.task!.type;
       important = widget.task!.important;
     }
+  }
+
+  //Shows an alert dialog
+  void showAlertDialog(BuildContext context, String title, String content) {
+    showDialog(
+      context: context,
+      builder: (dialogContext) {
+        return AlertDialog(
+          title: Text(title),
+          content: Text(content, style: TextStyle(fontSize: 16)),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.pop(dialogContext);
+              },
+              child: Text("OK", style: TextStyle(fontSize: 16)),
+            ),
+          ],
+        );
+      },
+    );
   }
 
   @override
@@ -329,30 +370,16 @@ class _AddEditTaskState extends State<AddEditTask> {
                           },
                           onTap: () async {
                             if (!checkForEmptiness()) {
-                              showDialog(
-                                context: context,
-                                builder: (dialogContext) {
-                                  return AlertDialog(
-                                    title: Text(
-                                      "Couln't ${widget.willEdit ? "Edit" : "Add"}",
-                                    ),
-                                    content: Text(
-                                      "Can't ${widget.willEdit ? "edit the" : "add an"} item without one or some of parameters",
-                                      style: TextStyle(fontSize: 16),
-                                    ),
-                                    actions: [
-                                      TextButton(
-                                        onPressed: () {
-                                          Navigator.pop(dialogContext);
-                                        },
-                                        child: Text(
-                                          "OK",
-                                          style: TextStyle(fontSize: 16),
-                                        ),
-                                      ),
-                                    ],
-                                  );
-                                },
+                              showAlertDialog(
+                                context,
+                                "Couln't ${widget.willEdit ? "Edit" : "Add"}",
+                                "Can't ${widget.willEdit ? "edit the" : "add an"} item without one or some of parameters",
+                              );
+                            } else if (!checkForDateAndTime()) {
+                              showAlertDialog(
+                                context,
+                                "Couln't ${widget.willEdit ? "Edit" : "Add"}",
+                                "Can't ${widget.willEdit ? "edit the" : "add an"} item before now",
                               );
                             } else {
                               if (widget.willEdit) {
