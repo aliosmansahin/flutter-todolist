@@ -21,16 +21,18 @@ class _SegmentOverdueState extends State<SegmentOverdue> {
 
   void filterTasks() {
     var date = DateTime.now();
+    var tommorrow = date.add(Duration(days: 1));
 
     // Filter passed tasks
     Iterable<MapEntry<DateTime, List<Task>>> tasksIter = widget.data.entries
-        .where((element) => element.key.isBefore(date));
+        .where((element) => element.key.isBefore(tommorrow));
 
     if (tasksIter.isNotEmpty) {
       for (var entry in tasksIter) {
         // Only undone tasks
         List<Task> incompleteTasks = entry.value
             .where((task) => !task.completed)
+            .where((task) => task.dateAndTime.isBefore(date))
             .toList();
 
         // Add them to tasks
