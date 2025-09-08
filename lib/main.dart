@@ -40,6 +40,7 @@ part 'utils/notask.dart';
 part 'utils/dateheader.dart';
 part 'utils/taskscolumn.dart';
 part 'utils/blur.dart';
+part 'utils/floatingbutton.dart';
 part 'segments/segmentall.dart';
 part 'segments/segmenttoday.dart';
 part 'segments/segmentupcoming.dart';

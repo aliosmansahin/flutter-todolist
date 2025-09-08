@@ -219,30 +219,40 @@ class _MainPageState extends State<MainPage> {
             ),
           ),
 
+          FloatingButton(
+            bottom: 105,
+            right: 20,
+            height: 80,
+            width: 150,
+            icon: Icon(
+              Icons.add,
+              size: 30,
+              color: Theme.of(context).canvasColor,
+            ),
+            text: Text(
+              "New task",
+              style: TextStyle(
+                color: Theme.of(context).canvasColor,
+                fontSize: 17,
+              ),
+            ),
+            onPressed: () {
+              showModalBottomSheet(
+                isScrollControlled: true,
+                context: context,
+                builder: (bottomSheetContext) {
+                  return AddEditTask();
+                },
+              );
+            },
+          ),
+
           //They must be here
           filterOpened ? Blur() : Container(),
           selectedSegment == TaskSegments.all ? FilterUI() : Container(),
         ],
       ),
       backgroundColor: Theme.of(context).secondaryHeaderColor,
-      floatingActionButton: Padding(
-        padding: const EdgeInsets.only(bottom: 75),
-        child: FloatingActionButton.extended(
-          heroTag: "new/edittask",
-          onPressed: () {
-            showModalBottomSheet(
-              isScrollControlled: true,
-              context: context,
-              builder: (bottomSheetContext) {
-                return AddEditTask();
-              },
-            );
-          },
-          backgroundColor: Theme.of(context).bottomSheetTheme.backgroundColor,
-          icon: Icon(Icons.add),
-          label: Text("New task"),
-        ),
-      ),
     );
   }
 }
