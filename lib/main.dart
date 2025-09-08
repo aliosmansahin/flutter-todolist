@@ -58,6 +58,8 @@ part 'filter/filterfields/filterstatus.dart';
 part 'filter/filterfields/filterdate.dart';
 part 'filter/filterformbuttons.dart';
 part 'filter/filterfields/filtertype.dart';
+part 'search/searchbutton.dart';
+part 'search/searchinput.dart';
 
 //Instance for database
 late Database db;
