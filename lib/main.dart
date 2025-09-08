@@ -48,6 +48,7 @@ part 'segments/segmenttodo.dart';
 part 'segments/segmentcompleted.dart';
 part 'segments/segmentoverdue.dart';
 part 'segments/segments.dart';
+part 'segments/segmentbuttons.dart';
 part 'filter/filterui.dart';
 part 'filter/filteropened.dart';
 part 'filter/filterfloatingbutton.dart';
