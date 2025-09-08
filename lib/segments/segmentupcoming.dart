@@ -34,6 +34,7 @@ class _SegmentUpcomingState extends State<SegmentUpcoming> {
       //Pass them to tasks
       for (var element in allTasks.entries) {
         List<Task> tasksList = element.value
+            .where((element) => !element.completed)
             .where((element) => element.dateAndTime.isAfter(now))
             .toList();
         if (tasksList.isNotEmpty) {
