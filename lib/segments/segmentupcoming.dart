@@ -20,6 +20,9 @@ class _SegmentUpcomingState extends State<SegmentUpcoming> {
   Map<DateTime, List<Task>> tasks = {};
 
   void filterTasks() {
+    //Clear old tasks
+    tasks.clear();
+
     //Get all upcoming tasks
     var now = DateTime.now();
     var yesterday = now.subtract(Duration(days: 1));

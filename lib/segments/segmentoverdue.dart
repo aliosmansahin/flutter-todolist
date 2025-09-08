@@ -20,6 +20,9 @@ class _SegmentOverdueState extends State<SegmentOverdue> {
   Map<DateTime, List<Task>> tasks = {};
 
   void filterTasks() {
+    //Clear old tasks
+    tasks.clear();
+
     var date = DateTime.now();
     var tommorrow = date.add(Duration(days: 1));
 
