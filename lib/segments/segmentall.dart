@@ -27,6 +27,9 @@ class _SegmentAllState extends State<SegmentAll> {
   String date = "alldate";
   String type = "All";
 
+  //Search
+  String searchValue = "";
+
   /*
     Resets all filters to default
   */
@@ -52,6 +55,13 @@ class _SegmentAllState extends State<SegmentAll> {
       //Get completed tasks
 
       List<Task> tasksList = element.value.toList();
+
+      //Search
+      if (searchValue != "") {
+        tasksList = tasksList
+            .where((task) => task.title.contains(searchValue))
+            .toList();
+      }
 
       //Importancy
       if (important) {

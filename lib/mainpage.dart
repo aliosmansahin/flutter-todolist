@@ -28,6 +28,9 @@ class _MainPageState extends State<MainPage> {
   //Filter dialog animation
   bool filterOpened = false;
 
+  //Search input animation
+  bool searchOpened = false;
+
   /*
     Listener function to handle events for tasks
   */
@@ -188,6 +191,10 @@ class _MainPageState extends State<MainPage> {
               );
             },
           ),
+
+          //Search button and input
+          SearchInput(), //Input will be back of button
+          SearchButton(),
 
           //They must be here
           filterOpened ? Blur() : Container(),
