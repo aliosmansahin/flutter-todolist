@@ -154,7 +154,10 @@ class _MainPageState extends State<MainPage> {
               Last item will have bottom-margin, to prevent overlap with floating action button
               */
               SliverToBoxAdapter(
-                child: SizedBox(height: 180, width: double.infinity),
+                child: SizedBox(
+                  height: searchOpened ? 280 : 180,
+                  width: double.infinity,
+                ),
               ),
             ],
           ),
