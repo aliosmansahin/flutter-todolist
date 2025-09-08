@@ -22,6 +22,11 @@ class _TaskCardState extends State<TaskCard> {
         await (db.update(db.tasks)..where((i) => i.id.equals(widget.task.id)))
             .writeReturning(TasksCompanion(completed: drift.Value(true)));
     widget.task = newData.first;
+
+    //Cancel unnecessary notification
+    if (widget.task.shouldNotify) {
+      cancelTaskNotification(widget.task.id);
+    }
   }
 
   @override
