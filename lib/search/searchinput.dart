@@ -49,14 +49,18 @@ class _SearchInputState extends State<SearchInput> {
               children: [
                 Expanded(
                   flex: 5,
-                  child: SearchBar(
-                    controller: controller,
-                    autoFocus: true,
-                    onChanged: (value) {
-                      _mainPageState.currentState!.setState(() {
-                        _segmentAllState.currentState!.searchValue = value;
-                      });
-                    },
+                  child: Bounceable(
+                    duration: Duration(milliseconds: 200),
+                    onTap: () {},
+                    child: SearchBar(
+                      controller: controller,
+                      autoFocus: true,
+                      onChanged: (value) {
+                        _mainPageState.currentState!.setState(() {
+                          _segmentAllState.currentState!.searchValue = value;
+                        });
+                      },
+                    ),
                   ),
                 ),
                 Padding(padding: EdgeInsetsGeometry.only(left: 10)),
