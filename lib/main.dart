@@ -14,7 +14,6 @@ import 'dart:ui';
 import 'package:android_intent_plus/android_intent.dart';
 import 'package:drift/drift.dart' as drift;
 import 'package:flutter/material.dart';
-import 'package:drift/native.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bounceable/flutter_bounceable.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
@@ -251,7 +250,7 @@ Future<void> main() async {
 
   await initNotifications();
 
-  db = Database(NativeDatabase.memory());
+  db = Database();
 
   await checkAndSchedulePendingNotifications();
   runApp(const MyApp());

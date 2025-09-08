@@ -1,4 +1,7 @@
 import 'package:drift/drift.dart';
+import 'package:drift_sqflite/drift_sqflite.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:path/path.dart' as p;
 
 part 'database.g.dart';
 
@@ -22,9 +25,18 @@ abstract class TasksView extends View {
   Query as() => select([tasks.title]).from(tasks);
 }
 
+// The function that creates database connection
+LazyDatabase _openConnection() {
+  return LazyDatabase(() async {
+    final dir = await getApplicationDocumentsDirectory();
+    final path = p.join(dir.path, 'my_db.sqlite');
+    return SqfliteQueryExecutor(path: path, logStatements: true);
+  });
+}
+
 @DriftDatabase(tables: [Tasks], views: [TasksView])
 class Database extends _$Database {
-  Database(QueryExecutor e) : super(e);
+  Database() : super(_openConnection());
 
   @override
   int get schemaVersion => 4;
