@@ -95,6 +95,7 @@ class _SearchInputState extends State<SearchInput> {
                                 .searchValue
                                 .isEmpty) {
                               _mainPageState.currentState!.searchOpened = false;
+                              FocusManager.instance.primaryFocus?.unfocus();
                             } else {
                               _segmentAllState.currentState!.searchValue = "";
                               controller.text = "";

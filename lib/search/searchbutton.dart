@@ -36,6 +36,7 @@ class _SearchButtonState extends State<SearchButton> {
         _mainPageState.currentState!.setState(() {
           _mainPageState.currentState!.searchOpened =
               !_mainPageState.currentState!.searchOpened;
+          FocusManager.instance.primaryFocus?.unfocus();
         });
       },
     );
