@@ -8,6 +8,8 @@ Created by Ali Osman ŞAHİN on 09/03/2025
 
 part of 'main.dart';
 
+GlobalKey<_MainPageState> _mainPageState = GlobalKey();
+
 class MainPage extends StatefulWidget {
   const MainPage({super.key});
 
@@ -23,6 +25,9 @@ class _MainPageState extends State<MainPage> {
   late Timer _timer;
   int? _lastMinute;
 
+  //Filter dialog animation
+  bool filterOpened = false;
+
   /*
     Listener function to handle events for tasks
   */
@@ -31,27 +36,44 @@ class _MainPageState extends State<MainPage> {
     //query.orderBy([(t) => drift.OrderingTerm.asc(t.dateAndTime)]);
 
     query.watch().listen((element) {
-      setState(() {
-        DateTime now = DateTime.now();
-        final upcomingTasks =
-            element.where((task) => task.dateAndTime.isAfter(now)).toList()
-              ..sort((a, b) => a.dateAndTime.compareTo(b.dateAndTime));
-        final pastTasks =
-            element.where((task) => !task.dateAndTime.isAfter(now)).toList()
-              ..sort((a, b) => a.dateAndTime.compareTo(b.dateAndTime));
-
-        final sortedTasks = [...upcomingTasks, ...pastTasks];
-
-        data = groupBy(
-          sortedTasks,
-          (Task task) => DateTime(
-            task.dateAndTime.year,
-            task.dateAndTime.month,
-            task.dateAndTime.day,
-          ),
-        );
-      });
+      sortData(element);
     });
+  }
+
+  /*
+    Getter for all data
+  */
+  Future<void> getAllData() async {
+    print("şlşaskdlşsakd");
+    final query = db.select(db.tasks);
+
+    await query.get().then((value) {
+      sortData(value);
+    });
+  }
+
+  /*
+    Sorter function
+  */
+  void sortData(List<Task> element) {
+    DateTime now = DateTime.now();
+    final upcomingTasks =
+        element.where((task) => task.dateAndTime.isAfter(now)).toList()
+          ..sort((a, b) => a.dateAndTime.compareTo(b.dateAndTime));
+    final pastTasks =
+        element.where((task) => !task.dateAndTime.isAfter(now)).toList()
+          ..sort((a, b) => a.dateAndTime.compareTo(b.dateAndTime));
+
+    final sortedTasks = [...upcomingTasks, ...pastTasks];
+
+    data = groupBy(
+      sortedTasks,
+      (Task task) => DateTime(
+        task.dateAndTime.year,
+        task.dateAndTime.month,
+        task.dateAndTime.day,
+      ),
+    );
   }
 
   /*
@@ -96,6 +118,7 @@ class _MainPageState extends State<MainPage> {
   */
   @override
   Widget build(BuildContext context) {
+    getAllData();
     return Scaffold(
       body: Stack(
         children: [
@@ -103,8 +126,8 @@ class _MainPageState extends State<MainPage> {
             physics: BouncingScrollPhysics(),
             slivers: [
               /*
-          AppBar
-          */
+              AppBar
+              */
               SliverAppBar.medium(
                 pinned: false,
                 floating: false,
@@ -195,6 +218,10 @@ class _MainPageState extends State<MainPage> {
               ),
             ),
           ),
+
+          //They must be here
+          filterOpened ? Blur() : Container(),
+          selectedSegment == TaskSegments.all ? FilterUI() : Container(),
         ],
       ),
       backgroundColor: Theme.of(context).secondaryHeaderColor,

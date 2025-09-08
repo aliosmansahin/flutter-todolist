@@ -22,7 +22,7 @@ class _SegmentsState extends State<Segments> {
   Widget build(BuildContext context) {
     switch (widget.currentSegment) {
       case TaskSegments.all:
-        return SegmentAll(data: widget.data);
+        return SegmentAll(data: widget.data, key: _segmentAllState);
 
       case TaskSegments.today:
         return SegmentToday(data: widget.data);

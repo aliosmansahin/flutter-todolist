@@ -306,10 +306,10 @@ class _AddEditTaskState extends State<AddEditTask> {
                           }
                         },
                         dropdownMenuEntries: [
-                          DropdownMenuEntry(value: "food", label: "Food"),
-                          DropdownMenuEntry(value: "sport", label: "Sport"),
-                          DropdownMenuEntry(value: "work", label: "Work"),
-                          DropdownMenuEntry(value: "school", label: "School"),
+                          DropdownMenuEntry(value: "Food", label: "Food"),
+                          DropdownMenuEntry(value: "Sport", label: "Sport"),
+                          DropdownMenuEntry(value: "Work", label: "Work"),
+                          DropdownMenuEntry(value: "School", label: "School"),
                         ],
                       ),
                     ),
@@ -395,6 +395,7 @@ class _AddEditTaskState extends State<AddEditTask> {
                                 Navigator.pop(context);
                               }
                             }
+                            _mainPageState.currentState!.setState(() {});
                           },
                           child: Text(
                             widget.willEdit ? "Edit Task" : "Add Task",
