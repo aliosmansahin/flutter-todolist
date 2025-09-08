@@ -59,7 +59,9 @@ class _FloatingButtonState extends State<FloatingButton> {
               ),
             ],
           ),
-          child: widget.text != null
+          child:
+              widget.text !=
+                  null //If text is not null display textbutton, no matter if icon is null
               ? TextButton(
                   onPressed: widget.onPressed,
                   style: TextButton.styleFrom(
@@ -70,7 +72,8 @@ class _FloatingButtonState extends State<FloatingButton> {
                     children: [widget.icon ?? Container(), widget.text!],
                   ),
                 )
-              : widget.icon != null
+              : widget.icon !=
+                    null //If text is null, display icon button if icon is not null
               ? IconButton(
                   onPressed: widget.onPressed,
                   icon: widget.icon!,
