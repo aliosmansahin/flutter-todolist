@@ -386,9 +386,9 @@ class _AddEditTaskState extends State<AddEditTask> {
                                 //Add
                                 await addTask();
                               }
-                              if (mounted) {
-                                Navigator.pop(context);
-                              }
+
+                              if (!mounted) return;
+                              Navigator.pop(context);
                             }
                             _mainPageState.currentState!.setState(() {});
                           },
