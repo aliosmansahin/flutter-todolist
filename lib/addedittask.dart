@@ -226,27 +226,31 @@ class _AddEditTaskState extends State<AddEditTask> {
                                 ).format(selectedDate).toString(),
                                 style: TextStyle(fontSize: 17),
                               ),
-                              OutlinedButton(
-                                style: OutlinedButton.styleFrom(
-                                  backgroundColor: Theme.of(
-                                    context,
-                                  ).canvasColor,
-                                ),
-                                onPressed: () async {
-                                  final DateTime? date = await showDatePicker(
-                                    context: context,
-                                    firstDate: DateTime.now(),
-                                    lastDate: DateTime(3000),
-                                  );
-                                  if (date != null) {
-                                    setState(() {
-                                      selectedDate = date;
-                                    });
-                                  }
-                                },
-                                child: Text(
-                                  "Select a deadline date",
-                                  style: TextStyle(fontSize: 15),
+                              Bounceable(
+                                duration: Duration(milliseconds: 200),
+                                onTap: () {},
+                                child: OutlinedButton(
+                                  style: OutlinedButton.styleFrom(
+                                    backgroundColor: Theme.of(
+                                      context,
+                                    ).canvasColor,
+                                  ),
+                                  onPressed: () async {
+                                    final DateTime? date = await showDatePicker(
+                                      context: context,
+                                      firstDate: DateTime.now(),
+                                      lastDate: DateTime(3000),
+                                    );
+                                    if (date != null) {
+                                      setState(() {
+                                        selectedDate = date;
+                                      });
+                                    }
+                                  },
+                                  child: Text(
+                                    "Select a deadline date",
+                                    style: TextStyle(fontSize: 15),
+                                  ),
                                 ),
                               ),
                             ],
@@ -259,29 +263,33 @@ class _AddEditTaskState extends State<AddEditTask> {
                                 selectedTime.format(context).toString(),
                                 style: TextStyle(fontSize: 17),
                               ),
-                              OutlinedButton(
-                                style: OutlinedButton.styleFrom(
-                                  backgroundColor: Theme.of(
-                                    context,
-                                  ).canvasColor,
-                                ),
-                                onPressed: () async {
-                                  final TimeOfDay? timeOfDay =
-                                      await showTimePicker(
-                                        context: context,
-                                        initialTime: selectedTime,
-                                        initialEntryMode:
-                                            TimePickerEntryMode.dial,
-                                      );
-                                  if (timeOfDay != null) {
-                                    setState(() {
-                                      selectedTime = timeOfDay;
-                                    });
-                                  }
-                                },
-                                child: Text(
-                                  "Select a deadline time",
-                                  style: TextStyle(fontSize: 15),
+                              Bounceable(
+                                duration: Duration(milliseconds: 200),
+                                onTap: () {},
+                                child: OutlinedButton(
+                                  style: OutlinedButton.styleFrom(
+                                    backgroundColor: Theme.of(
+                                      context,
+                                    ).canvasColor,
+                                  ),
+                                  onPressed: () async {
+                                    final TimeOfDay? timeOfDay =
+                                        await showTimePicker(
+                                          context: context,
+                                          initialTime: selectedTime,
+                                          initialEntryMode:
+                                              TimePickerEntryMode.dial,
+                                        );
+                                    if (timeOfDay != null) {
+                                      setState(() {
+                                        selectedTime = timeOfDay;
+                                      });
+                                    }
+                                  },
+                                  child: Text(
+                                    "Select a deadline time",
+                                    style: TextStyle(fontSize: 15),
+                                  ),
                                 ),
                               ),
                             ],
@@ -337,22 +345,9 @@ class _AddEditTaskState extends State<AddEditTask> {
                     //Add task button
                     Padding(
                       padding: const EdgeInsets.only(top: 20),
-                      child: Container(
-                        decoration: BoxDecoration(
-                          color: buttonColor,
-                          borderRadius: BorderRadius.all(Radius.circular(10)),
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.grey.withValues(alpha: 0.5),
-                              spreadRadius: 4,
-                              blurRadius: 7,
-                              offset: Offset(0, 3),
-                            ),
-                          ],
-                        ),
-                        padding: EdgeInsets.all(10),
-                        alignment: Alignment.center,
-                        width: double.infinity,
+                      child: Bounceable(
+                        duration: Duration(milliseconds: 200),
+                        onTap: () {},
                         child: GestureDetector(
                           onTapCancel: () {
                             setState(() {
@@ -397,11 +392,30 @@ class _AddEditTaskState extends State<AddEditTask> {
                             }
                             _mainPageState.currentState!.setState(() {});
                           },
-                          child: Text(
-                            widget.willEdit ? "Edit Task" : "Add Task",
-                            style: TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold,
+                          child: Container(
+                            decoration: BoxDecoration(
+                              color: buttonColor,
+                              borderRadius: BorderRadius.all(
+                                Radius.circular(10),
+                              ),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.grey.withValues(alpha: 0.5),
+                                  spreadRadius: 4,
+                                  blurRadius: 7,
+                                  offset: Offset(0, 3),
+                                ),
+                              ],
+                            ),
+                            padding: EdgeInsets.all(10),
+                            alignment: Alignment.center,
+                            width: double.infinity,
+                            child: Text(
+                              widget.willEdit ? "Edit Task" : "Add Task",
+                              style: TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold,
+                              ),
                             ),
                           ),
                         ),

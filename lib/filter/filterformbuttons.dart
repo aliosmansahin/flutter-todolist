@@ -22,25 +22,33 @@ class _FilterFormButtonsState extends State<FilterFormButtons> {
       children: [
         Expanded(
           flex: 1,
-          child: ElevatedButton(
-            onPressed: () {
-              _mainPageState.currentState!.setState(() {
-                _segmentAllState.currentState!.resetFilters();
-              });
-            },
-            child: Text("Reset", style: TextStyle(fontSize: 17)),
+          child: Bounceable(
+            duration: Duration(milliseconds: 200),
+            onTap: () {},
+            child: ElevatedButton(
+              onPressed: () {
+                _mainPageState.currentState!.setState(() {
+                  _segmentAllState.currentState!.resetFilters();
+                });
+              },
+              child: Text("Reset", style: TextStyle(fontSize: 17)),
+            ),
           ),
         ),
         Padding(padding: EdgeInsetsGeometry.only(left: 10)),
         Expanded(
           flex: 2,
-          child: ElevatedButton(
-            onPressed: () {
-              _mainPageState.currentState!.setState(() {
-                _mainPageState.currentState!.filterOpened = false;
-              });
-            },
-            child: Text("Close", style: TextStyle(fontSize: 17)),
+          child: Bounceable(
+            duration: Duration(milliseconds: 200),
+            onTap: () {},
+            child: ElevatedButton(
+              onPressed: () {
+                _mainPageState.currentState!.setState(() {
+                  _mainPageState.currentState!.filterOpened = false;
+                });
+              },
+              child: Text("Close", style: TextStyle(fontSize: 17)),
+            ),
           ),
         ),
       ],
