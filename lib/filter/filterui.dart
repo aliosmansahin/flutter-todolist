@@ -21,9 +21,9 @@ class _FilterUIState extends State<FilterUI> {
     return AnimatedPositioned(
       width: _mainPageState.currentState!.filterOpened ? 350 : 80,
       height: _mainPageState.currentState!.filterOpened ? 380 : 80,
-      bottom: _mainPageState.currentState!.filterOpened ? 200 : 105,
+      bottom: _mainPageState.currentState!.filterOpened ? 120 : 105,
       left: _mainPageState.currentState!.filterOpened ? 20 : 20,
-      duration: Duration(seconds: 1),
+      duration: Duration(milliseconds: 1200),
       curve: Curves.elasticOut,
       child: Container(
         padding: EdgeInsets.all(10),
