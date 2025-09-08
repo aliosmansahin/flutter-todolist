@@ -49,7 +49,7 @@ class _FloatingButtonState extends State<FloatingButton> {
         padding: const EdgeInsets.all(10),
         child: Container(
           decoration: BoxDecoration(
-            borderRadius: BorderRadius.all(Radius.circular(80)),
+            borderRadius: BorderRadius.all(Radius.circular(widget.height ?? 0)),
             boxShadow: [
               BoxShadow(
                 color: Colors.grey.withValues(alpha: 0.5),
