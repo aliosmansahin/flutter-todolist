@@ -121,207 +121,222 @@ class _TaskDetailState extends State<TaskDetail> {
       );
     } else {
       return Scaffold(
-        body: CustomScrollView(
-          physics: BouncingScrollPhysics(),
-          slivers: [
-            /*
-          AppBar
-          */
-            SliverAppBar.medium(
-              pinned: false,
-              floating: false,
-              expandedHeight: 400,
-              stretch: true,
-              backgroundColor: Theme.of(context).secondaryHeaderColor,
-              foregroundColor: Theme.of(context).primaryColor,
-              flexibleSpace: FlexibleSpaceBar(
-                title: Text(
-                  "Task Detail",
-                  style: TextStyle(color: Theme.of(context).primaryColorDark),
+        body: Stack(
+          children: [
+            CustomScrollView(
+              physics: BouncingScrollPhysics(),
+              slivers: [
+                /*
+              AppBar
+              */
+                SliverAppBar.medium(
+                  pinned: false,
+                  floating: false,
+                  expandedHeight: 400,
+                  stretch: true,
+                  backgroundColor: Theme.of(context).secondaryHeaderColor,
+                  foregroundColor: Theme.of(context).primaryColor,
+                  flexibleSpace: FlexibleSpaceBar(
+                    title: Text(
+                      "Task Detail",
+                      style: TextStyle(
+                        color: Theme.of(context).primaryColorDark,
+                      ),
+                    ),
+                    centerTitle: true,
+                  ),
                 ),
-                centerTitle: true,
-              ),
-            ),
-            SliverPadding(
-              padding: const EdgeInsets.all(10),
-              sliver: SliverList(
-                delegate: SliverChildListDelegate([
-                  //Task name
-                  ShadowedField(
-                    title: "Task name",
-                    child: Text(data.title, style: TextStyle(fontSize: 17)),
-                  ),
+                SliverPadding(
+                  padding: const EdgeInsets.all(10),
+                  sliver: SliverList(
+                    delegate: SliverChildListDelegate([
+                      //Task name
+                      ShadowedField(
+                        title: "Task name",
+                        child: Text(data.title, style: TextStyle(fontSize: 17)),
+                      ),
 
-                  //Task description
-                  ShadowedField(
-                    title: "Task description",
-                    margin: EdgeInsets.only(top: 20),
-                    child: Text(
-                      data.description,
-                      style: TextStyle(fontSize: 17),
-                    ),
-                  ),
-
-                  //Deadline date and time
-                  ShadowedField(
-                    title: "Deadline date and time",
-                    margin: EdgeInsets.only(top: 20),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          DateFormat(
-                            "yyyy/MM/dd",
-                          ).format(data.dateAndTime).toString(),
+                      //Task description
+                      ShadowedField(
+                        title: "Task description",
+                        margin: EdgeInsets.only(top: 20),
+                        child: Text(
+                          data.description,
                           style: TextStyle(fontSize: 17),
                         ),
-                        Text(
-                          DateFormat(
-                            "HH:mm",
-                          ).format(data.dateAndTime).toString(),
-                          style: TextStyle(fontSize: 17),
-                        ),
-                      ],
-                    ),
-                  ),
+                      ),
 
-                  //Task type
-                  ShadowedField(
-                    title: "Task type",
-                    margin: EdgeInsets.only(top: 20),
-                    child: Text(data.type, style: TextStyle(fontSize: 17)),
-                  ),
-
-                  //Importancy
-                  ShadowedField(
-                    title: "Importancy",
-                    margin: EdgeInsets.only(top: 20),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          "Is this task important for you?",
-                          style: TextStyle(fontSize: 20),
+                      //Deadline date and time
+                      ShadowedField(
+                        title: "Deadline date and time",
+                        margin: EdgeInsets.only(top: 20),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              DateFormat(
+                                "yyyy/MM/dd",
+                              ).format(data.dateAndTime).toString(),
+                              style: TextStyle(fontSize: 17),
+                            ),
+                            Text(
+                              DateFormat(
+                                "HH:mm",
+                              ).format(data.dateAndTime).toString(),
+                              style: TextStyle(fontSize: 17),
+                            ),
+                          ],
                         ),
-                        Switch(
-                          value: data.important,
-                          onChanged: (value) async {
-                            await changeImportancy(value);
-                          },
-                        ),
-                      ],
-                    ),
-                  ),
+                      ),
 
-                  //Notifications
-                  ShadowedField(
-                    title: "Notification",
-                    margin: EdgeInsets.only(top: 20),
-                    child: data.dateAndTime.isAfter(DateTime.now())
-                        ? Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text(
-                                "Send notification",
+                      //Task type
+                      ShadowedField(
+                        title: "Task type",
+                        margin: EdgeInsets.only(top: 20),
+                        child: Text(data.type, style: TextStyle(fontSize: 17)),
+                      ),
+
+                      //Importancy
+                      ShadowedField(
+                        title: "Importancy",
+                        margin: EdgeInsets.only(top: 20),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              "Is this task important for you?",
+                              style: TextStyle(fontSize: 20),
+                            ),
+                            Switch(
+                              value: data.important,
+                              onChanged: (value) async {
+                                await changeImportancy(value);
+                              },
+                            ),
+                          ],
+                        ),
+                      ),
+
+                      //Notifications
+                      ShadowedField(
+                        title: "Notification",
+                        margin: EdgeInsets.only(top: 20),
+                        child: data.dateAndTime.isAfter(DateTime.now())
+                            ? Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Text(
+                                    "Send notification",
+                                    style: TextStyle(fontSize: 20),
+                                  ),
+                                  Switch(
+                                    value: data.shouldNotify,
+                                    onChanged: (value) async {
+                                      bool isBefore = data.dateAndTime.isBefore(
+                                        DateTime.now(),
+                                      );
+                                      if (isBefore) {
+                                        setState(() {});
+                                      } else {
+                                        await changeNotifyStatus(value);
+                                      }
+                                    },
+                                  ),
+                                ],
+                              )
+                            : Text(
+                                "This is a passed task",
                                 style: TextStyle(fontSize: 20),
                               ),
-                              Switch(
-                                value: data.shouldNotify,
-                                onChanged: (value) async {
-                                  bool isBefore = data.dateAndTime.isBefore(
-                                    DateTime.now(),
-                                  );
-                                  if (isBefore) {
-                                    setState(() {});
-                                  } else {
-                                    await changeNotifyStatus(value);
-                                  }
-                                },
-                              ),
-                            ],
-                          )
-                        : Text(
-                            "This is a passed task",
-                            style: TextStyle(fontSize: 20),
-                          ),
+                      ),
+                    ]),
                   ),
-                ]),
-              ),
+                ),
+
+                SliverPadding(padding: EdgeInsetsGeometry.only(top: 160)),
+              ],
             ),
 
-            SliverPadding(padding: EdgeInsetsGeometry.only(top: 160)),
+            //Edit task
+            FloatingButton(
+              bottom: 80,
+              right: 20,
+              height: 80,
+              width: 150,
+              icon: Icon(
+                Icons.edit,
+                size: 30,
+                color: Theme.of(context).canvasColor,
+              ),
+              text: Text(
+                "Edit task",
+                style: TextStyle(
+                  color: Theme.of(context).canvasColor,
+                  fontSize: 17,
+                ),
+              ),
+              onPressed: () {
+                showModalBottomSheet(
+                  isScrollControlled: true,
+                  context: context,
+                  builder: (bottomSheetContext) {
+                    return AddEditTask(willEdit: true, task: data);
+                  },
+                );
+              },
+            ),
+
+            //Delete task
+            FloatingButton(
+              bottom: 80,
+              right: 170,
+              height: 80,
+              width: 80,
+              icon: Icon(
+                Icons.delete,
+                size: 30,
+                color: Theme.of(context).canvasColor,
+              ),
+              onPressed: () {
+                showDialog(
+                  context: context,
+                  builder: (dialogContext) {
+                    return AlertDialog(
+                      title: Text("Delete Task"),
+                      content: Text(
+                        "Would you like to delete this task?",
+                        style: TextStyle(fontSize: 16),
+                      ),
+                      actions: [
+                        TextButton(
+                          onPressed: () {
+                            Navigator.pop(dialogContext);
+                          },
+                          child: Text(
+                            "No",
+                            style: TextStyle(
+                              fontSize: 16,
+                              color: Theme.of(context).primaryColorDark,
+                            ),
+                          ),
+                        ),
+                        TextButton(
+                          onPressed: () async {
+                            Navigator.pop(dialogContext);
+                            await deleteTask();
+                          },
+                          child: Text("Yes", style: TextStyle(fontSize: 16)),
+                        ),
+                      ],
+                    );
+                  },
+                );
+              },
+            ),
           ],
         ),
         backgroundColor: Theme.of(context).secondaryHeaderColor,
-        floatingActionButton: Padding(
-          padding: const EdgeInsets.only(bottom: 50),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: [
-              FloatingActionButton.extended(
-                heroTag: null,
-                onPressed: () {
-                  showDialog(
-                    context: context,
-                    builder: (dialogContext) {
-                      return AlertDialog(
-                        title: Text("Delete Task"),
-                        content: Text(
-                          "Would you like to delete this task?",
-                          style: TextStyle(fontSize: 16),
-                        ),
-                        actions: [
-                          TextButton(
-                            onPressed: () {
-                              Navigator.pop(dialogContext);
-                            },
-                            child: Text(
-                              "No",
-                              style: TextStyle(
-                                fontSize: 16,
-                                color: Theme.of(context).primaryColorDark,
-                              ),
-                            ),
-                          ),
-                          TextButton(
-                            onPressed: () async {
-                              Navigator.pop(dialogContext);
-                              await deleteTask();
-                            },
-                            child: Text("Yes", style: TextStyle(fontSize: 16)),
-                          ),
-                        ],
-                      );
-                    },
-                  );
-                },
-                backgroundColor: Theme.of(
-                  context,
-                ).bottomSheetTheme.backgroundColor,
-                icon: Icon(Icons.delete),
-                label: Text("Delete task"),
-              ),
-              Padding(padding: EdgeInsetsGeometry.only(left: 10)),
-              FloatingActionButton.extended(
-                heroTag: "new/edittask",
-                onPressed: () {
-                  showModalBottomSheet(
-                    isScrollControlled: true,
-                    context: context,
-                    builder: (bottomSheetContext) {
-                      return AddEditTask(willEdit: true, task: data);
-                    },
-                  );
-                },
-                backgroundColor: Theme.of(
-                  context,
-                ).bottomSheetTheme.backgroundColor,
-                icon: Icon(Icons.edit),
-                label: Text("Edit task"),
-              ),
-            ],
-          ),
-        ),
       );
     }
   }
