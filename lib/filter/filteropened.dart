@@ -37,6 +37,21 @@ class _FilterOpenedState extends State<FilterOpened> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
+              //Title
+              Row(
+                children: [
+                  Text(
+                    "Filters",
+                    style: TextStyle(
+                      color: Theme.of(context).canvasColor,
+                      fontSize: 21,
+                      fontStyle: FontStyle.italic,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ],
+              ),
+
               //Only Important
               FilterImportant(),
 
