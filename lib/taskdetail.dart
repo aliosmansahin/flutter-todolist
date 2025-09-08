@@ -263,7 +263,7 @@ class _TaskDetailState extends State<TaskDetail> {
               bottom: 80,
               right: 20,
               height: 80,
-              width: 150,
+              width: 160,
               icon: Icon(
                 Icons.edit,
                 size: 30,
@@ -290,7 +290,7 @@ class _TaskDetailState extends State<TaskDetail> {
             //Delete task
             FloatingButton(
               bottom: 80,
-              right: 170,
+              right: 180,
               height: 80,
               width: 80,
               icon: Icon(

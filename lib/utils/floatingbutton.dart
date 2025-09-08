@@ -69,7 +69,13 @@ class _FloatingButtonState extends State<FloatingButton> {
                   ),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
-                    children: [widget.icon ?? Container(), widget.text!],
+                    children: [
+                      widget.icon ?? Container(),
+                      widget.icon != null
+                          ? Padding(padding: EdgeInsetsGeometry.only(right: 10))
+                          : Container(),
+                      widget.text!,
+                    ],
                   ),
                 )
               : widget.icon !=

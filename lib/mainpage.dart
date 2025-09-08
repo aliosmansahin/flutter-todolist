@@ -165,7 +165,7 @@ class _MainPageState extends State<MainPage> {
             bottom: 105,
             right: 20,
             height: 80,
-            width: 150,
+            width: 160,
             icon: Icon(
               Icons.add,
               size: 30,
