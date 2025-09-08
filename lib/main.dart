@@ -10,6 +10,7 @@ Imports
 import 'dart:async';
 import 'dart:ffi';
 import 'dart:io';
+import 'dart:ui';
 
 import 'package:android_intent_plus/android_intent.dart';
 import 'package:drift/drift.dart' as drift;
@@ -38,6 +39,7 @@ part 'utils/shadowedfield.dart';
 part 'utils/notask.dart';
 part 'utils/dateheader.dart';
 part 'utils/taskscolumn.dart';
+part 'utils/blur.dart';
 part 'segments/segmentall.dart';
 part 'segments/segmenttoday.dart';
 part 'segments/segmentupcoming.dart';
@@ -45,6 +47,13 @@ part 'segments/segmenttodo.dart';
 part 'segments/segmentcompleted.dart';
 part 'segments/segmentoverdue.dart';
 part 'segments/segments.dart';
+part 'filter/filterui.dart';
+part 'filter/filteropened.dart';
+part 'filter/filterfloatingbutton.dart';
+part 'filter/filterfields/filterimportant.dart';
+part 'filter/filterfields/filterstatus.dart';
+part 'filter/filterfields/filterdate.dart';
+part 'filter/filterformbuttons.dart';
 
 //Instance for database
 late Database db;
@@ -275,7 +284,7 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.red),
       ),
       debugShowCheckedModeBanner: false,
-      home: MainPage(),
+      home: MainPage(key: _mainPageState),
     );
   }
 }

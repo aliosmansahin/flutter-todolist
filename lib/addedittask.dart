@@ -395,6 +395,7 @@ class _AddEditTaskState extends State<AddEditTask> {
                                 Navigator.pop(context);
                               }
                             }
+                            _mainPageState.currentState!.setState(() {});
                           },
                           child: Text(
                             widget.willEdit ? "Edit Task" : "Add Task",
