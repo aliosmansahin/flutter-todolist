@@ -54,6 +54,7 @@ part 'filter/filterfields/filterimportant.dart';
 part 'filter/filterfields/filterstatus.dart';
 part 'filter/filterfields/filterdate.dart';
 part 'filter/filterformbuttons.dart';
+part 'filter/filterfields/filtertype.dart';
 
 //Instance for database
 late Database db;

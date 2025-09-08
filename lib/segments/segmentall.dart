@@ -25,14 +25,18 @@ class _SegmentAllState extends State<SegmentAll> {
   bool important = false;
   String done = "alldone";
   String date = "alldate";
+  String type = "all";
 
   /*
     Resets all filters to default
   */
   void resetFilters() {
-    important = false;
-    done = "alldone";
-    date = "alldate";
+    setState(() {
+      important = false;
+      done = "alldone";
+      date = "alldate";
+      type = "all";
+    });
   }
 
   void filterTasks() {
@@ -70,6 +74,11 @@ class _SegmentAllState extends State<SegmentAll> {
         tasksList = tasksList
             .where((task) => task.dateAndTime.isAfter(DateTime.now()))
             .toList();
+      }
+
+      //Type
+      if (type != "all") {
+        tasksList = tasksList.where((task) => task.type == type).toList();
       }
 
       //Pass them to tasksMap

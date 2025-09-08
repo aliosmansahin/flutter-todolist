@@ -20,7 +20,7 @@ class _FilterUIState extends State<FilterUI> {
   Widget build(BuildContext context) {
     return AnimatedPositioned(
       width: _mainPageState.currentState!.filterOpened ? 350 : 80,
-      height: _mainPageState.currentState!.filterOpened ? 300 : 80,
+      height: _mainPageState.currentState!.filterOpened ? 380 : 80,
       bottom: _mainPageState.currentState!.filterOpened ? 200 : 105,
       left: _mainPageState.currentState!.filterOpened ? 20 : 20,
       duration: Duration(seconds: 1),

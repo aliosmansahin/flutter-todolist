@@ -61,6 +61,9 @@ class _FilterOpenedState extends State<FilterOpened> {
               //Past/Future
               FilterDate(),
 
+              //Type
+              FilterType(),
+
               //Close Button
               FilterFormButtons(),
             ],
