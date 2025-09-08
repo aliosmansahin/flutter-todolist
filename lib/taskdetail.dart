@@ -222,29 +222,33 @@ class _TaskDetailState extends State<TaskDetail> {
                         title: "Notification",
                         margin: EdgeInsets.only(top: 20),
                         child: data.dateAndTime.isAfter(DateTime.now())
-                            ? Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Text(
-                                    "Send notification",
-                                    style: TextStyle(fontSize: 20),
-                                  ),
-                                  Switch(
-                                    value: data.shouldNotify,
-                                    onChanged: (value) async {
-                                      bool isBefore = data.dateAndTime.isBefore(
-                                        DateTime.now(),
-                                      );
-                                      if (isBefore) {
-                                        setState(() {});
-                                      } else {
-                                        await changeNotifyStatus(value);
-                                      }
-                                    },
-                                  ),
-                                ],
-                              )
+                            ? !data.completed
+                                  ? Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Text(
+                                          "Send notification",
+                                          style: TextStyle(fontSize: 20),
+                                        ),
+                                        Switch(
+                                          value: data.shouldNotify,
+                                          onChanged: (value) async {
+                                            bool isBefore = data.dateAndTime
+                                                .isBefore(DateTime.now());
+                                            if (isBefore) {
+                                              setState(() {});
+                                            } else {
+                                              await changeNotifyStatus(value);
+                                            }
+                                          },
+                                        ),
+                                      ],
+                                    )
+                                  : Text(
+                                      "You completed this task",
+                                      style: TextStyle(fontSize: 20),
+                                    )
                             : Text(
                                 "This is a passed task",
                                 style: TextStyle(fontSize: 20),
