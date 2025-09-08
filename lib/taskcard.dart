@@ -22,6 +22,11 @@ class _TaskCardState extends State<TaskCard> {
         await (db.update(db.tasks)..where((i) => i.id.equals(widget.task.id)))
             .writeReturning(TasksCompanion(completed: drift.Value(true)));
     widget.task = newData.first;
+
+    //Cancel unnecessary notification
+    if (widget.task.shouldNotify) {
+      cancelTaskNotification(widget.task.id);
+    }
   }
 
   @override
@@ -34,8 +39,20 @@ class _TaskCardState extends State<TaskCard> {
           ),
         );
       },
-      child: Card(
-        surfaceTintColor: Theme.of(context).cardTheme.surfaceTintColor,
+      child: Container(
+        margin: EdgeInsets.all(10),
+        decoration: BoxDecoration(
+          color: Theme.of(context).secondaryHeaderColor,
+          boxShadow: [
+            BoxShadow(
+              color: Colors.grey.withValues(alpha: 0.5),
+              spreadRadius: 4,
+              blurRadius: 7,
+              offset: Offset(0, 3),
+            ),
+          ],
+          borderRadius: BorderRadius.all(Radius.circular(10)),
+        ),
         child: SizedBox(
           width: double.infinity,
           height: 75,
@@ -88,23 +105,42 @@ class _TaskCardState extends State<TaskCard> {
                                 horizontal: 20,
                               ),
                               child: Icon(
-                                Icons.done,
-                                color: Colors.red,
+                                Icons.check_circle,
+                                color: Color(0xFF2E7D32),
                                 size: 40,
                               ),
                             )
-                          : IconButton(
-                              icon: Icon(Icons.done, size: 40),
-                              padding: EdgeInsets.symmetric(
-                                horizontal: 20,
-                                vertical: 0,
-                              ),
-                              onPressed: () {
-                                setState(() {
-                                  completeTask();
-                                });
-                              },
-                            ),
+                          : (widget.task.dateAndTime.isAfter(DateTime.now())
+                                ? IconButton(
+                                    icon: Icon(
+                                      Icons.circle_outlined,
+                                      size: 40,
+                                      color: Color.fromARGB(200, 0, 0, 0),
+                                    ),
+                                    padding: EdgeInsets.symmetric(
+                                      horizontal: 20,
+                                      vertical: 0,
+                                    ),
+                                    onPressed: () {
+                                      setState(() {
+                                        if (widget.task.dateAndTime.isAfter(
+                                          DateTime.now(),
+                                        )) {
+                                          completeTask();
+                                        }
+                                      });
+                                    },
+                                  )
+                                : Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                      horizontal: 20,
+                                    ),
+                                    child: Icon(
+                                      Icons.close,
+                                      color: Color(0xFFD32F2F),
+                                      size: 40,
+                                    ),
+                                  )),
                     ),
                   ],
                 ),

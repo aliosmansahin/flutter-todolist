@@ -20,6 +20,9 @@ class _SegmentCompletedState extends State<SegmentCompleted> {
   Map<DateTime, List<Task>> tasks = {};
 
   void filterTasks() {
+    //Clear old tasks
+    tasks.clear();
+
     Map<DateTime, List<Task>> allTasks = Map.fromEntries(widget.data.entries);
 
     for (var element in allTasks.entries) {

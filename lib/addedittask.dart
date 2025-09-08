@@ -39,6 +39,26 @@ class _AddEditTaskState extends State<AddEditTask> {
     return true;
   }
 
+  //Checks Date and time if user selects date and time before now
+  //TRUE: Date and time is appropriate
+  //FALSE: Date and time are before now
+  bool checkForDateAndTime() {
+    DateTime selectedDateAndTime = DateTime(
+      selectedDate.year,
+      selectedDate.month,
+      selectedDate.day,
+      selectedTime.hour,
+      selectedTime.minute,
+    );
+    DateTime now = DateTime.now();
+
+    if (selectedDateAndTime.isBefore(now)) {
+      return false;
+    } else {
+      return true;
+    }
+  }
+
   Future<void> addTask() async {
     //Insert task and get the task object
     final Task task = await db
@@ -103,6 +123,27 @@ class _AddEditTaskState extends State<AddEditTask> {
     }
   }
 
+  //Shows an alert dialog
+  void showAlertDialog(BuildContext context, String title, String content) {
+    showDialog(
+      context: context,
+      builder: (dialogContext) {
+        return AlertDialog(
+          title: Text(title),
+          content: Text(content, style: TextStyle(fontSize: 16)),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.pop(dialogContext);
+              },
+              child: Text("OK", style: TextStyle(fontSize: 16)),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   @override
   void initState() {
     setupFields();
@@ -123,14 +164,14 @@ class _AddEditTaskState extends State<AddEditTask> {
       minChildSize: 0.1,
       builder: (BuildContext context, ScrollController scrollController) {
         return Container(
-          color: Theme.of(context).cardTheme.surfaceTintColor,
+          color: Theme.of(context).secondaryHeaderColor,
           child: CustomScrollView(
             controller: scrollController,
             physics: BouncingScrollPhysics(),
             slivers: [
               SliverAppBar.medium(
                 title: Text(widget.willEdit ? "Edit Task" : "New Task"),
-                backgroundColor: Theme.of(context).cardTheme.surfaceTintColor,
+                backgroundColor: Theme.of(context).secondaryHeaderColor,
                 pinned: true,
               ),
               SliverPadding(
@@ -186,6 +227,11 @@ class _AddEditTaskState extends State<AddEditTask> {
                                 style: TextStyle(fontSize: 17),
                               ),
                               OutlinedButton(
+                                style: OutlinedButton.styleFrom(
+                                  backgroundColor: Theme.of(
+                                    context,
+                                  ).canvasColor,
+                                ),
                                 onPressed: () async {
                                   final DateTime? date = await showDatePicker(
                                     context: context,
@@ -198,7 +244,10 @@ class _AddEditTaskState extends State<AddEditTask> {
                                     });
                                   }
                                 },
-                                child: Text("Select a deadline date"),
+                                child: Text(
+                                  "Select a deadline date",
+                                  style: TextStyle(fontSize: 15),
+                                ),
                               ),
                             ],
                           ),
@@ -207,12 +256,15 @@ class _AddEditTaskState extends State<AddEditTask> {
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               Text(
-                                DateFormat(
-                                  "HH:mm",
-                                ).format(selectedDate).toString(),
+                                selectedTime.format(context).toString(),
                                 style: TextStyle(fontSize: 17),
                               ),
                               OutlinedButton(
+                                style: OutlinedButton.styleFrom(
+                                  backgroundColor: Theme.of(
+                                    context,
+                                  ).canvasColor,
+                                ),
                                 onPressed: () async {
                                   final TimeOfDay? timeOfDay =
                                       await showTimePicker(
@@ -227,7 +279,10 @@ class _AddEditTaskState extends State<AddEditTask> {
                                     });
                                   }
                                 },
-                                child: Text("Select a deadline time"),
+                                child: Text(
+                                  "Select a deadline time",
+                                  style: TextStyle(fontSize: 15),
+                                ),
                               ),
                             ],
                           ),
@@ -288,8 +343,8 @@ class _AddEditTaskState extends State<AddEditTask> {
                           borderRadius: BorderRadius.all(Radius.circular(10)),
                           boxShadow: [
                             BoxShadow(
-                              color: Colors.grey.withValues(alpha: 1),
-                              spreadRadius: 5,
+                              color: Colors.grey.withValues(alpha: 0.5),
+                              spreadRadius: 4,
                               blurRadius: 7,
                               offset: Offset(0, 3),
                             ),
@@ -315,30 +370,16 @@ class _AddEditTaskState extends State<AddEditTask> {
                           },
                           onTap: () async {
                             if (!checkForEmptiness()) {
-                              showDialog(
-                                context: context,
-                                builder: (dialogContext) {
-                                  return AlertDialog(
-                                    title: Text(
-                                      "Couln't ${widget.willEdit ? "Edit" : "Add"}",
-                                    ),
-                                    content: Text(
-                                      "Can't ${widget.willEdit ? "edit the" : "add an"} item without one or some of parameters",
-                                      style: TextStyle(fontSize: 16),
-                                    ),
-                                    actions: [
-                                      TextButton(
-                                        onPressed: () {
-                                          Navigator.pop(dialogContext);
-                                        },
-                                        child: Text(
-                                          "OK",
-                                          style: TextStyle(fontSize: 16),
-                                        ),
-                                      ),
-                                    ],
-                                  );
-                                },
+                              showAlertDialog(
+                                context,
+                                "Couln't ${widget.willEdit ? "Edit" : "Add"}",
+                                "Can't ${widget.willEdit ? "edit the" : "add an"} item without one or some of parameters",
+                              );
+                            } else if (!checkForDateAndTime()) {
+                              showAlertDialog(
+                                context,
+                                "Couln't ${widget.willEdit ? "Edit" : "Add"}",
+                                "Can't ${widget.willEdit ? "edit the" : "add an"} item before now",
                               );
                             } else {
                               if (widget.willEdit) {
@@ -365,7 +406,7 @@ class _AddEditTaskState extends State<AddEditTask> {
                         ),
                       ),
                     ),
-                    Padding(padding: EdgeInsetsGeometry.only(top: 20)),
+                    Padding(padding: EdgeInsetsGeometry.only(top: 40)),
                   ]),
                 ),
               ),

@@ -20,11 +20,15 @@ class _SegmentUpcomingState extends State<SegmentUpcoming> {
   Map<DateTime, List<Task>> tasks = {};
 
   void filterTasks() {
+    //Clear old tasks
+    tasks.clear();
+
     //Get all upcoming tasks
-    var date = DateTime.now();
+    var now = DateTime.now();
+    var yesterday = now.subtract(Duration(days: 1));
     Iterable<MapEntry<DateTime, List<Task>>> tasksIter = widget.data.entries
         .where((element) {
-          return element.key.isAfter(date);
+          return element.key.isAfter(yesterday);
         });
 
     if (tasksIter.isNotEmpty) {
@@ -32,7 +36,10 @@ class _SegmentUpcomingState extends State<SegmentUpcoming> {
 
       //Pass them to tasks
       for (var element in allTasks.entries) {
-        List<Task> tasksList = element.value.toList();
+        List<Task> tasksList = element.value
+            .where((element) => !element.completed)
+            .where((element) => element.dateAndTime.isAfter(now))
+            .toList();
         if (tasksList.isNotEmpty) {
           tasks[element.key] = tasksList;
         }

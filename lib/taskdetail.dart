@@ -60,6 +60,9 @@ class _TaskDetailState extends State<TaskDetail> {
     }
   }
 
+  /*
+    Changer for notify status
+  */
   Future<void> changeNotifyStatus(bool newValue) async {
     //Store new data as a list and pass first item into data variable
     var newData =
@@ -79,6 +82,19 @@ class _TaskDetailState extends State<TaskDetail> {
     } else {
       await cancelTaskNotification(data.id);
     }
+  }
+
+  /*
+    Changer for importancy
+  */
+  Future<void> changeImportancy(bool newValue) async {
+    //Store new data as a list and pass first item into data variable
+    var newData =
+        await (db.update(db.tasks)..where((tbl) {
+              return tbl.id.equals(data.id);
+            }))
+            .writeReturning(TasksCompanion(important: drift.Value(newValue)));
+    data = newData.first;
   }
 
   /*
@@ -114,7 +130,7 @@ class _TaskDetailState extends State<TaskDetail> {
             SliverAppBar.medium(
               pinned: false,
               floating: false,
-              expandedHeight: 150,
+              expandedHeight: 400,
               stretch: true,
               backgroundColor: Theme.of(context).secondaryHeaderColor,
               foregroundColor: Theme.of(context).primaryColor,
@@ -125,69 +141,6 @@ class _TaskDetailState extends State<TaskDetail> {
                 ),
                 centerTitle: true,
               ),
-              actions: [
-                Padding(
-                  padding: const EdgeInsets.only(right: 10),
-                  child: IconButton(
-                    padding: EdgeInsets.all(10),
-                    onPressed: () {
-                      showModalBottomSheet(
-                        isScrollControlled: true,
-                        context: context,
-                        builder: (bottomSheetContext) {
-                          return AddEditTask(willEdit: true, task: data);
-                        },
-                      );
-                    },
-                    icon: Icon(Icons.edit),
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(right: 10),
-                  child: IconButton(
-                    padding: EdgeInsets.all(10),
-                    onPressed: () {
-                      showDialog(
-                        context: context,
-                        builder: (dialogContext) {
-                          return AlertDialog(
-                            title: Text("Delete Task"),
-                            content: Text(
-                              "Would you like to delete this task?",
-                              style: TextStyle(fontSize: 16),
-                            ),
-                            actions: [
-                              TextButton(
-                                onPressed: () {
-                                  Navigator.pop(dialogContext);
-                                },
-                                child: Text(
-                                  "No",
-                                  style: TextStyle(
-                                    fontSize: 16,
-                                    color: Theme.of(context).primaryColorDark,
-                                  ),
-                                ),
-                              ),
-                              TextButton(
-                                onPressed: () async {
-                                  Navigator.pop(dialogContext);
-                                  await deleteTask();
-                                },
-                                child: Text(
-                                  "Yes",
-                                  style: TextStyle(fontSize: 16),
-                                ),
-                              ),
-                            ],
-                          );
-                        },
-                      );
-                    },
-                    icon: Icon(Icons.delete),
-                  ),
-                ),
-              ],
             ),
             SliverPadding(
               padding: const EdgeInsets.all(10),
@@ -239,6 +192,27 @@ class _TaskDetailState extends State<TaskDetail> {
                     child: Text(data.type, style: TextStyle(fontSize: 17)),
                   ),
 
+                  //Importancy
+                  ShadowedField(
+                    title: "Importancy",
+                    margin: EdgeInsets.only(top: 20),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          "Is this task important for you?",
+                          style: TextStyle(fontSize: 20),
+                        ),
+                        Switch(
+                          value: data.important,
+                          onChanged: (value) async {
+                            await changeImportancy(value);
+                          },
+                        ),
+                      ],
+                    ),
+                  ),
+
                   //Notifications
                   ShadowedField(
                     title: "Notification",
@@ -254,7 +228,14 @@ class _TaskDetailState extends State<TaskDetail> {
                               Switch(
                                 value: data.shouldNotify,
                                 onChanged: (value) async {
-                                  await changeNotifyStatus(value);
+                                  bool isBefore = data.dateAndTime.isBefore(
+                                    DateTime.now(),
+                                  );
+                                  if (isBefore) {
+                                    setState(() {});
+                                  } else {
+                                    await changeNotifyStatus(value);
+                                  }
                                 },
                               ),
                             ],
@@ -267,9 +248,80 @@ class _TaskDetailState extends State<TaskDetail> {
                 ]),
               ),
             ),
+
+            SliverPadding(padding: EdgeInsetsGeometry.only(top: 160)),
           ],
         ),
         backgroundColor: Theme.of(context).secondaryHeaderColor,
+        floatingActionButton: Padding(
+          padding: const EdgeInsets.only(bottom: 50),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              FloatingActionButton.extended(
+                heroTag: null,
+                onPressed: () {
+                  showDialog(
+                    context: context,
+                    builder: (dialogContext) {
+                      return AlertDialog(
+                        title: Text("Delete Task"),
+                        content: Text(
+                          "Would you like to delete this task?",
+                          style: TextStyle(fontSize: 16),
+                        ),
+                        actions: [
+                          TextButton(
+                            onPressed: () {
+                              Navigator.pop(dialogContext);
+                            },
+                            child: Text(
+                              "No",
+                              style: TextStyle(
+                                fontSize: 16,
+                                color: Theme.of(context).primaryColorDark,
+                              ),
+                            ),
+                          ),
+                          TextButton(
+                            onPressed: () async {
+                              Navigator.pop(dialogContext);
+                              await deleteTask();
+                            },
+                            child: Text("Yes", style: TextStyle(fontSize: 16)),
+                          ),
+                        ],
+                      );
+                    },
+                  );
+                },
+                backgroundColor: Theme.of(
+                  context,
+                ).bottomSheetTheme.backgroundColor,
+                icon: Icon(Icons.delete),
+                label: Text("Delete task"),
+              ),
+              Padding(padding: EdgeInsetsGeometry.only(left: 10)),
+              FloatingActionButton.extended(
+                heroTag: "new/edittask",
+                onPressed: () {
+                  showModalBottomSheet(
+                    isScrollControlled: true,
+                    context: context,
+                    builder: (bottomSheetContext) {
+                      return AddEditTask(willEdit: true, task: data);
+                    },
+                  );
+                },
+                backgroundColor: Theme.of(
+                  context,
+                ).bottomSheetTheme.backgroundColor,
+                icon: Icon(Icons.edit),
+                label: Text("Edit task"),
+              ),
+            ],
+          ),
+        ),
       );
     }
   }
