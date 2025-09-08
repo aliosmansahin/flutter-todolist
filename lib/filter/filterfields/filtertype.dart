@@ -57,11 +57,11 @@ class _FilterTypeState extends State<FilterType> {
               });
             },
             dropdownMenuEntries: [
-              DropdownMenuEntry(value: "all", label: "All"),
-              DropdownMenuEntry(value: "food", label: "Food"),
-              DropdownMenuEntry(value: "sport", label: "Sport"),
-              DropdownMenuEntry(value: "work", label: "Work"),
-              DropdownMenuEntry(value: "school", label: "School"),
+              DropdownMenuEntry(value: "All", label: "All"),
+              DropdownMenuEntry(value: "Food", label: "Food"),
+              DropdownMenuEntry(value: "Sport", label: "Sport"),
+              DropdownMenuEntry(value: "Work", label: "Work"),
+              DropdownMenuEntry(value: "School", label: "School"),
             ],
           ),
         ],

@@ -25,7 +25,7 @@ class _SegmentAllState extends State<SegmentAll> {
   bool important = false;
   String done = "alldone";
   String date = "alldate";
-  String type = "all";
+  String type = "All";
 
   /*
     Resets all filters to default
@@ -35,7 +35,7 @@ class _SegmentAllState extends State<SegmentAll> {
       important = false;
       done = "alldone";
       date = "alldate";
-      type = "all";
+      type = "All";
     });
   }
 
@@ -77,7 +77,7 @@ class _SegmentAllState extends State<SegmentAll> {
       }
 
       //Type
-      if (type != "all") {
+      if (type != "All") {
         tasksList = tasksList.where((task) => task.type == type).toList();
       }
 
