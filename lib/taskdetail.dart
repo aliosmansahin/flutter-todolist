@@ -10,7 +10,12 @@ part of 'main.dart';
 
 class TaskDetail extends StatefulWidget {
   final int id;
-  const TaskDetail({super.key, required this.id});
+  final Function completeTaskFunc;
+  const TaskDetail({
+    super.key,
+    required this.id,
+    required this.completeTaskFunc,
+  });
 
   @override
   State<TaskDetail> createState() => _TaskDetailState();
@@ -21,6 +26,11 @@ class _TaskDetailState extends State<TaskDetail> {
   bool isLoading = true;
 
   late StreamSubscription<List<Task>> _subscription;
+
+  //To call setState every minute
+  late Timer _timer;
+  int? _lastMinute;
+
   /*
     Listener function to handle events for task
     Also handles the first loading
@@ -98,17 +108,37 @@ class _TaskDetailState extends State<TaskDetail> {
   }
 
   /*
+    Starts minute listener
+  */
+  void startMinuteListener() {
+    _lastMinute = DateTime.now().minute;
+
+    //Checks every second if the minute has changed
+    _timer = Timer.periodic(Duration(seconds: 1), (timer) {
+      final now = DateTime.now();
+      if (now.minute != _lastMinute) {
+        _lastMinute = now.minute;
+
+        //Be called every minute
+        setState(() {});
+      }
+    });
+  }
+
+  /*
     InitState function
   */
   @override
   void initState() {
     super.initState();
     listenForUpdates();
+    startMinuteListener();
   }
 
   @override
   void dispose() {
     _subscription.cancel(); //Cancel listening
+    _timer.cancel();
     super.dispose();
   }
 
@@ -150,9 +180,29 @@ class _TaskDetailState extends State<TaskDetail> {
                   padding: const EdgeInsets.all(10),
                   sliver: SliverList(
                     delegate: SliverChildListDelegate([
+                      //Task status
+                      ShadowedField(
+                        title: "Status",
+                        margin: EdgeInsets.only(top: 20),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              "Status of this task",
+                              style: TextStyle(fontSize: 20),
+                            ),
+                            TaskStatus(
+                              task: data,
+                              completeTaskFunc: widget.completeTaskFunc,
+                            ),
+                          ],
+                        ),
+                      ),
+
                       //Task name
                       ShadowedField(
                         title: "Task name",
+                        margin: EdgeInsets.only(top: 20),
                         child: Text(data.title, style: TextStyle(fontSize: 17)),
                       ),
 

@@ -54,7 +54,6 @@ class _SearchInputState extends State<SearchInput> {
                     onTap: () {},
                     child: SearchBar(
                       controller: controller,
-                      autoFocus: true,
                       onChanged: (value) {
                         _mainPageState.currentState!.setState(() {
                           _segmentAllState.currentState!.searchValue = value;

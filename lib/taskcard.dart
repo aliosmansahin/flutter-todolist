@@ -42,7 +42,10 @@ class _TaskCardState extends State<TaskCard> {
     return GestureDetector(
       onTap: () {
         Navigator.of(context).push(
-          MaterialPageRoute(builder: (context) => TaskDetail(id: task.id)),
+          MaterialPageRoute(
+            builder: (context) =>
+                TaskDetail(id: task.id, completeTaskFunc: completeTask),
+          ),
         );
       },
       child: Container(
@@ -102,52 +105,7 @@ class _TaskCardState extends State<TaskCard> {
                       ],
                     ),
 
-                    //Done button
-                    Padding(
-                      padding: EdgeInsetsGeometry.symmetric(horizontal: 10),
-                      child: task.completed
-                          ? Padding(
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 20,
-                              ),
-                              child: Icon(
-                                Icons.check_circle,
-                                color: Color(0xFF2E7D32),
-                                size: 40,
-                              ),
-                            )
-                          : (task.dateAndTime.isAfter(DateTime.now())
-                                ? IconButton(
-                                    icon: Icon(
-                                      Icons.circle_outlined,
-                                      size: 40,
-                                      color: Color.fromARGB(200, 0, 0, 0),
-                                    ),
-                                    padding: EdgeInsets.symmetric(
-                                      horizontal: 20,
-                                      vertical: 0,
-                                    ),
-                                    onPressed: () {
-                                      _mainPageState.currentState!.setState(() {
-                                        if (task.dateAndTime.isAfter(
-                                          DateTime.now(),
-                                        )) {
-                                          completeTask();
-                                        }
-                                      });
-                                    },
-                                  )
-                                : Padding(
-                                    padding: const EdgeInsets.symmetric(
-                                      horizontal: 20,
-                                    ),
-                                    child: Icon(
-                                      Icons.close,
-                                      color: Color(0xFFD32F2F),
-                                      size: 40,
-                                    ),
-                                  )),
-                    ),
+                    TaskStatus(task: task, completeTaskFunc: completeTask),
                   ],
                 ),
               ],
