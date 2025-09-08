@@ -19,6 +19,10 @@ class _MainPageState extends State<MainPage> {
   Map<DateTime, List<Task>> data = {};
   TaskSegments selectedSegment = TaskSegments.all;
 
+  //To call setState every minute
+  late Timer _timer;
+  int? _lastMinute;
+
   /*
     Listener function to handle events for tasks
   */
@@ -51,12 +55,40 @@ class _MainPageState extends State<MainPage> {
   }
 
   /*
+    Starts minute listener
+  */
+  void startMinuteListener() {
+    _lastMinute = DateTime.now().minute;
+
+    //Checks every second if the minute has changed
+    _timer = Timer.periodic(Duration(seconds: 1), (timer) {
+      final now = DateTime.now();
+      if (now.minute != _lastMinute) {
+        _lastMinute = now.minute;
+
+        //Be called every minute
+        setState(() {});
+      }
+    });
+  }
+
+  /*
     InitState function
   */
   @override
   void initState() {
     listenForUpdates();
     super.initState();
+    startMinuteListener();
+  }
+
+  /*
+    Dispose function
+  */
+  @override
+  void dispose() {
+    _timer.cancel();
+    super.dispose();
   }
 
   /*
