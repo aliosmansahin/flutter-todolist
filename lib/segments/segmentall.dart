@@ -47,7 +47,6 @@ class _SegmentAllState extends State<SegmentAll> {
     tasks.clear();
 
     //Use all the data
-    //TODO: Add a filtering ui
     //Call this funciton in build
     Map<DateTime, List<Task>> allTasks = Map.fromEntries(widget.data.entries);
 
@@ -97,7 +96,7 @@ class _SegmentAllState extends State<SegmentAll> {
       }
     }
 
-    print(tasks);
+    //print(tasks);
   }
 
   @override

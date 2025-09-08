@@ -9,16 +9,16 @@ Created by Ali Osman ŞAHİN on 09/08/2025
 part of '../main.dart';
 
 class FloatingButton extends StatefulWidget {
-  Icon? icon;
-  Text? text;
-  VoidCallback? onPressed;
-  double? top;
-  double? bottom;
-  double? left;
-  double? right;
-  double? width;
-  double? height;
-  FloatingButton({
+  final Icon? icon;
+  final Text? text;
+  final VoidCallback? onPressed;
+  final double? top;
+  final double? bottom;
+  final double? left;
+  final double? right;
+  final double? width;
+  final double? height;
+  const FloatingButton({
     super.key,
     this.icon,
     this.text,

@@ -8,13 +8,11 @@ Main entrypoint, runs "MyApp"
 Imports
 */
 import 'dart:async';
-import 'dart:ffi';
 import 'dart:io';
 import 'dart:ui';
 
 import 'package:android_intent_plus/android_intent.dart';
 import 'package:drift/drift.dart' as drift;
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:drift/native.dart';
 import 'package:flutter/services.dart';
@@ -42,6 +40,7 @@ part 'utils/dateheader.dart';
 part 'utils/taskscolumn.dart';
 part 'utils/blur.dart';
 part 'utils/floatingbutton.dart';
+part 'utils/taskstatus.dart';
 part 'segments/segmentall.dart';
 part 'segments/segmenttoday.dart';
 part 'segments/segmentupcoming.dart';
@@ -98,8 +97,8 @@ Scheduler for notifications
 
 */
 Future<void> scheduleTaskNotification(Task task) async {
-  print(task.shouldNotify);
-  print(task.notificationSent);
+  //print(task.shouldNotify);
+  //print(task.notificationSent);
   if (!task.shouldNotify || task.notificationSent) return;
 
   //Not send notification if it passed
@@ -141,9 +140,9 @@ Future<void> scheduleTaskNotification(Task task) async {
     ),
   );*/
 
-  print(":::::::notification scheduled");
-  print(task.dateAndTime);
-  print(tz.TZDateTime.from(task.dateAndTime, tz.local));
+  //print(":::::::notification scheduled");
+  //print(task.dateAndTime);
+  //print(tz.TZDateTime.from(task.dateAndTime, tz.local));
 
   await (db.update(db.tasks)..where((t) => t.id.equals(task.id))).write(
     TasksCompanion(notificationSent: drift.Value(true)),
@@ -158,7 +157,7 @@ Cancels task notification
 Future<void> cancelTaskNotification(int taskId) async {
   await flutterLocalNotificationsPlugin.cancel(taskId);
 
-  print(":::::::notification canceled");
+  //print(":::::::notification canceled");
 }
 
 /*
@@ -194,7 +193,7 @@ Future<bool> canScheduleExactAlarms() async {
     final result = await platform.invokeMethod<bool>("canScheduleExactAlarms");
     return result ?? false;
   } catch (e) {
-    print("Coun't check for the exact alarm $e");
+    //print("Coun't check for the exact alarm $e");
     return false;
   }
 }

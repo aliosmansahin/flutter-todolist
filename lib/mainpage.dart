@@ -47,7 +47,6 @@ class _MainPageState extends State<MainPage> {
     Getter for all data
   */
   Future<void> getAllData() async {
-    print("şlşaskdlşsakd");
     final query = db.select(db.tasks);
 
     await query.get().then((value) {
