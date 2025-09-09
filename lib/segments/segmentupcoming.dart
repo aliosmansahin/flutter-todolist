@@ -9,8 +9,7 @@ Created by Ali Osman ŞAHİN on 09/06/2025
 part of '../main.dart';
 
 class SegmentUpcoming extends StatefulWidget {
-  final Map<DateTime, List<Task>> data;
-  const SegmentUpcoming({super.key, required this.data});
+  const SegmentUpcoming({super.key});
 
   @override
   State<SegmentUpcoming> createState() => _SegmentUpcomingState();
@@ -26,7 +25,9 @@ class _SegmentUpcomingState extends State<SegmentUpcoming> {
     //Get all upcoming tasks
     var now = DateTime.now();
     var yesterday = now.subtract(Duration(days: 1));
-    Iterable<MapEntry<DateTime, List<Task>>> tasksIter = widget.data.entries
+    Iterable<MapEntry<DateTime, List<Task>>> tasksIter = globalNotifier
+        .taskData
+        .entries
         .where((element) {
           return element.key.isAfter(yesterday);
         });

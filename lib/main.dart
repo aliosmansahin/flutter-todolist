@@ -19,9 +19,12 @@ import 'package:flutter_bounceable/flutter_bounceable.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_timezone/flutter_timezone.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
 import 'package:timezone/data/latest_all.dart' as tz;
 import 'package:timezone/timezone.dart' as tz;
 import 'package:collection/collection.dart';
+import 'package:todolist/provider/globalnotifier.dart';
+import 'package:todolist/utils/sortdata.dart';
 import 'package:todolist/utils/tasksegments.dart';
 
 import 'database/database.dart';
@@ -65,6 +68,9 @@ late Database db;
 //Instance for notificationsPlugin
 final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
     FlutterLocalNotificationsPlugin();
+
+//Instace for provider
+late GlobalNotifier globalNotifier;
 
 /*
 
@@ -253,7 +259,12 @@ Future<void> main() async {
   db = Database();
 
   await checkAndSchedulePendingNotifications();
-  runApp(const MyApp());
+  runApp(
+    ChangeNotifierProvider(
+      create: (context) => GlobalNotifier(),
+      child: const MyApp(),
+    ),
+  );
 }
 
 /*
@@ -288,7 +299,7 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.red),
       ),
       debugShowCheckedModeBanner: false,
-      home: MainPage(key: _mainPageState),
+      home: MainPage(),
     );
   }
 }

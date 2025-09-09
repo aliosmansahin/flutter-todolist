@@ -21,14 +21,12 @@ class _FilterTypeState extends State<FilterType> {
   @override
   void initState() {
     super.initState();
-    controller = TextEditingController(
-      text: _segmentAllState.currentState!.type,
-    );
+    controller = TextEditingController(text: globalNotifier.type);
   }
 
   @override
   Widget build(BuildContext context) {
-    controller.text = _segmentAllState.currentState!.type;
+    controller.text = globalNotifier.type;
     return Container(
       padding: EdgeInsets.only(left: 10),
       decoration: BoxDecoration(
@@ -50,11 +48,9 @@ class _FilterTypeState extends State<FilterType> {
           DropdownMenu(
             controller: controller,
             onSelected: (value) {
-              _segmentAllState.currentState!.setState(() {
-                if (value != null) {
-                  _segmentAllState.currentState!.type = value;
-                }
-              });
+              if (value != null) {
+                globalNotifier.setType(value);
+              }
             },
             dropdownMenuEntries: [
               DropdownMenuEntry(value: "All", label: "All"),

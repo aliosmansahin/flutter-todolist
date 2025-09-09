@@ -21,12 +21,12 @@ class _SearchInputState extends State<SearchInput> {
   @override
   Widget build(BuildContext context) {
     return AnimatedPositioned(
-      width: _mainPageState.currentState!.searchOpened
+      width: globalNotifier.searchOpened
           ? MediaQuery.of(context).size.width - 60
           : 10,
-      height: _mainPageState.currentState!.searchOpened ? 70 : 10,
-      bottom: _mainPageState.currentState!.searchOpened ? 200 : 140,
-      left: _mainPageState.currentState!.searchOpened ? 30 : 135,
+      height: globalNotifier.searchOpened ? 70 : 10,
+      bottom: globalNotifier.searchOpened ? 200 : 140,
+      left: globalNotifier.searchOpened ? 30 : 135,
       duration: Duration(milliseconds: 1200),
       curve: Curves.elasticOut,
       child: Container(
@@ -55,9 +55,7 @@ class _SearchInputState extends State<SearchInput> {
                     child: SearchBar(
                       controller: controller,
                       onChanged: (value) {
-                        _mainPageState.currentState!.setState(() {
-                          _segmentAllState.currentState!.searchValue = value;
-                        });
+                        globalNotifier.setSearchValue(value);
                       },
                     ),
                   ),
@@ -88,18 +86,13 @@ class _SearchInputState extends State<SearchInput> {
                           iconSize: 35,
                         ),
                         onPressed: () {
-                          _mainPageState.currentState!.setState(() {
-                            if (_segmentAllState
-                                .currentState!
-                                .searchValue
-                                .isEmpty) {
-                              _mainPageState.currentState!.searchOpened = false;
-                              FocusManager.instance.primaryFocus?.unfocus();
-                            } else {
-                              _segmentAllState.currentState!.searchValue = "";
-                              controller.text = "";
-                            }
-                          });
+                          if (globalNotifier.searchValue.isEmpty) {
+                            globalNotifier.setSearchOpened(false);
+                            FocusManager.instance.primaryFocus?.unfocus();
+                          } else {
+                            globalNotifier.setSearchValue("");
+                            controller.text = "";
+                          }
                         },
                         icon: Icon(
                           controller.text.isNotEmpty

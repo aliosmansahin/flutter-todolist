@@ -9,8 +9,7 @@ Created by Ali Osman ŞAHİN on 09/06/2025
 part of '../main.dart';
 
 class SegmentOverdue extends StatefulWidget {
-  final Map<DateTime, List<Task>> data;
-  const SegmentOverdue({super.key, required this.data});
+  const SegmentOverdue({super.key});
 
   @override
   State<SegmentOverdue> createState() => _SegmentOverdueState();
@@ -27,7 +26,9 @@ class _SegmentOverdueState extends State<SegmentOverdue> {
     var tommorrow = date.add(Duration(days: 1));
 
     // Filter passed tasks
-    Iterable<MapEntry<DateTime, List<Task>>> tasksIter = widget.data.entries
+    Iterable<MapEntry<DateTime, List<Task>>> tasksIter = globalNotifier
+        .taskData
+        .entries
         .where((element) => element.key.isBefore(tommorrow));
 
     if (tasksIter.isNotEmpty) {

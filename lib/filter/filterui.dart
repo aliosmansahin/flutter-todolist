@@ -19,15 +19,17 @@ class _FilterUIState extends State<FilterUI> {
   @override
   Widget build(BuildContext context) {
     return AnimatedPositioned(
-      width: _mainPageState.currentState!.filterOpened ? 350 : 80,
-      height: _mainPageState.currentState!.filterOpened ? 380 : 80,
-      bottom: _mainPageState.currentState!.filterOpened ? 120 : 105,
-      left: _mainPageState.currentState!.filterOpened ? 20 : 20,
+      width: globalNotifier.filterOpened
+          ? MediaQuery.of(context).size.width - 40
+          : 80,
+      height: globalNotifier.filterOpened ? 380 : 80,
+      bottom: globalNotifier.filterOpened ? 120 : 105,
+      left: globalNotifier.filterOpened ? 20 : 20,
       duration: Duration(milliseconds: 1200),
       curve: Curves.elasticOut,
       child: Container(
         padding: EdgeInsets.all(10),
-        child: _mainPageState.currentState!.filterOpened
+        child: globalNotifier.filterOpened
             ? FilterOpened()
             : FilterFloatingButton(),
       ),

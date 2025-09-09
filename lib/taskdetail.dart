@@ -146,8 +146,8 @@ class _TaskDetailState extends State<TaskDetail> {
   Widget build(BuildContext context) {
     if (isLoading) {
       return Scaffold(
-        appBar: AppBar(title: Text('Loading...')),
         body: Center(child: CircularProgressIndicator()),
+        backgroundColor: Theme.of(context).secondaryHeaderColor,
       );
     } else {
       return Scaffold(
@@ -157,8 +157,8 @@ class _TaskDetailState extends State<TaskDetail> {
               physics: BouncingScrollPhysics(),
               slivers: [
                 /*
-              AppBar
-              */
+                AppBar
+                */
                 SliverAppBar.medium(
                   pinned: false,
                   floating: false,

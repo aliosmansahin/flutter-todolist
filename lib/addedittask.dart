@@ -390,7 +390,6 @@ class _AddEditTaskState extends State<AddEditTask> {
                               if (!mounted) return;
                               Navigator.pop(context);
                             }
-                            _mainPageState.currentState!.setState(() {});
                           },
                           child: Container(
                             decoration: BoxDecoration(

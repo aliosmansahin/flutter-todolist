@@ -24,20 +24,15 @@ class _SearchButtonState extends State<SearchButton> {
       bottom: 105,
       left: 100,
       icon: Icon(
-        _segmentAllState.currentState!.searchValue.isNotEmpty
-            ? Icons.search_off
-            : Icons.search,
+        globalNotifier.searchValue.isNotEmpty ? Icons.search_off : Icons.search,
         size: 30,
-        color: _mainPageState.currentState!.searchOpened
+        color: globalNotifier.searchOpened
             ? Colors.black
             : Theme.of(context).canvasColor,
       ),
       onPressed: () {
-        _mainPageState.currentState!.setState(() {
-          _mainPageState.currentState!.searchOpened =
-              !_mainPageState.currentState!.searchOpened;
-          FocusManager.instance.primaryFocus?.unfocus();
-        });
+        globalNotifier.setSearchOpened(!globalNotifier.searchOpened);
+        FocusManager.instance.primaryFocus?.unfocus();
       },
     );
   }

@@ -60,16 +60,9 @@ class _SegmentButtonsState extends State<SegmentButtons> {
                 label: Text("Overdue"),
               ),
             ],
-            selected: <TaskSegments>{
-              _mainPageState.currentState!.selectedSegment,
-            },
+            selected: <TaskSegments>{globalNotifier.selectedSegment},
             onSelectionChanged: (p0) {
-              _mainPageState.currentState!.setState(() {
-                // By default there is only a single segment that can be
-                // selected at one time, so its value is always the first
-                // item in the selected set.
-                _mainPageState.currentState!.selectedSegment = p0.first;
-              });
+              globalNotifier.setSelectedSegment(p0.first);
             },
             multiSelectionEnabled: false,
           ),

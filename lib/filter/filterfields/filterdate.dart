@@ -40,11 +40,9 @@ class _FilterDateState extends State<FilterDate> {
               Text("All", style: TextStyle(fontSize: 17)),
               Radio(
                 value: "alldate",
-                groupValue: _segmentAllState.currentState!.date,
+                groupValue: globalNotifier.date,
                 onChanged: (value) {
-                  _mainPageState.currentState!.setState(() {
-                    _segmentAllState.currentState!.date = value.toString();
-                  });
+                  globalNotifier.setDate(value.toString());
                 },
               ),
             ],
@@ -54,11 +52,9 @@ class _FilterDateState extends State<FilterDate> {
               Text("Past", style: TextStyle(fontSize: 17)),
               Radio(
                 value: "past",
-                groupValue: _segmentAllState.currentState!.date,
+                groupValue: globalNotifier.date,
                 onChanged: (value) {
-                  _mainPageState.currentState!.setState(() {
-                    _segmentAllState.currentState!.date = value.toString();
-                  });
+                  globalNotifier.setDate(value.toString());
                 },
               ),
             ],
@@ -68,11 +64,9 @@ class _FilterDateState extends State<FilterDate> {
               Text("Future", style: TextStyle(fontSize: 17)),
               Radio(
                 value: "future",
-                groupValue: _segmentAllState.currentState!.date,
+                groupValue: globalNotifier.date,
                 onChanged: (value) {
-                  _mainPageState.currentState!.setState(() {
-                    _segmentAllState.currentState!.date = value.toString();
-                  });
+                  globalNotifier.setDate(value.toString());
                 },
               ),
             ],

@@ -8,11 +8,8 @@ Created by Ali Osman ŞAHİN on 09/06/2025
 
 part of '../main.dart';
 
-GlobalKey<_SegmentAllState> _segmentAllState = GlobalKey();
-
 class SegmentAll extends StatefulWidget {
-  final Map<DateTime, List<Task>> data;
-  const SegmentAll({super.key, required this.data});
+  const SegmentAll({super.key});
 
   @override
   State<SegmentAll> createState() => _SegmentAllState();
@@ -21,34 +18,15 @@ class SegmentAll extends StatefulWidget {
 class _SegmentAllState extends State<SegmentAll> {
   Map<DateTime, List<Task>> tasks = {};
 
-  //Filters
-  bool important = false;
-  String done = "alldone";
-  String date = "alldate";
-  String type = "All";
-
-  //Search
-  String searchValue = "";
-
-  /*
-    Resets all filters to default
-  */
-  void resetFilters() {
-    setState(() {
-      important = false;
-      done = "alldone";
-      date = "alldate";
-      type = "All";
-    });
-  }
-
   void filterTasks() {
     //Clear old tasks
     tasks.clear();
 
     //Use all the data
     //Call this funciton in build
-    Map<DateTime, List<Task>> allTasks = Map.fromEntries(widget.data.entries);
+    Map<DateTime, List<Task>> allTasks = Map.fromEntries(
+      globalNotifier.taskData.entries,
+    );
 
     for (var element in allTasks.entries) {
       //Get completed tasks
@@ -56,38 +34,40 @@ class _SegmentAllState extends State<SegmentAll> {
       List<Task> tasksList = element.value.toList();
 
       //Search
-      if (searchValue != "") {
+      if (globalNotifier.searchValue != "") {
         tasksList = tasksList
-            .where((task) => task.title.contains(searchValue))
+            .where((task) => task.title.contains(globalNotifier.searchValue))
             .toList();
       }
 
       //Importancy
-      if (important) {
+      if (globalNotifier.important) {
         tasksList = tasksList.where((task) => task.important).toList();
       }
 
       //Status
-      if (done == "done") {
+      if (globalNotifier.done == "done") {
         tasksList = tasksList.where((task) => task.completed).toList();
-      } else if (done == "undone") {
+      } else if (globalNotifier.done == "undone") {
         tasksList = tasksList.where((task) => !task.completed).toList();
       }
 
       //Date and time
-      if (date == "past") {
+      if (globalNotifier.date == "past") {
         tasksList = tasksList
             .where((task) => task.dateAndTime.isBefore(DateTime.now()))
             .toList();
-      } else if (date == "future") {
+      } else if (globalNotifier.date == "future") {
         tasksList = tasksList
             .where((task) => task.dateAndTime.isAfter(DateTime.now()))
             .toList();
       }
 
       //Type
-      if (type != "All") {
-        tasksList = tasksList.where((task) => task.type == type).toList();
+      if (globalNotifier.type != "All") {
+        tasksList = tasksList
+            .where((task) => task.type == globalNotifier.type)
+            .toList();
       }
 
       //Pass them to tasksMap

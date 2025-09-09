@@ -21,9 +21,7 @@ class _BlurState extends State<Blur> {
     return Positioned.fill(
       child: GestureDetector(
         onTap: () {
-          _mainPageState.currentState!.setState(() {
-            _mainPageState.currentState!.filterOpened = false;
-          });
+          globalNotifier.setFilterOpened(false);
         },
         child: BackdropFilter(
           filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),

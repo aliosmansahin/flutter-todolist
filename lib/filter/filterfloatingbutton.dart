@@ -42,9 +42,7 @@ class _FilterFloatingButtonState extends State<FilterFloatingButton> {
               shape: CircleBorder(),
             ),
             onPressed: () {
-              _mainPageState.currentState!.setState(() {
-                _mainPageState.currentState!.filterOpened = true;
-              });
+              globalNotifier.setFilterOpened(true);
             },
             icon: Icon(Icons.tune, size: 30),
           ),

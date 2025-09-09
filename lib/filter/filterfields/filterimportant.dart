@@ -37,11 +37,9 @@ class _FilterImportantState extends State<FilterImportant> {
         children: [
           Text("Only Important", style: TextStyle(fontSize: 17)),
           Switch(
-            value: _segmentAllState.currentState!.important,
+            value: globalNotifier.important,
             onChanged: (value) {
-              _mainPageState.currentState!.setState(() {
-                _segmentAllState.currentState!.important = value;
-              });
+              globalNotifier.setImportant(value);
             },
           ),
         ],

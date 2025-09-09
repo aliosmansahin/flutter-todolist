@@ -45,11 +45,9 @@ class _TaskStatusState extends State<TaskStatus> {
                     ),
                     padding: EdgeInsets.symmetric(horizontal: 20, vertical: 0),
                     onPressed: () {
-                      _mainPageState.currentState!.setState(() {
-                        if (widget.task.dateAndTime.isAfter(DateTime.now())) {
-                          widget.completeTaskFunc();
-                        }
-                      });
+                      if (widget.task.dateAndTime.isAfter(DateTime.now())) {
+                        widget.completeTaskFunc();
+                      }
                     },
                   )
                 : Padding(

@@ -27,9 +27,7 @@ class _FilterFormButtonsState extends State<FilterFormButtons> {
             onTap: () {},
             child: ElevatedButton(
               onPressed: () {
-                _mainPageState.currentState!.setState(() {
-                  _segmentAllState.currentState!.resetFilters();
-                });
+                globalNotifier.resetFilters();
               },
               child: Text("Reset", style: TextStyle(fontSize: 17)),
             ),
@@ -43,9 +41,7 @@ class _FilterFormButtonsState extends State<FilterFormButtons> {
             onTap: () {},
             child: ElevatedButton(
               onPressed: () {
-                _mainPageState.currentState!.setState(() {
-                  _mainPageState.currentState!.filterOpened = false;
-                });
+                globalNotifier.setFilterOpened(false);
               },
               child: Text("Close", style: TextStyle(fontSize: 17)),
             ),

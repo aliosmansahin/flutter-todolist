@@ -40,11 +40,9 @@ class _FilterStatusState extends State<FilterStatus> {
               Text("All", style: TextStyle(fontSize: 17)),
               Radio(
                 value: "alldone",
-                groupValue: _segmentAllState.currentState!.done,
+                groupValue: globalNotifier.done,
                 onChanged: (value) {
-                  _mainPageState.currentState!.setState(() {
-                    _segmentAllState.currentState!.done = value.toString();
-                  });
+                  globalNotifier.setDone(value.toString());
                 },
               ),
             ],
@@ -54,11 +52,9 @@ class _FilterStatusState extends State<FilterStatus> {
               Text("Done", style: TextStyle(fontSize: 17)),
               Radio(
                 value: "done",
-                groupValue: _segmentAllState.currentState!.done,
+                groupValue: globalNotifier.done,
                 onChanged: (value) {
-                  _mainPageState.currentState!.setState(() {
-                    _segmentAllState.currentState!.done = value.toString();
-                  });
+                  globalNotifier.setDone(value.toString());
                 },
               ),
             ],
@@ -68,11 +64,9 @@ class _FilterStatusState extends State<FilterStatus> {
               Text("Undone", style: TextStyle(fontSize: 17)),
               Radio(
                 value: "undone",
-                groupValue: _segmentAllState.currentState!.done,
+                groupValue: globalNotifier.done,
                 onChanged: (value) {
-                  _mainPageState.currentState!.setState(() {
-                    _segmentAllState.currentState!.done = value.toString();
-                  });
+                  globalNotifier.setDone(value.toString());
                 },
               ),
             ],

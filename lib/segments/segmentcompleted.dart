@@ -9,8 +9,7 @@ Created by Ali Osman ŞAHİN on 09/06/2025
 part of '../main.dart';
 
 class SegmentCompleted extends StatefulWidget {
-  final Map<DateTime, List<Task>> data;
-  const SegmentCompleted({super.key, required this.data});
+  const SegmentCompleted({super.key});
 
   @override
   State<SegmentCompleted> createState() => _SegmentCompletedState();
@@ -23,7 +22,9 @@ class _SegmentCompletedState extends State<SegmentCompleted> {
     //Clear old tasks
     tasks.clear();
 
-    Map<DateTime, List<Task>> allTasks = Map.fromEntries(widget.data.entries);
+    Map<DateTime, List<Task>> allTasks = Map.fromEntries(
+      globalNotifier.taskData.entries,
+    );
 
     for (var element in allTasks.entries) {
       //Get completed tasks
