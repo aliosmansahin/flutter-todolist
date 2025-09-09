@@ -35,41 +35,58 @@ class _FilterStatusState extends State<FilterStatus> {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Row(
-            children: [
-              Text("All", style: TextStyle(fontSize: 17)),
-              Radio(
-                value: "alldone",
-                groupValue: globalNotifier.done,
-                onChanged: (value) {
-                  globalNotifier.setDone(value.toString());
-                },
-              ),
-            ],
+          GestureDetector(
+            onTapUp: (details) {
+              globalNotifier.setDone("alldone");
+            },
+            child: Row(
+              children: [
+                Text("All", style: TextStyle(fontSize: 17)),
+                Radio(
+                  value: "alldone",
+                  groupValue: globalNotifier.done,
+                  onChanged: (value) {
+                    globalNotifier.setDone(value.toString());
+                  },
+                ),
+              ],
+            ),
           ),
-          Row(
-            children: [
-              Text("Done", style: TextStyle(fontSize: 17)),
-              Radio(
-                value: "done",
-                groupValue: globalNotifier.done,
-                onChanged: (value) {
-                  globalNotifier.setDone(value.toString());
-                },
-              ),
-            ],
+
+          GestureDetector(
+            onTapUp: (details) {
+              globalNotifier.setDone("done");
+            },
+            child: Row(
+              children: [
+                Text("Done", style: TextStyle(fontSize: 17)),
+                Radio(
+                  value: "done",
+                  groupValue: globalNotifier.done,
+                  onChanged: (value) {
+                    globalNotifier.setDone(value.toString());
+                  },
+                ),
+              ],
+            ),
           ),
-          Row(
-            children: [
-              Text("Undone", style: TextStyle(fontSize: 17)),
-              Radio(
-                value: "undone",
-                groupValue: globalNotifier.done,
-                onChanged: (value) {
-                  globalNotifier.setDone(value.toString());
-                },
-              ),
-            ],
+
+          GestureDetector(
+            onTapUp: (details) {
+              globalNotifier.setDone("undone");
+            },
+            child: Row(
+              children: [
+                Text("Undone", style: TextStyle(fontSize: 17)),
+                Radio(
+                  value: "undone",
+                  groupValue: globalNotifier.done,
+                  onChanged: (value) {
+                    globalNotifier.setDone(value.toString());
+                  },
+                ),
+              ],
+            ),
           ),
         ],
       ),

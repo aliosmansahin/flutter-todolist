@@ -35,41 +35,58 @@ class _FilterDateState extends State<FilterDate> {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Row(
-            children: [
-              Text("All", style: TextStyle(fontSize: 17)),
-              Radio(
-                value: "alldate",
-                groupValue: globalNotifier.date,
-                onChanged: (value) {
-                  globalNotifier.setDate(value.toString());
-                },
-              ),
-            ],
+          GestureDetector(
+            onTapUp: (details) {
+              globalNotifier.setDate("alldate");
+            },
+            child: Row(
+              children: [
+                Text("All", style: TextStyle(fontSize: 17)),
+                Radio(
+                  value: "alldate",
+                  groupValue: globalNotifier.date,
+                  onChanged: (value) {
+                    globalNotifier.setDate(value.toString());
+                  },
+                ),
+              ],
+            ),
           ),
-          Row(
-            children: [
-              Text("Past", style: TextStyle(fontSize: 17)),
-              Radio(
-                value: "past",
-                groupValue: globalNotifier.date,
-                onChanged: (value) {
-                  globalNotifier.setDate(value.toString());
-                },
-              ),
-            ],
+
+          GestureDetector(
+            onTapUp: (details) {
+              globalNotifier.setDate("past");
+            },
+            child: Row(
+              children: [
+                Text("Past", style: TextStyle(fontSize: 17)),
+                Radio(
+                  value: "past",
+                  groupValue: globalNotifier.date,
+                  onChanged: (value) {
+                    globalNotifier.setDate(value.toString());
+                  },
+                ),
+              ],
+            ),
           ),
-          Row(
-            children: [
-              Text("Future", style: TextStyle(fontSize: 17)),
-              Radio(
-                value: "future",
-                groupValue: globalNotifier.date,
-                onChanged: (value) {
-                  globalNotifier.setDate(value.toString());
-                },
-              ),
-            ],
+
+          GestureDetector(
+            onTapUp: (details) {
+              globalNotifier.setDate("future");
+            },
+            child: Row(
+              children: [
+                Text("Future", style: TextStyle(fontSize: 17)),
+                Radio(
+                  value: "future",
+                  groupValue: globalNotifier.date,
+                  onChanged: (value) {
+                    globalNotifier.setDate(value.toString());
+                  },
+                ),
+              ],
+            ),
           ),
         ],
       ),
