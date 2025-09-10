@@ -32,10 +32,26 @@ class _ShadowedFieldState extends State<ShadowedField> {
         color: Theme.of(context).secondaryHeaderColor,
         boxShadow: [
           BoxShadow(
-            color: Colors.grey.withValues(alpha: 0.5),
+            color: Theme.of(context).secondaryHeaderColor.withValues(
+              red: 0.1,
+              green: 0.1,
+              blue: 0.1,
+              alpha: 0.2,
+            ),
             spreadRadius: 4,
             blurRadius: 7,
-            offset: Offset(0, 3),
+            offset: Offset(0, 5),
+          ),
+          BoxShadow(
+            color: Theme.of(context).secondaryHeaderColor.withValues(
+              red: 1.1,
+              green: 1.1,
+              blue: 1.1,
+              alpha: 0.2,
+            ),
+            spreadRadius: 4,
+            blurRadius: 7,
+            offset: Offset(0, -5),
           ),
         ],
         borderRadius: BorderRadius.all(Radius.circular(10)),
