@@ -43,11 +43,15 @@ class _TaskCardState extends State<TaskCard> {
     task = widget.task;
     return GestureDetector(
       onTap: () {
-        Navigator.of(context).push(
-          MaterialPageRoute(
-            builder: (context) =>
-                TaskDetail(id: task.id, completeTaskFunc: completeTask),
-          ),
+        MyApp.navigatorKey.currentState?.pushNamedAndRemoveUntil(
+          "/details-page",
+          (route) => (route.settings.name != "/details-page") || route.isFirst,
+          arguments: {
+            "id": task.id,
+            "completeTaskFunc": () async {
+              completeTask();
+            },
+          },
         );
       },
       child: Container(

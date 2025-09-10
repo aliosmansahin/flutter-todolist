@@ -44,9 +44,9 @@ class _TaskStatusState extends State<TaskStatus> {
                       color: Color.fromARGB(200, 0, 0, 0),
                     ),
                     padding: EdgeInsets.symmetric(horizontal: 20, vertical: 0),
-                    onPressed: () {
+                    onPressed: () async {
                       if (widget.task.dateAndTime.isAfter(DateTime.now())) {
-                        widget.completeTaskFunc();
+                        await widget.completeTaskFunc();
                       }
                     },
                   )

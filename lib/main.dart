@@ -8,21 +8,18 @@ Main entrypoint, runs "MyApp"
 Imports
 */
 import 'dart:async';
-import 'dart:io';
 import 'dart:ui';
 
-import 'package:android_intent_plus/android_intent.dart';
 import 'package:drift/drift.dart' as drift;
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_bounceable/flutter_bounceable.dart';
-import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_timezone/flutter_timezone.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:timezone/data/latest_all.dart' as tz;
 import 'package:timezone/timezone.dart' as tz;
 import 'package:collection/collection.dart';
+import 'package:todolist/notifications/notificationcontroller.dart';
 import 'package:todolist/provider/globalnotifier.dart';
 import 'package:todolist/utils/sortdata.dart';
 import 'package:todolist/utils/tasksegments.dart';
@@ -65,36 +62,8 @@ part 'search/searchinput.dart';
 //Instance for database
 late Database db;
 
-//Instance for notificationsPlugin
-final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
-    FlutterLocalNotificationsPlugin();
-
 //Instace for provider
 late GlobalNotifier globalNotifier;
-
-/*
-
-Initializer for notifications
-
-*/
-Future<void> initNotifications() async {
-  const AndroidInitializationSettings initializationSettingsAndroid =
-      AndroidInitializationSettings('@mipmap/ic_launcher');
-
-  const DarwinInitializationSettings initializationSettingsIOS =
-      DarwinInitializationSettings(
-        requestAlertPermission: true,
-        requestBadgePermission: true,
-        requestSoundPermission: true,
-      );
-
-  final InitializationSettings initializationSettings = InitializationSettings(
-    android: initializationSettingsAndroid,
-    iOS: initializationSettingsIOS,
-  );
-
-  await flutterLocalNotificationsPlugin.initialize(initializationSettings);
-}
 
 /*
 
@@ -109,45 +78,7 @@ Future<void> scheduleTaskNotification(Task task) async {
   //Not send notification if it passed
   if (task.dateAndTime.isBefore(DateTime.now())) return;
 
-  await flutterLocalNotificationsPlugin.zonedSchedule(
-    task.id,
-    "Task Reminder",
-    task.title,
-    tz.TZDateTime.from(task.dateAndTime, tz.local),
-    const NotificationDetails(
-      android: AndroidNotificationDetails(
-        "task_channel",
-        "Task Notifications",
-        channelDescription: "Task notification channel",
-        importance: Importance.max,
-        priority: Priority.high,
-      ),
-    ),
-
-    androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
-    uiLocalNotificationDateInterpretation:
-        UILocalNotificationDateInterpretation.absoluteTime,
-    matchDateTimeComponents: null,
-  );
-
-  /*flutterLocalNotificationsPlugin.show(
-    task.id,
-    "Task Reminder",
-    task.title,
-    const NotificationDetails(
-      android: AndroidNotificationDetails(
-        "task_channel",
-        "Task Notifications",
-        channelDescription: "Task notification channel",
-        importance: Importance.max,
-        priority: Priority.high,
-      ),
-    ),
-  );*/
-
-  //print(":::::::notification scheduled");
-  //print(task.dateAndTime);
-  //print(tz.TZDateTime.from(task.dateAndTime, tz.local));
+  NotificationController.scheduleNewNotification(task);
 
   await (db.update(db.tasks)..where((t) => t.id.equals(task.id))).write(
     TasksCompanion(notificationSent: drift.Value(true)),
@@ -160,9 +91,7 @@ Cancels task notification
 
 */
 Future<void> cancelTaskNotification(int taskId) async {
-  await flutterLocalNotificationsPlugin.cancel(taskId);
-
-  //print(":::::::notification canceled");
+  NotificationController.cancelNotification(taskId);
 }
 
 /*
@@ -189,76 +118,27 @@ Future<void> checkAndSchedulePendingNotifications() async {
 
 /*
 
-Checks for if the application can schedule exact alarms
-
-*/
-Future<bool> canScheduleExactAlarms() async {
-  const platform = MethodChannel("alarm_permission");
-  try {
-    final result = await platform.invokeMethod<bool>("canScheduleExactAlarms");
-    return result ?? false;
-  } catch (e) {
-    //print("Coun't check for the exact alarm $e");
-    return false;
-  }
-}
-
-/*
-
-Requests exact alarm permission
-
-*/
-Future<void> checkAndRequestExactAlarmPermission() async {
-  if (Platform.isAndroid) {
-    final canSchedule = await canScheduleExactAlarms();
-    if (!canSchedule) {
-      //Needs to route settings
-      final intent = AndroidIntent(
-        action: 'android.settings.REQUEST_SCHEDULE_EXACT_ALARM',
-      );
-      await intent.launch();
-    }
-  }
-}
-
-/*
-
 Main Function
 
 */
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
+  //Time zone
   tz.initializeTimeZones();
   final String currentTimeZone = await FlutterTimezone.getLocalTimezone();
   tz.setLocalLocation(tz.getLocation(currentTimeZone));
 
-  const AndroidNotificationChannel channel = AndroidNotificationChannel(
-    "task_channel",
-    "Task Notifications",
-    description: "Task notification channel",
-    importance: Importance.max,
-  );
-
-  //Permission request for notifications
-  final androidImplementation = flutterLocalNotificationsPlugin
-      .resolvePlatformSpecificImplementation<
-        AndroidFlutterLocalNotificationsPlugin
-      >();
-
-  await androidImplementation?.createNotificationChannel(channel);
-
-  await androidImplementation?.requestExactAlarmsPermission();
-
-  await androidImplementation?.requestNotificationsPermission();
-
-  //await checkAndRequestExactAlarmPermission();
-
-  await initNotifications();
-
+  //Database
   db = Database();
 
+  //Notifications
+  await NotificationController.initializeLocalNotifications();
+  await NotificationController.initializeIsolateReceivePort();
+  await NotificationController.startListeningNotificationEvents();
+
   await checkAndSchedulePendingNotifications();
+
   runApp(
     ChangeNotifierProvider(
       create: (context) => GlobalNotifier(),
@@ -272,10 +152,68 @@ Future<void> main() async {
 Material App, home will show "mainpage.dart"
 
 */
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
   const MyApp({super.key});
 
+  // The navigator key is necessary to navigate using static methods
+  static final GlobalKey<NavigatorState> navigatorKey =
+      GlobalKey<NavigatorState>();
+
+  @override
+  State<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
   // This widget is the root of your application.
+
+  static const String routeHome = "/", routeDetails = "/details-page";
+
+  @override
+  void initState() {
+    super.initState();
+  }
+
+  List<Route<dynamic>> onGenerateInitialRoutes(String initialRouteName) {
+    List<Route<dynamic>> pageStack = [];
+    pageStack.add(MaterialPageRoute(builder: (context) => MainPage()));
+
+    if (NotificationController.initialAction != null) {
+      final payload = NotificationController.initialAction!.payload;
+      int? taskId;
+
+      if (payload != null && payload.containsKey("taskid")) {
+        taskId = int.tryParse(payload["taskid"]!);
+      } else {
+        taskId = NotificationController.initialAction!.id;
+      }
+      pageStack.add(
+        MaterialPageRoute(
+          builder: (context) => TaskDetail(
+            id: taskId!,
+            completeTaskFunc: () async {},
+          ), //Notified tasks can't be done, so no completeTask function here
+        ),
+      );
+    }
+    return pageStack;
+  }
+
+  Route<dynamic>? onGenerateRoute(RouteSettings settings) {
+    switch (settings.name) {
+      case routeHome:
+        return MaterialPageRoute(builder: (context) => MainPage());
+      case routeDetails:
+        final args = settings.arguments as Map<String, dynamic>;
+        int taskId = args["id"];
+        Future<void> Function() completeTaskFunc = args["completeTaskFunc"];
+        return MaterialPageRoute(
+          builder: (context) =>
+              TaskDetail(id: taskId, completeTaskFunc: completeTaskFunc),
+        );
+    }
+    return null;
+  }
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -299,7 +237,9 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.red),
       ),
       debugShowCheckedModeBanner: false,
-      home: MainPage(),
+      navigatorKey: MyApp.navigatorKey,
+      onGenerateInitialRoutes: onGenerateInitialRoutes,
+      onGenerateRoute: onGenerateRoute,
     );
   }
 }
