@@ -40,7 +40,7 @@ class _ShadowedFieldState extends State<ShadowedField> {
             ),
             spreadRadius: 4,
             blurRadius: 7,
-            offset: Offset(0, 5),
+            offset: Offset(2, 2),
           ),
           BoxShadow(
             color: Theme.of(context).secondaryHeaderColor.withValues(
@@ -51,7 +51,7 @@ class _ShadowedFieldState extends State<ShadowedField> {
             ),
             spreadRadius: 4,
             blurRadius: 7,
-            offset: Offset(0, -5),
+            offset: Offset(-2, -2),
           ),
         ],
         borderRadius: BorderRadius.all(Radius.circular(10)),

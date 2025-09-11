@@ -408,7 +408,7 @@ class _AddEditTaskState extends State<AddEditTask> {
                                       ),
                                   spreadRadius: 4,
                                   blurRadius: 7,
-                                  offset: Offset(0, 5),
+                                  offset: Offset(2, 2),
                                 ),
                                 BoxShadow(
                                   color: Theme.of(context).secondaryHeaderColor
@@ -420,7 +420,7 @@ class _AddEditTaskState extends State<AddEditTask> {
                                       ),
                                   spreadRadius: 4,
                                   blurRadius: 7,
-                                  offset: Offset(0, -5),
+                                  offset: Offset(-2, -2),
                                 ),
                               ],
                             ),

@@ -35,7 +35,7 @@ class _FilterFloatingButtonState extends State<FilterFloatingButton> {
         ),
         child: ClipRect(
           child: IconButton(
-            color: Colors.white,
+            color: Theme.of(context).canvasColor,
             style: IconButton.styleFrom(
               backgroundColor: Theme.of(context).primaryColorDark,
               shadowColor: Colors.black,
