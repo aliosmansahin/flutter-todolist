@@ -234,13 +234,13 @@ class _MyAppState extends State<MyApp> {
         //
         // This works for code too, not just values: Most code changes can be
         // tested with just a hot reload.
-        secondaryHeaderColor: Color.fromARGB(255, 192, 232, 255),
+        secondaryHeaderColor: Color.fromARGB(255, 199, 229, 247),
         primaryColor: const Color.fromARGB(255, 0, 51, 161),
         primaryColorDark: const Color.fromARGB(255, 25, 0, 134),
         canvasColor: const Color.fromARGB(255, 255, 255, 255),
         segmentedButtonTheme: SegmentedButtonThemeData(
           style: SegmentedButton.styleFrom(
-            backgroundColor: Color.fromARGB(255, 192, 232, 255),
+            backgroundColor: Color.fromARGB(255, 199, 229, 247),
             foregroundColor: Colors.black,
             selectedBackgroundColor: const Color.fromARGB(255, 25, 0, 134),
             selectedForegroundColor: Colors.white,
