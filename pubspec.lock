@@ -17,14 +17,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "7.7.1"
-  android_intent_plus:
-    dependency: "direct main"
-    description:
-      name: android_intent_plus
-      sha256: "2329378af63f49b985cb2e110ac784d08374f1e2b1984be77ba9325b1c8cce11"
-      url: "https://pub.dev"
-    source: hosted
-    version: "5.3.1"
   args:
     dependency: transitive
     description:
@@ -653,14 +645,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.9.0"
-  sqlite3_flutter_libs:
-    dependency: "direct main"
-    description:
-      name: sqlite3_flutter_libs
-      sha256: "2b03273e71867a8a4d030861fc21706200debe5c5858a4b9e58f4a1c129586a4"
-      url: "https://pub.dev"
-    source: hosted
-    version: "0.5.39"
   sqlparser:
     dependency: transitive
     description:
