@@ -158,273 +158,295 @@ class _AddEditTaskState extends State<AddEditTask> {
     }
     return DraggableScrollableSheet(
       expand: false,
-      shouldCloseOnMinExtent: false,
       initialChildSize: 0.75,
-      maxChildSize: 1,
+      maxChildSize: 0.9,
       minChildSize: 0.1,
       builder: (BuildContext context, ScrollController scrollController) {
         return Container(
           color: Theme.of(context).secondaryHeaderColor,
-          child: CustomScrollView(
-            controller: scrollController,
-            physics: BouncingScrollPhysics(),
-            slivers: [
-              SliverAppBar.medium(
-                title: Text(widget.willEdit ? "Edit Task" : "New Task"),
-                backgroundColor: Theme.of(context).secondaryHeaderColor,
-                pinned: true,
-              ),
-              SliverPadding(
-                padding: const EdgeInsets.all(8.0),
-                sliver: SliverList(
-                  delegate: SliverChildListDelegate([
-                    //Task name
-                    ShadowedField(
-                      title: "Task name",
-                      margin: EdgeInsets.only(bottom: 20, top: 10),
-                      child: TextField(
-                        controller: titleController,
-                        decoration: InputDecoration(
-                          hintText: "Type a name",
-                          border: OutlineInputBorder(),
+          child: SafeArea(
+            child: CustomScrollView(
+              controller: scrollController,
+              physics: BouncingScrollPhysics(),
+              slivers: [
+                SliverAppBar.medium(
+                  title: Text(widget.willEdit ? "Edit Task" : "New Task"),
+                  backgroundColor: Theme.of(context).secondaryHeaderColor,
+                  pinned: true,
+                ),
+                SliverPadding(
+                  padding: const EdgeInsets.all(8.0),
+                  sliver: SliverList(
+                    delegate: SliverChildListDelegate([
+                      //Task name
+                      ShadowedField(
+                        title: "Task name",
+                        margin: EdgeInsets.only(bottom: 20, top: 10),
+                        child: TextField(
+                          controller: titleController,
+                          decoration: InputDecoration(
+                            hintText: "Type a name",
+                            border: OutlineInputBorder(),
+                          ),
+                          scrollPhysics: BouncingScrollPhysics(),
+                          style: TextStyle(fontSize: 17),
                         ),
-                        scrollPhysics: BouncingScrollPhysics(),
-                        style: TextStyle(fontSize: 17),
                       ),
-                    ),
 
-                    //Task description
-                    ShadowedField(
-                      title: "Task description",
-                      margin: EdgeInsets.only(bottom: 20),
-                      child: TextField(
-                        minLines: 5,
-                        maxLines: 5,
-                        controller: descriptionController,
-                        decoration: InputDecoration(
-                          hintText: "Type a description",
-                          border: OutlineInputBorder(),
+                      //Task description
+                      ShadowedField(
+                        title: "Task description",
+                        margin: EdgeInsets.only(bottom: 20),
+                        child: TextField(
+                          minLines: 5,
+                          maxLines: 5,
+                          controller: descriptionController,
+                          decoration: InputDecoration(
+                            hintText: "Type a description",
+                            border: OutlineInputBorder(),
+                          ),
+                          scrollPhysics: BouncingScrollPhysics(),
+                          style: TextStyle(fontSize: 17),
                         ),
-                        scrollPhysics: BouncingScrollPhysics(),
-                        style: TextStyle(fontSize: 17),
                       ),
-                    ),
 
-                    //Deadline date and time
-                    ShadowedField(
-                      title: "Deadline date and time",
-                      margin: EdgeInsets.only(bottom: 20),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text(
-                                DateFormat(
-                                  "yyyy/MM/dd",
-                                ).format(selectedDate).toString(),
-                                style: TextStyle(fontSize: 17),
-                              ),
-                              Bounceable(
-                                duration: Duration(milliseconds: 200),
-                                onTap: () {},
-                                child: OutlinedButton(
-                                  style: OutlinedButton.styleFrom(
-                                    backgroundColor: Theme.of(
-                                      context,
-                                    ).canvasColor,
-                                  ),
-                                  onPressed: () async {
-                                    final DateTime? date = await showDatePicker(
-                                      context: context,
-                                      firstDate: DateTime.now(),
-                                      lastDate: DateTime(3000),
-                                    );
-                                    if (date != null) {
-                                      setState(() {
-                                        selectedDate = date;
-                                      });
-                                    }
-                                  },
-                                  child: Text(
-                                    "Select a deadline date",
-                                    style: TextStyle(fontSize: 15),
-                                  ),
+                      //Deadline date and time
+                      ShadowedField(
+                        title: "Deadline date and time",
+                        margin: EdgeInsets.only(bottom: 20),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(
+                                  DateFormat(
+                                    "yyyy/MM/dd",
+                                  ).format(selectedDate).toString(),
+                                  style: TextStyle(fontSize: 17),
                                 ),
-                              ),
-                            ],
-                          ),
-                          Divider(),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text(
-                                selectedTime.format(context).toString(),
-                                style: TextStyle(fontSize: 17),
-                              ),
-                              Bounceable(
-                                duration: Duration(milliseconds: 200),
-                                onTap: () {},
-                                child: OutlinedButton(
-                                  style: OutlinedButton.styleFrom(
-                                    backgroundColor: Theme.of(
-                                      context,
-                                    ).canvasColor,
+                                Bounceable(
+                                  duration: Duration(milliseconds: 200),
+                                  onTap: () {},
+                                  child: OutlinedButton(
+                                    style: OutlinedButton.styleFrom(
+                                      backgroundColor: Theme.of(
+                                        context,
+                                      ).canvasColor,
+                                    ),
+                                    onPressed: () async {
+                                      final DateTime? date =
+                                          await showDatePicker(
+                                            context: context,
+                                            firstDate: DateTime.now(),
+                                            lastDate: DateTime(3000),
+                                          );
+                                      if (date != null) {
+                                        setState(() {
+                                          selectedDate = date;
+                                        });
+                                      }
+                                    },
+                                    child: Text(
+                                      "Select a deadline date",
+                                      style: TextStyle(fontSize: 15),
+                                    ),
                                   ),
-                                  onPressed: () async {
-                                    final TimeOfDay? timeOfDay =
-                                        await showTimePicker(
-                                          context: context,
-                                          initialTime: selectedTime,
-                                          initialEntryMode:
-                                              TimePickerEntryMode.dial,
-                                        );
-                                    if (timeOfDay != null) {
-                                      setState(() {
-                                        selectedTime = timeOfDay;
-                                      });
-                                    }
-                                  },
-                                  child: Text(
-                                    "Select a deadline time",
-                                    style: TextStyle(fontSize: 15),
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ],
-                      ),
-                    ),
-
-                    //Task type
-                    ShadowedField(
-                      title: "Task type",
-                      margin: EdgeInsets.only(bottom: 20),
-                      child: DropdownMenu(
-                        width: double.infinity,
-                        hintText: "Select a type",
-                        initialSelection: widget.willEdit
-                            ? widget.task!.type
-                            : null,
-                        onSelected: (value) {
-                          if (value != null) {
-                            selectedType = value;
-                          }
-                        },
-                        dropdownMenuEntries: [
-                          DropdownMenuEntry(value: "Food", label: "Food"),
-                          DropdownMenuEntry(value: "Sport", label: "Sport"),
-                          DropdownMenuEntry(value: "Work", label: "Work"),
-                          DropdownMenuEntry(value: "School", label: "School"),
-                        ],
-                      ),
-                    ),
-
-                    //Importancy
-                    ShadowedField(
-                      title: "Importancy",
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(
-                            "Is this task important for you?",
-                            style: TextStyle(fontSize: 17),
-                          ),
-                          Switch(
-                            value: important,
-                            onChanged: (value) => setState(() {
-                              important = value;
-                            }),
-                          ),
-                        ],
-                      ),
-                    ),
-
-                    //Add task button
-                    Padding(
-                      padding: const EdgeInsets.only(top: 20),
-                      child: Bounceable(
-                        duration: Duration(milliseconds: 200),
-                        onTap: () {},
-                        child: GestureDetector(
-                          onTapCancel: () {
-                            setState(() {
-                              buttonColor = Theme.of(context).canvasColor;
-                            });
-                          },
-                          onTapUp: (details) {
-                            setState(() {
-                              buttonColor = Theme.of(context).canvasColor;
-                            });
-                          },
-                          onTapDown: (details) {
-                            buttonColor = Theme.of(context).primaryColor;
-                            setState(() {});
-                          },
-                          onTap: () async {
-                            if (!checkForEmptiness()) {
-                              showAlertDialog(
-                                context,
-                                "Couln't ${widget.willEdit ? "Edit" : "Add"}",
-                                "Can't ${widget.willEdit ? "edit the" : "add an"} item without one or some of parameters",
-                              );
-                            } else if (!checkForDateAndTime()) {
-                              showAlertDialog(
-                                context,
-                                "Couln't ${widget.willEdit ? "Edit" : "Add"}",
-                                "Can't ${widget.willEdit ? "edit the" : "add an"} item before now",
-                              );
-                            } else {
-                              if (widget.willEdit) {
-                                //Edit
-                                if (widget.task != null) {
-                                  await editTask(widget.task!.id);
-                                }
-                              } else {
-                                //Add
-                                await addTask();
-                              }
-
-                              if (!mounted) return;
-                              Navigator.pop(context);
-                            }
-                          },
-                          child: Container(
-                            decoration: BoxDecoration(
-                              color: buttonColor,
-                              borderRadius: BorderRadius.all(
-                                Radius.circular(10),
-                              ),
-                              boxShadow: [
-                                BoxShadow(
-                                  color: Colors.grey.withValues(alpha: 0.5),
-                                  spreadRadius: 4,
-                                  blurRadius: 7,
-                                  offset: Offset(0, 3),
                                 ),
                               ],
                             ),
-                            padding: EdgeInsets.all(10),
-                            alignment: Alignment.center,
-                            width: double.infinity,
-                            child: Text(
-                              widget.willEdit ? "Edit Task" : "Add Task",
-                              style: TextStyle(
-                                fontSize: 16,
-                                fontWeight: FontWeight.bold,
+                            Divider(),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(
+                                  selectedTime.format(context).toString(),
+                                  style: TextStyle(fontSize: 17),
+                                ),
+                                Bounceable(
+                                  duration: Duration(milliseconds: 200),
+                                  onTap: () {},
+                                  child: OutlinedButton(
+                                    style: OutlinedButton.styleFrom(
+                                      backgroundColor: Theme.of(
+                                        context,
+                                      ).canvasColor,
+                                    ),
+                                    onPressed: () async {
+                                      final TimeOfDay? timeOfDay =
+                                          await showTimePicker(
+                                            context: context,
+                                            initialTime: selectedTime,
+                                            initialEntryMode:
+                                                TimePickerEntryMode.dial,
+                                          );
+                                      if (timeOfDay != null) {
+                                        setState(() {
+                                          selectedTime = timeOfDay;
+                                        });
+                                      }
+                                    },
+                                    child: Text(
+                                      "Select a deadline time",
+                                      style: TextStyle(fontSize: 15),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                      ),
+
+                      //Task type
+                      ShadowedField(
+                        title: "Task type",
+                        margin: EdgeInsets.only(bottom: 20),
+                        child: DropdownMenu(
+                          width: double.infinity,
+                          hintText: "Select a type",
+                          initialSelection: widget.willEdit
+                              ? widget.task!.type
+                              : null,
+                          onSelected: (value) {
+                            if (value != null) {
+                              selectedType = value;
+                            }
+                          },
+                          dropdownMenuEntries: [
+                            DropdownMenuEntry(value: "Food", label: "Food"),
+                            DropdownMenuEntry(value: "Sport", label: "Sport"),
+                            DropdownMenuEntry(value: "Work", label: "Work"),
+                            DropdownMenuEntry(value: "School", label: "School"),
+                          ],
+                        ),
+                      ),
+
+                      //Importancy
+                      ShadowedField(
+                        title: "Importancy",
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              "Is this task important for you?",
+                              style: TextStyle(fontSize: 17),
+                            ),
+                            Switch(
+                              value: important,
+                              onChanged: (value) => setState(() {
+                                important = value;
+                              }),
+                            ),
+                          ],
+                        ),
+                      ),
+
+                      //Add task button
+                      Padding(
+                        padding: const EdgeInsets.only(top: 20),
+                        child: Bounceable(
+                          duration: Duration(milliseconds: 200),
+                          onTap: () {},
+                          child: GestureDetector(
+                            onTapCancel: () {
+                              setState(() {
+                                buttonColor = Theme.of(context).canvasColor;
+                              });
+                            },
+                            onTapUp: (details) {
+                              setState(() {
+                                buttonColor = Theme.of(context).canvasColor;
+                              });
+                            },
+                            onTapDown: (details) {
+                              buttonColor = Theme.of(context).primaryColor;
+                              setState(() {});
+                            },
+                            onTap: () async {
+                              if (!checkForEmptiness()) {
+                                showAlertDialog(
+                                  context,
+                                  "Couln't ${widget.willEdit ? "Edit" : "Add"}",
+                                  "Can't ${widget.willEdit ? "edit the" : "add an"} item without one or some of parameters",
+                                );
+                              } else if (!checkForDateAndTime()) {
+                                showAlertDialog(
+                                  context,
+                                  "Couln't ${widget.willEdit ? "Edit" : "Add"}",
+                                  "Can't ${widget.willEdit ? "edit the" : "add an"} item before now",
+                                );
+                              } else {
+                                if (widget.willEdit) {
+                                  //Edit
+                                  if (widget.task != null) {
+                                    await editTask(widget.task!.id);
+                                  }
+                                } else {
+                                  //Add
+                                  await addTask();
+                                }
+
+                                if (!mounted) return;
+                                Navigator.pop(context);
+                              }
+                            },
+                            child: Container(
+                              decoration: BoxDecoration(
+                                color: buttonColor,
+                                borderRadius: BorderRadius.all(
+                                  Radius.circular(10),
+                                ),
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Theme.of(context)
+                                        .secondaryHeaderColor
+                                        .withValues(
+                                          red: 0.1,
+                                          green: 0.1,
+                                          blue: 0.1,
+                                          alpha: 0.2,
+                                        ),
+                                    spreadRadius: 4,
+                                    blurRadius: 7,
+                                    offset: Offset(2, 2),
+                                  ),
+                                  BoxShadow(
+                                    color: Theme.of(context)
+                                        .secondaryHeaderColor
+                                        .withValues(
+                                          red: 1.1,
+                                          green: 1.1,
+                                          blue: 1.1,
+                                          alpha: 0.2,
+                                        ),
+                                    spreadRadius: 4,
+                                    blurRadius: 7,
+                                    offset: Offset(-2, -2),
+                                  ),
+                                ],
+                              ),
+                              padding: EdgeInsets.all(10),
+                              alignment: Alignment.center,
+                              width: double.infinity,
+                              child: Text(
+                                widget.willEdit ? "Edit Task" : "Add Task",
+                                style: TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.bold,
+                                ),
                               ),
                             ),
                           ),
                         ),
                       ),
-                    ),
-                    Padding(padding: EdgeInsetsGeometry.only(top: 40)),
-                  ]),
+                      Padding(padding: EdgeInsetsGeometry.only(top: 40)),
+                    ]),
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         );
       },

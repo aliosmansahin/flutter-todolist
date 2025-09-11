@@ -234,7 +234,18 @@ class _MyAppState extends State<MyApp> {
         //
         // This works for code too, not just values: Most code changes can be
         // tested with just a hot reload.
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.red),
+        secondaryHeaderColor: Color.fromARGB(255, 192, 232, 255),
+        primaryColor: const Color.fromARGB(255, 0, 51, 161),
+        primaryColorDark: const Color.fromARGB(255, 25, 0, 134),
+        canvasColor: const Color.fromARGB(255, 255, 255, 255),
+        segmentedButtonTheme: SegmentedButtonThemeData(
+          style: SegmentedButton.styleFrom(
+            backgroundColor: Color.fromARGB(255, 192, 232, 255),
+            foregroundColor: Colors.black,
+            selectedBackgroundColor: const Color.fromARGB(255, 25, 0, 134),
+            selectedForegroundColor: Colors.white,
+          ),
+        ),
       ),
       debugShowCheckedModeBanner: false,
       navigatorKey: MyApp.navigatorKey,
