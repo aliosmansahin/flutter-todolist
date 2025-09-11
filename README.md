@@ -34,6 +34,9 @@ flutter pub get
 flutter run
 ```
 
+## PS
+This project is currently coded and tested only for Android. It may have issues on different platforms.
+
 <!-- LINKS -->
 [flutter-url]: https://flutter.dev/
 [dart-url]: https://dart.dev/
