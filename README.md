@@ -1,4 +1,4 @@
-# flutter-todolist
+# To Do List
 A simple task management application made with Flutter, designed for one-handed use and featuring mostly neumorphism design style.
 
 ## Screenshots
